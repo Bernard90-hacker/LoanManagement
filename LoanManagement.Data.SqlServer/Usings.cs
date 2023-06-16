@@ -13,5 +13,6 @@ global using LoanManagement.core.Dto;
 global using LoanManagement.core.Pagination;
 global using Microsoft.AspNetCore.Http;
 global using Microsoft.Extensions.Configuration;
+global using LoanManagement.core.Models.Users_Management;
 
 

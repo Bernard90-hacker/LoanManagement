@@ -17,4 +17,6 @@ global using LoanManagement.API.Ressources;
 global using LoanManagement.API.Validator;
 global using LoanManagement.core.Dto;
 global using System.Text.Json.Serialization;
+global using LoanManagement.API.Extensions;
+
 

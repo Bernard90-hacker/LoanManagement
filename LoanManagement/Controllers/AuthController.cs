@@ -10,12 +10,12 @@
 		private readonly ILoggerManager _logger;
 		private readonly IMapper _mapper;
 		private readonly MailService _mailService;
-		private readonly TokenService _tokenService;
+		private readonly UserTokenService _tokenService;
 		private readonly IConfiguration _config;
 
 		public AuthController(IMapper mapper, IUserService userService,
 			UserService service, ILoggerManager logger, MailService mailService,
-			TokenService tokenService, IConfiguration config)
+			UserTokenService tokenService, IConfiguration config)
 		{
 			_userService = userService;
 			_service = service;
@@ -27,7 +27,7 @@
 		}
 
 		[HttpPost("login")]
-		public async Task<IActionResult> Login(LoginRessource ressource)
+		public async Task<IActionResult> Login([FromForm] LoginRessource ressource)
 		{
 			try
 			{
@@ -85,13 +85,13 @@
 		{
 			try
 			{
-				var validation = new RegisterValidator();
-				var validationResult = await validation.ValidateAsync(ressource);
-				if (!validationResult.IsValid)
-				{
-					_logger.LogError("Création d'un compte utilisateur : Champs obligatoires");
-					return BadRequest();
-				}
+				//var validation = new RegisterValidator();
+				//var validationResult = await validation.ValidateAsync(ressource);
+				//if (!validationResult.IsValid)
+				//{
+				//	_logger.LogError("Création d'un compte utilisateur : Champs obligatoires");
+				//	return BadRequest();
+				//}
 				User user = _mapper.Map<User>(ressource);
 				var userCreated = _userService.Create(user);
 				var userResult = _mapper.Map<GetUserDto>(userCreated);

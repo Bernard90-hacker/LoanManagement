@@ -8,10 +8,10 @@ using System.Text;
 
 namespace LoanManagement.service.Services
 {
-	public class TokenService : IUserTokenService
+	public class UserTokenService : IUserTokenService
 	{
 		private IUnitOfWork _unitOfWork;
-		public TokenService(IUnitOfWork unitOfWork) => _unitOfWork = unitOfWork;
+		public UserTokenService(IUnitOfWork unitOfWork) => _unitOfWork = unitOfWork;
 
 		public async Task<UserToken> Add(UserToken token)
 		{

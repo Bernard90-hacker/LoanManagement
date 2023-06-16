@@ -26,6 +26,9 @@ namespace LoanManagement.API.Extensions
 		{
 			services.AddTransient<IUserService, UserService>();
 			services.AddTransient<UserService>();
+			services.AddTransient<MailService>();
+			services.AddTransient<IUserTokenService, UserTokenService>();
+			services.AddTransient<UserTokenService>();
 		}
 
 		public static void ConfigureUnitOfWorkService(this IServiceCollection services)

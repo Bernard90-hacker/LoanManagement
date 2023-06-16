@@ -1,4 +1,6 @@
 ﻿
+using LoanManagement.core.Repositories.Users_Management;
+
 namespace LoanManagement.core
 {
 	public interface IUnitOfWork : IDisposable
@@ -6,6 +8,16 @@ namespace LoanManagement.core
 
 		IUserRepository Users { get; }
 		IUserTokenRepository UserTokens { get; }
+		IUtilisateurRepository Utilisateurs { get; }
+		IDepartementRepository Departements { get;}
+		IDirectionRepository Directions { get;}
+		IEmployeRepository Employes { get; }
+		IHabilitationProfilRepository HabilitationProfils { get; }
+		IJournalRepository Journaux { get; }
+		IMotDePasseRepository MotDePasses { get;  }
+		IParamMotDePasseRepository ParamMotDePasses { get; }
+		IProfilRepository Profils { get; }
+		ITypeJournalRepository TypeJournaux { get; }
 
 		Task<int> CommitAsync();
 		Task<IDbContextTransaction> BeginTransactionAsync();

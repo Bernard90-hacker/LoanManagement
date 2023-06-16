@@ -1,6 +1,4 @@
 
-using LoanManagement.API.Extensions;
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.WebHost.ConfigureKestrel(options =>
