@@ -4,7 +4,7 @@
 	{
 		Task<PagedList<MotDePasse>> GetAll(MotDePasseParameters parameters);
 		Task<IEnumerable<MotDePasse>> GetAll();
-		Task<IEnumerable<MotDePasse>> GetPasswordsByHash(string hash);
-		Task<MotDePasse> GetPasswordById(int id);
+		Task<IEnumerable<MotDePasse>?> GetPasswordsByHash(string hash);
+		Task<MotDePasse?> GetPasswordById(int id);
 	}
 }

@@ -5,15 +5,14 @@ namespace LoanManagement.core
 {
 	public interface IUnitOfWork : IDisposable
 	{
-
-		IUserRepository Users { get; }
-		IUserTokenRepository UserTokens { get; }
+		IApplicationRepository Applications { get; }
 		IUtilisateurRepository Utilisateurs { get; }
 		IDepartementRepository Departements { get;}
 		IDirectionRepository Directions { get;}
 		IEmployeRepository Employes { get; }
 		IHabilitationProfilRepository HabilitationProfils { get; }
 		IJournalRepository Journaux { get; }
+		IMenuRepository Menus { get; }
 		IMotDePasseRepository MotDePasses { get;  }
 		IParamMotDePasseRepository ParamMotDePasses { get; }
 		IProfilRepository Profils { get; }

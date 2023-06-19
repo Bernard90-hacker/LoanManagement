@@ -68,17 +68,19 @@
 				.IsRequired();
 
 			builder
-				.Property(x => x.UserId)
+				.Property(x => x.UtilisateurId)
 				.IsRequired();
 
 			builder
-				.HasOne<Utilisateur>()
+				.HasOne(x => x.Utilisateur)
 				.WithMany(x => x.Journaux)
+				.HasForeignKey(x => x.UtilisateurId)
 				.IsRequired();
 
 			builder
-				.HasOne<TypeJournal>()
+				.HasOne(x => x.TypeJournal)
 				.WithMany(x => x.Journaux)
+				.HasForeignKey(x => x.TypeJournalId)
 				.IsRequired();
 
 			builder

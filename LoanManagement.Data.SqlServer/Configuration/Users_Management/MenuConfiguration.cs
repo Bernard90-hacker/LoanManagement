@@ -56,12 +56,17 @@
 				.WithMany(x => x.SousMenus);
 
 			builder
-				.HasOne<HabilitationProfil>()
-				.WithMany(x => x.Menus);
+				.HasOne(x => x.Application)
+				.WithMany(x => x.Menus)
+				.HasForeignKey(x => x.ApplicationId);
 
 			builder
-				.HasOne<Application>()
-				.WithMany(x => x.Menus);
+				.HasOne(x => x.Application)
+				.WithMany(x => x.Menus)
+				.HasForeignKey(x => x.ApplicationId);
+
+			builder
+				.ToTable("Menus");
 		}
 	}
 }

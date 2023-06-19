@@ -6,5 +6,7 @@ namespace LoanManagement.core.Pagination
 	{
 		public string OldPasswordHash { get; set; } = string.Empty;
 		public string OldPasswordSalt { get; set; } = string.Empty;
+
+        public MotDePasseParameters() {}
     }
 }

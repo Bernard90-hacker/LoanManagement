@@ -14,5 +14,8 @@ global using LoanManagement.core.Pagination;
 global using Microsoft.AspNetCore.Http;
 global using Microsoft.Extensions.Configuration;
 global using LoanManagement.core.Models.Users_Management;
+global using LoanManagement.core.Repositories.Users_Management;
+global using LoanManagement.Data.SqlServer.Configuration.Users_Management;
+
 
 

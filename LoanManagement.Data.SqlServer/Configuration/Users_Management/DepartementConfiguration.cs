@@ -25,9 +25,9 @@
 				.IsRequired();
 
 			builder
-				.HasOne<Direction>()
+				.HasOne(x => x.Direction)
 				.WithMany(x => x.Departements)
-				.IsRequired();
+				.HasForeignKey(x => x.DirectionId);
 
 			builder
 				.ToTable("Departements");

@@ -5,7 +5,7 @@ namespace LoanManagement.core.Repositories.Users_Management
 	{
 		Task<PagedList<TypeJournal>> GetAll(TypeJournalParameters parameters);
 		Task<IEnumerable<TypeJournal>> GetAll();
-		Task<TypeJournal> GetTypeJournalByCode(string code);
-		Task<TypeJournal> GetTypeJournalById(int id);
+		Task<TypeJournal?> GetTypeJournalByCode(string code);
+		Task<TypeJournal?> GetTypeJournalById(int id);
 	}
 }

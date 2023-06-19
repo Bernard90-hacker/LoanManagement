@@ -7,9 +7,11 @@ namespace LoanManagement.API.Mapping
 	{
 		public MappingProfile()
 		{
-			CreateMap<User, GetUserDto>();
-			CreateMap<RegisterRessource, User>();
 			CreateMap<LoginRessource, LoginDto>();
+			CreateMap<Direction, DirectionRessource>();
+			CreateMap<DirectionRessource, Direction>();
+			CreateMap<DepartementRessource, Departement>();
+			CreateMap<Departement, DepartementRessource>();
 		}
 	}
 }

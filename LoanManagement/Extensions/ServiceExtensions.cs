@@ -1,4 +1,5 @@
 ﻿using LoanManagement.core;
+using LoanManagement.service.Services.Users_Management;
 
 namespace LoanManagement.API.Extensions
 {
@@ -24,11 +25,30 @@ namespace LoanManagement.API.Extensions
 
 		public static void ConfigureApiService(this IServiceCollection services)
 		{
-			services.AddTransient<IUserService, UserService>();
-			services.AddTransient<UserService>();
-			services.AddTransient<MailService>();
-			services.AddTransient<IUserTokenService, UserTokenService>();
-			services.AddTransient<UserTokenService>();
+			services.AddTransient<IDirectionService, DirectionService>();
+			services.AddTransient<IDepartmentService, DepartementService>();
+			services.AddTransient<IApplicationService, ApplicationService>();
+			services.AddTransient<IEmployeService, EmployeService>();
+			services.AddTransient<IHabilitationProfilService, HabilitationProfilService>();
+			services.AddTransient<IJournalService, JournalService>();
+			services.AddTransient<IMenuService, MenuService>();
+			services.AddTransient<IMotDePasseService, MotDePasseService>();
+			services.AddTransient<IParamMotDePasseService, ParamMotDePasseService>();
+			services.AddTransient<IProfilService, ProfilService>();
+			services.AddTransient<ITypeJournalService, TypeJournalService>();
+			services.AddTransient<IUtilisateurService, UtilisateurService>();
+			services.AddTransient<DepartementService>();
+			services.AddTransient<DirectionService>();
+			services.AddTransient<ApplicationService>();
+			services.AddTransient<EmployeService>();
+			services.AddTransient<HabilitationProfilService>();
+			services.AddTransient<JournalService>();
+			services.AddTransient<MenuService>();
+			services.AddTransient<MotDePasseService>();
+			services.AddTransient<ParamMotDePasseService>();
+			services.AddTransient<ProfilService>();
+			services.AddTransient<TypeJournalService>();
+			services.AddTransient<UtilisateurService>();
 		}
 
 		public static void ConfigureUnitOfWorkService(this IServiceCollection services)

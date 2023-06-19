@@ -16,8 +16,8 @@
         public string PreferenceURL { get; set;} = string.Empty;
         public DateTime DateOperation { get; set;}
         public DateTime DateSysteme { get; set;}
-        public int UserId { get; set; }
-        public Utilisateur? User { get; set; }
+        public int UtilisateurId { get; set; }
+        public Utilisateur? Utilisateur { get; set; }
         public int TypeJournalId { get; set; }
         public TypeJournal? TypeJournal { get; set; }
     }

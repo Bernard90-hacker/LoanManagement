@@ -4,7 +4,7 @@
 	{
 		Task<PagedList<ParamMotDePasse>> GetAll(ParamMotDePasseParameters parameters);
 		Task<IEnumerable<ParamMotDePasse>> GetAll();
-		Task<ParamMotDePasse> GetById(int id);
+		Task<ParamMotDePasse?> GetById(int id);
 		Task<ParamMotDePasse> Create(ParamMotDePasse p);
 		Task<ParamMotDePasse> Update(ParamMotDePasse p, ParamMotDePasse paramToBeUpdated);
 		Task Delete(ParamMotDePasse p);

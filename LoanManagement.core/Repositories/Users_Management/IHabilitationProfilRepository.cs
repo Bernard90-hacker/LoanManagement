@@ -4,6 +4,6 @@
 	{
 		Task<PagedList<HabilitationProfil>> GetAll(HabilitationProfilParameters parameters);
 		Task<IEnumerable<HabilitationProfil>> GetAll();
-		Task<HabilitationProfil> GetHabilitationProfilById(int id);
+		Task<HabilitationProfil?> GetHabilitationProfilById(int id);
 	}
 }

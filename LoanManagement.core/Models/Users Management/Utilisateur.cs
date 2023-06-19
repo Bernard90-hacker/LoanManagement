@@ -17,6 +17,8 @@
         public DateTime DateDesactivation { get; set; }
         public DateTime DateAjout { get; set; }
         public DateTime DateModificationMotDePasse { get; set; }
+
+        public Employe? Employe { get; set; }
         public List<MotDePasse> Passwords { get; set; } = new();
         public List<Journal> Journaux { get; set; } = new();
     }

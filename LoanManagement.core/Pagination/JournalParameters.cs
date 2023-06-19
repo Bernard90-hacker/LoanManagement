@@ -1,6 +1,6 @@
 ﻿namespace LoanManagement.core.Pagination
 {
-	public class JournalParameters
+	public class JournalParameters : QueryStringParameters
 	{
 		public string IPAdress { get; set; } = string.Empty;
 		public string MethodeHTTP { get; set; } = string.Empty;

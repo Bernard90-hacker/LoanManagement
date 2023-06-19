@@ -4,7 +4,7 @@
 	{
 		Task<PagedList<Departement>> GetAll(DepartmentParameters parameters);
 		Task<IEnumerable<Departement>> GetAll();
-		Task<Departement> GetDepartmentById(int id);
-		Task<Departement> GetDepartmentByCode(string code);
+		Task<Departement?> GetDepartmentById(int id);
+		Task<Departement?> GetDepartmentByCode(string code);
 	}
 }

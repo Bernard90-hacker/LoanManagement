@@ -35,9 +35,17 @@
 				.IsRequired();
 
 			builder
-				.HasOne<Departement>()
-				.WithMany(x => x.Employes)
+				.Property(x => x.UserId)
 				.IsRequired();
+
+			builder
+				.HasOne(x => x.Departement)
+				.WithMany(x => x.Employes)
+				.HasForeignKey(x => x.DepartementId)
+				.IsRequired();
+
+			builder
+				.ToTable("Employes");
 
 		}
 	}
