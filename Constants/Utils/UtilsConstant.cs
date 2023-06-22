@@ -7,15 +7,35 @@ namespace Constants.Utils
     public static class UtilsConstant
     {
         private static readonly Random Random = new();
+		const int keySize = 64;
+		const int iterations = 350000;
 
-        public static void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
-        {
-            using var hmac = new HMACSHA512();
-            passwordSalt = hmac.Key;
-            passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
-        }
 
-        public static bool VerifyPasswordHash(string password, byte[] storedHash, byte[] storedSalt)
+		public static string HashPassword(string password, out byte[] salt, out string passwordHashed)
+		{
+			HashAlgorithmName hashAlgorithm = HashAlgorithmName.SHA512;
+			salt = RandomNumberGenerator.GetBytes(keySize);
+
+			var hash = Rfc2898DeriveBytes.Pbkdf2(
+				Encoding.UTF8.GetBytes(password),
+				salt,
+				iterations,
+				hashAlgorithm,
+				keySize);
+			passwordHashed = Convert.ToHexString(hash);
+
+			return Convert.ToHexString(hash);
+		}
+
+		public static bool CheckPassword(string password, string hash, byte[] salt)
+		{
+			HashAlgorithmName hashAlgorithm = HashAlgorithmName.SHA512;
+			var hashToCompare = Rfc2898DeriveBytes.Pbkdf2(password, salt, iterations, hashAlgorithm, keySize);
+
+			return CryptographicOperations.FixedTimeEquals(hashToCompare, Convert.FromHexString(hash));
+		}
+
+		public static bool VerifyPasswordHash(string password, byte[] storedHash, byte[] storedSalt)
         {
             if (storedHash.Length != 64) throw new ArgumentException("Longueur non valide du hachage du mot de passe (64 octets attendus).", "storedHash");
             if (storedSalt.Length != 128) throw new ArgumentException("Longueur non valide du sel de mot de passe (128 octets attendus).", "storedSalt");
@@ -25,7 +45,30 @@ namespace Constants.Utils
             return !computedHash.Where((t, i) => t != storedHash[i]).Any();
         }
 
-        public static string IncrementStringWithNumbers(string str)
+		public static string CreateRefreshToken(string username, string refreshToken, out string refreshTokenTime)
+		{
+			List<Claim> claim = new()
+			{
+				new Claim(ClaimTypes.NameIdentifier, username.ToString())
+			};
+			SymmetricSecurityKey key = new(Encoding.UTF8.GetBytes(refreshToken));
+			SigningCredentials creds = new(key, SecurityAlgorithms.HmacSha256);
+			JwtSecurityToken? token = new(
+					notBefore: DateTime.Now,
+					expires: DateTime.Now.AddDays(7),
+					signingCredentials: creds,
+					claims: claim
+				);
+
+			string? jwt = new JwtSecurityTokenHandler().WriteToken(token);
+            refreshTokenTime = token.ValidTo.ToString("dd/MM/yyyy");
+
+
+            return jwt;
+
+		}
+
+		public static string IncrementStringWithNumbers(string str)
         {
             string digits = new(str.Where(char.IsDigit).ToArray());
             string letters = new(str.Where(char.IsLetter).ToArray());
@@ -254,13 +297,13 @@ namespace Constants.Utils
             return false;
         }
 
-		public static string HashPassword(string password)
-		{
-			using SHA256 sha256 = SHA256.Create();
-			byte[] hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
-			string hashedPassword = BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
+		//public static string HashPassword(string password)
+		//{
+		//	using SHA256 sha256 = SHA256.Create();
+		//	byte[] hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
+		//	string hashedPassword = BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
 
-			return hashedPassword;
-		}
+		//	return hashedPassword;
+		//}
 	}
 }

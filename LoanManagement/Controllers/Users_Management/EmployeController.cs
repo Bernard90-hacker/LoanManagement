@@ -1,0 +1,239 @@
+﻿using LoanManagement.core.Repositories.Users_Management;
+
+namespace LoanManagement.API.Controllers.Users_Management
+{
+	[ApiController]
+	[Route("api/users/[controller]")]
+	public class EmployeController : Controller
+	{
+		private readonly IUtilisateurService _utilisateurService;
+		private readonly IEmployeService _employeService;
+		private readonly IDepartmentService _departementService;
+		private readonly ILoggerManager _logger;
+		private readonly IMapper _mapper;
+
+        public EmployeController(IUtilisateurService utilisateurService, IEmployeService employeService,
+			ILoggerManager logger, IMapper mapper, IDepartmentService departementService)
+        {
+			_utilisateurService = utilisateurService;
+			_employeService = employeService;
+			_logger = logger;
+			_mapper = mapper;
+			_departementService = departementService;
+        }
+
+		[HttpGet("all")]
+		public async Task<ActionResult<EmployeRessource>> GetAll([FromQuery] EmployeParameters parameters)
+		{
+			try
+			{
+				var employes = await _employeService.GetAll(parameters);
+				if(employes is null)
+				{
+					_logger.LogWarning("'Liste des employés' : Aucun employé trouvé");
+					return NotFound(new ApiResponse((int)CustomHttpCode.OBJECT_NOT_FOUND, description: "Aucun employé trouvé qui corresponde au(x) critère(s) spécifié(s)"));
+				}
+				var result = _mapper.Map<IEnumerable<EmployeRessource>>(employes);
+				var metadata = new
+				{
+					employes.PageSize,
+					employes.CurrentPage,
+					employes.TotalCount,
+					employes.TotalPages,
+					employes.HasNext,
+					employes.HasPrevious
+				};
+				Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
+				_logger.LogInformation("'Liste des employés' : Opération effectuée avec succès");
+				return Ok(result);
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError("Une erreur est survenue pendant le traitement de la requête");
+				return ValidationProblem(statusCode: (int)HttpCode.INTERNAL_SERVER_ERROR, title: "Erreur interne du serveur", detail: ex.Message);
+			}
+		}
+
+		[HttpGet("{id:int}")]
+		public async Task<ActionResult<EmployeRessource>> GetEmployeById(int id)
+		{
+			try
+			{
+				var employe = await _employeService.GetEmployeById(id);
+				if(employe is null)
+				{
+					_logger.LogWarning("Détails d'un employé : aucun employé trouvé");
+					return NotFound(new ApiResponse((int)CustomHttpCode.OBJECT_NOT_FOUND, description: "Aucun employé trouvé qui correspond au critère spécifié"));
+				}
+
+				var result = _mapper.Map<EmployeRessource>(employe);
+				_logger.LogInformation("'Détails d'un employé' : Opération effectuée avec succès");
+
+				return Ok(result);
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError("Une erreur est survenue pendant le traitement de la requête");
+				return ValidationProblem(statusCode: (int)HttpCode.INTERNAL_SERVER_ERROR, title: "Erreur interne du serveur", detail: ex.Message);
+			}
+		}
+
+		[HttpGet("{id:int}/Utilisateur")]
+		public async Task<ActionResult<UtilisateurRessource>> GetEmployeUserAccount(int id)
+		{
+			try
+			{
+				var employe = await _employeService.GetEmployeById(id);
+				if (employe is null)
+				{
+					_logger.LogWarning("Détails d'un employé : aucun employé trouvé");
+					return NotFound(new ApiResponse((int)CustomHttpCode.OBJECT_NOT_FOUND, description: "Aucun employé trouvé qui correspond au critère spécifié"));
+				}
+				var user = await _employeService.GetEmployeUserAccount(employe.UserId);
+				var result = _mapper.Map<UtilisateurRessource>(employe);
+				_logger.LogInformation("'Détails du compte utilisateur d'un employé' : Opération effectuée avec succès");
+
+				return Ok(result);
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError("Une erreur est survenue pendant le traitement de la requête");
+				return ValidationProblem(statusCode: (int)HttpCode.INTERNAL_SERVER_ERROR, title: "Erreur interne du serveur", detail: ex.Message);
+			}
+		}
+
+		[HttpGet("{email}")]
+		public async Task<ActionResult<EmployeRessource>> GetEmployeByEmail(string email)
+		{
+			try
+			{
+				var employe = await _employeService.GetEmployeByEmail(email);
+				if (employe is null)
+				{
+					_logger.LogWarning("Détails d'un employé : aucun employé trouvé");
+					return NotFound(new ApiResponse((int)CustomHttpCode.OBJECT_NOT_FOUND, description: "Aucun employé trouvé qui corresponde au critère spécifié"));
+				}
+
+				var result = _mapper.Map<EmployeRessource>(employe);
+				_logger.LogInformation("'Détails d'un employé' : Opération effectuée avec succès");
+
+				return Ok(result);
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError("Une erreur est survenue pendant le traitement de la requête");
+				return ValidationProblem(statusCode: (int)HttpCode.INTERNAL_SERVER_ERROR, title: "Erreur interne du serveur", detail: ex.Message);
+			}
+		}
+
+		[HttpPost("add")]
+		public async Task<ActionResult<EmployeRessource>> Add(EmployeRessource ressource)
+		{
+			try
+			{
+				var validation = new EmployeValidator();
+				var validationResult = await validation.ValidateAsync(ressource);
+				if (!validationResult.IsValid)
+				{
+					_logger.LogWarning("Enregistrement d'un employé : Champs obligatoires");
+					return BadRequest();
+				}
+				var user = await _utilisateurService.GetUserById(ressource.UserId);
+				var departement = await _departementService.GetDepartmentById(ressource.DepartementId);
+				if(user is null || departement is null)
+				{
+					_logger.LogWarning("Enregistrement d'un employé : L'utilisateur ou le département renseigné n'existe pas");
+					return BadRequest();
+				}
+				var employe = _mapper.Map<Employe>(ressource);
+				employe.DateAjout = DateTime.Now.ToString("dd/MM/yyyy");
+				employe.DateModification = DateTime.Now.ToString("dd/MM/yyyy");
+				var employeCreated = await _employeService.Create(employe);
+				var result = _mapper.Map<EmployeRessource>(employeCreated);
+
+				_logger.LogInformation("'Enregistrement d'un employé' : Opération effectuée avec succès");
+
+				return Ok(result);
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError("Une erreur est survenue pendant le traitement de la requête");
+				return ValidationProblem(statusCode: (int)HttpCode.INTERNAL_SERVER_ERROR, title: "Erreur interne du serveur", detail: ex.Message);
+			}
+		}
+
+		[HttpDelete("{id:int}")]
+		public async Task<ActionResult<EmployeRessource>> Delete(int Id)
+		{
+			try
+			{
+				var employe = await _employeService.GetEmployeById(Id);
+				if (employe is null)
+				{
+					_logger.LogWarning("Suppression d'un employé : Aucun employé trouvé");
+					return BadRequest();
+				}
+				await _employeService.Delete(employe);
+
+				_logger.LogInformation("'Suppression d'un employé' : Opération effectuée avec succès");
+
+				return Ok();
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError("Une erreur est survenue pendant le traitement de la requête");
+				return ValidationProblem(statusCode: (int)HttpCode.INTERNAL_SERVER_ERROR, title: "Erreur interne du serveur", detail: ex.Message);
+			}
+		}
+
+		[HttpPut("photo")]
+		public async Task<ActionResult<EmployeRessource>> UpdatePhoto(UpdateEmployePhotoRessource ressource)
+		{
+			try
+			{
+				var employe = await _employeService.GetEmployeById(ressource.Id);
+				if (employe is null)
+				{
+					_logger.LogWarning("Suppression d'un employé : Aucun employé trouvé");
+					return BadRequest();
+				}
+				var employeUpdated = await _employeService.UpdateEmployePhoto(employe, ressource.Photo);
+				var result = _mapper.Map<EmployeRessource>(employeUpdated);
+
+				_logger.LogInformation("'Mise à jour de la modification de la photo d'un employé' : Opération effectuée avec succès");
+
+				return Ok(result);
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError("Une erreur est survenue pendant le traitement de la requête");
+				return ValidationProblem(statusCode: (int)HttpCode.INTERNAL_SERVER_ERROR, title: "Erreur interne du serveur", detail: ex.Message);
+			}
+		}
+
+		[HttpPut("departement")]
+		public async Task<ActionResult<EmployeRessource>> UpdateEmployeDepartement(UpdateEmployeDepartementRessource ressource)
+		{
+			try
+			{
+				var employe = await _employeService.GetEmployeById(ressource.Id);
+				if (employe is null)
+				{
+					_logger.LogWarning("Suppression d'un employé : Aucun employé trouvé");
+					return BadRequest();
+				}
+				var employeUpdated = await _employeService.UpdateEmployeDepartment(employe, ressource.DepartementId);
+				var result = _mapper.Map<EmployeRessource>(employeUpdated);
+
+				_logger.LogInformation("'Mise à jour de la modification de la photo d'un employé' : Opération effectuée avec succès");
+
+				return Ok(result);
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError("Une erreur est survenue pendant le traitement de la requête");
+				return ValidationProblem(statusCode: (int)HttpCode.INTERNAL_SERVER_ERROR, title: "Erreur interne du serveur", detail: ex.Message);
+			}
+		}
+	}
+}

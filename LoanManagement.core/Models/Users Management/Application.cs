@@ -10,8 +10,8 @@ namespace LoanManagement.core.Models.Users_Management
         public string Description { get; set; } = string.Empty;
         public string Version { get; set; } = string.Empty;
         public int Statut { get; set; }
-        public DateTime DateAjout { get; set; }
-        public DateTime DateModification { get; set; }
+        public string DateAjout { get; set; } = string.Empty;
+        public string DateModification { get; set; } = string.Empty;
         public int ModuleId { get; set; }
         public Application? Module { get; set; }
         public ICollection<Application> Modules = new List<Application>();

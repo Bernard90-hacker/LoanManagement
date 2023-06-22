@@ -23,8 +23,8 @@
 				.Property(x => x.UtilisateurId)
 				.IsRequired();
 
-			builder
-				.Property(x => x.DateAjout)
+			builder.Property(x => x.DateAjout)
+				.HasDefaultValue(DateTime.Now.ToString("dd/MM/yyyy"))
 				.IsRequired();
 
 			builder

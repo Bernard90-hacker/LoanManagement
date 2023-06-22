@@ -12,6 +12,14 @@ namespace LoanManagement.service.Services.Users_Management
             _unitOfWork = unitOfWork;
         }
 
+		public async Task<MotDePasse> Create(MotDePasse motDePasse)
+		{
+			await _unitOfWork.MotDePasses.AddAsync(motDePasse);
+			await _unitOfWork.CommitAsync();
+
+			return motDePasse;
+		}
+
 		public async Task<PagedList<MotDePasse>> GetAll(MotDePasseParameters parameters)
 		{
 			return await _unitOfWork.MotDePasses.GetAll(parameters);
@@ -27,9 +35,9 @@ namespace LoanManagement.service.Services.Users_Management
 			return await _unitOfWork.MotDePasses.GetPasswordsById(id);
 		}
 
-		public async Task<IEnumerable<MotDePasse>?> GetPasswordsByHash(string hash)
+		public async Task<MotDePasse?> GetPasswordByHash(string hash)
 		{
-			return await _unitOfWork.MotDePasses.GetPasswordsByHash(hash);
+			return await _unitOfWork.MotDePasses.GetPasswordByHash(hash);
 		}
 	}
 }

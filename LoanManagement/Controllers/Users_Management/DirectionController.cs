@@ -97,7 +97,7 @@ namespace LoanManagement.API.Controllers.Users_Management
 					return NotFound(new ApiResponse((int)CustomHttpCode.OBJECT_NOT_FOUND, description: "Direction inexistante"));
 				}
 
-				var directionRessource = _mapper.Map<DepartementRessource>(direction);
+				var directionRessource = _mapper.Map<DirectionRessource>(direction);
 
 				_logger.LogInformation("Opération effectuée avec succès");
 
@@ -122,7 +122,7 @@ namespace LoanManagement.API.Controllers.Users_Management
 					return NotFound(new ApiResponse((int)CustomHttpCode.OBJECT_NOT_FOUND, description: "Direction inexistante"));
 				}
 
-				var directionRessource = _mapper.Map<DepartementRessource>(direction);
+				var directionRessource = _mapper.Map<DirectionRessource>(direction);
 
 				_logger.LogInformation("Opération effectuée avec succès");
 

@@ -49,10 +49,7 @@
 
 			builder
 				.Property(x => x.DateOperation)
-				.IsRequired();
-
-			builder
-				.Property(x => x.DateSysteme)
+				.HasDefaultValue(DateTime.Now.ToString("dd/MM/yyyy"))
 				.IsRequired();
 
 			builder

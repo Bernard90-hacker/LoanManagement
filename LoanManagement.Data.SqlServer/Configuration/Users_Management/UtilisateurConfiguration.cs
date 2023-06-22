@@ -46,11 +46,14 @@
 
 			builder
 				.Property(x => x.DateAjout)
-				.IsRequired();
+				.IsRequired()
+				.HasDefaultValue(DateTime.Now.ToString("dd/MM/yyyy"));
 
 			builder
-				.Property(x => x.DateDesactivation)
-				.IsRequired();
+				.Property(x => x.DateDesactivation);
+
+			builder
+				.Property(x => x.DateModificationMotDePasse);
 
 			builder
 				.Property(x => x.DateExpirationCompte)
@@ -58,8 +61,7 @@
 				.HasMaxLength(30);
 
 			builder
-				.Property(x => x.Statut)
-				.IsRequired();
+				.Property(x => x.Statut);
 
 			builder
 				.HasOne(x => x.Employe)

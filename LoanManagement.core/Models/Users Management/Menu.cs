@@ -9,8 +9,8 @@
         public string Description { get; set; } = string.Empty;
         public int Statut { get; set; }
         public int Position { get; set; }
-        public DateTime DateAjout { get; set; }
-        public DateTime DateModification { get; set; }
+        public string DateAjout { get; set; } = string.Empty;
+        public string DateModification { get; set; } = string.Empty;
         public int MenuId { get; set; }
         public ICollection<Menu> SousMenus { get;} = new List<Menu>();
         public int HabilitationProfilId { get; set; }

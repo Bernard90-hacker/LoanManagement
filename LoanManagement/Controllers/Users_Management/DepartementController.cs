@@ -54,7 +54,7 @@
 
 
 		[HttpPost("add")]
-		public async Task<ActionResult<DepartementRessource>> Add([FromQuery] DepartementRessource ressource)
+		public async Task<ActionResult<DepartementRessource>> Add(DepartementRessource ressource)
 		{
 			try
 			{
@@ -141,7 +141,7 @@
 			}
 		}
 
-		[HttpPost("delete")]
+		[HttpDelete("delete")]
 		public async Task<ActionResult<DirectionRessource>> Delete([FromQuery] string code)
 		{
 			try

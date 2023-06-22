@@ -9,8 +9,8 @@ namespace LoanManagement.core.Models.Users_Management
         public string Prenoms { get; set; } =string.Empty;
         public string Email { get; set; } = string.Empty;
         public string Photo { get; set; } = string.Empty;
-        public DateTime DateAjout { get; set; }
-        public DateTime DateModification { get; set; }
+        public string DateAjout { get; set; } = string.Empty;
+        public string DateModification { get; set; } = string.Empty;
         public int UserId { get; set; }
         public Utilisateur? User { get; set; }
         public int DepartementId { get; set; }

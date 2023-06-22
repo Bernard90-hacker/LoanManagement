@@ -8,5 +8,11 @@
 		Task<ParamMotDePasse> Create(ParamMotDePasse p);
 		Task<ParamMotDePasse> Update(ParamMotDePasse p, ParamMotDePasse paramToBeUpdated);
 		Task Delete(ParamMotDePasse p);
+		Task<ParamMotDePasse> UpdatePasswordsExpiryFrequency(ParamMotDePasse param, int ExpiryDate);
+		Task<ParamMotDePasse> PasswordMustIncludeUpperCase(ParamMotDePasse param, bool response);
+		Task<ParamMotDePasse> PasswordMustIncludeDigits(ParamMotDePasse param, bool response);
+		Task<ParamMotDePasse> PasswordMustExcludeUsername(ParamMotDePasse param, bool response);
+		Task<ParamMotDePasse> PasswordLength(ParamMotDePasse param, int taille);
+		Task<ParamMotDePasse?> GetCurrentParameter();
 	}
 }

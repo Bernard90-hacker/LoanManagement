@@ -50,7 +50,7 @@ namespace LoanManagement.Data.SqlServer
 
 			foreach (var foreignKey in builder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
 			{
-				foreignKey.DeleteBehavior = DeleteBehavior.Restrict;
+				foreignKey.DeleteBehavior = DeleteBehavior.NoAction;
 			}
 		}
 

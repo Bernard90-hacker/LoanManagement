@@ -14,8 +14,8 @@
         public string Entite { get; set; } = string.Empty;
         public string PageURL { get; set;} = string.Empty;
         public string PreferenceURL { get; set;} = string.Empty;
-        public DateTime DateOperation { get; set;}
-        public DateTime DateSysteme { get; set;}
+        public string DateOperation { get; set; } = string.Empty;
+        public string DateSysteme { get; set; } = string.Empty;
         public int UtilisateurId { get; set; }
         public Utilisateur? Utilisateur { get; set; }
         public int TypeJournalId { get; set; }

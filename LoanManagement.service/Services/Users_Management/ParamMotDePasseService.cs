@@ -48,5 +48,73 @@ namespace LoanManagement.service.Services.Users_Management
 
 			return paramToBeUpdated;
 		}
+
+		public async Task<ParamMotDePasse> UpdatePasswordsExpiryFrequency(ParamMotDePasse param, int ExpiryFrequency)
+		{
+			param.DelaiExpiration = ExpiryFrequency;
+			await _unitOfWork.CommitAsync();
+
+			return param;
+		}
+
+		public async Task<ParamMotDePasse> PasswordMustIncludeSpecialCharacters(ParamMotDePasse param, bool response)
+		{
+			param.IncludeSpecialCharacters = response;
+			await _unitOfWork.CommitAsync();
+
+			return param;
+		}
+
+		public async Task<ParamMotDePasse> PasswordMustIncludeDigits(ParamMotDePasse param, bool response)
+		{
+			param.IncludeDigits = response;
+			await _unitOfWork.CommitAsync();
+
+			return param;
+		}
+
+		public async Task<ParamMotDePasse> PasswordMustIncludeUpperCase(ParamMotDePasse param, bool response)
+		{
+			switch (response)
+			{
+				case true:
+
+					param.IncludeUpperCase = true;
+					param.IncludeLowerCase = false;
+					break;
+
+				case false:
+					param.IncludeUpperCase = false;
+					param.IncludeLowerCase = true;
+					break;
+			}
+			await _unitOfWork.CommitAsync();
+
+			return param;
+		}
+
+		public async Task<ParamMotDePasse> PasswordMustExcludeUsername(ParamMotDePasse param, bool response)
+		{
+			param.ExcludeUsername = response;
+			await _unitOfWork.CommitAsync();
+
+			return param;
+		}
+
+		public async Task<ParamMotDePasse> PasswordLength(ParamMotDePasse param, int taille)
+		{
+			param.Taille = taille;
+			await _unitOfWork.CommitAsync();
+
+			return param;
+		}
+
+		public async Task<ParamMotDePasse?> GetCurrentParameter()
+		{
+			var param = await _unitOfWork.ParamMotDePasses.GetAll();
+			if (param is null) return null;
+
+			return param.FirstOrDefault();
+		}
 	}
 }

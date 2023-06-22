@@ -71,9 +71,33 @@ namespace LoanManagement.service.Services.Users_Management
 			return null;
 		}
 
+		public async Task<Utilisateur?> GetEmployeUserAccount(int userId)
+		{
+			return await _unitOfWork.Utilisateurs.GetUserById(userId);
+		}
+
+		public async Task<Employe> UpdateEmployePhoto(Employe emp, string photo)
+		{
+			emp.Photo = photo;
+			emp.DateModification = DateTime.Now.ToString("dd/MM/yyyy");
+			await _unitOfWork.CommitAsync();
+
+			return emp;
+		}
+
+		public async Task<Employe> UpdateEmployeDepartment(Employe emp, int departementId)
+		{
+			emp.DepartementId = departementId;
+			emp.DateModification = DateTime.Now.ToString("dd/MM/yyyy");
+			await _unitOfWork.CommitAsync();
+
+			return emp;
+		}
+
 		public async Task<Employe> Update(Employe emp, Employe empToBeUpdated)
 		{
 			empToBeUpdated = emp;
+			emp.DateModification = DateTime.Now.ToString("dd/MM/yyyy");
 			await _unitOfWork.CommitAsync();
 
 			return empToBeUpdated;

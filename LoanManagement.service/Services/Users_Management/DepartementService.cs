@@ -36,7 +36,7 @@ namespace LoanManagement.service.Services.Users_Management
 			return await _unitOfWork.Departements.GetAll();
 		}
 
-		public async Task<Departement?> GetDepartementById(int id)
+		public async Task<Departement?> GetDepartmentById(int id)
 		{
 			return await _unitOfWork.Departements.GetDepartmentById(id);
 		}
@@ -44,11 +44,6 @@ namespace LoanManagement.service.Services.Users_Management
 		public async Task<Departement?> GetDepartmentByCode(string code)
 		{
 			return await _unitOfWork.Departements.GetDepartmentByCode(code);
-		}
-
-		public Task<Departement?> GetDepartmentById(int id)
-		{
-			throw new NotImplementedException();
 		}
 
 		public async Task<Departement> Update(Departement dept, Departement deptToBeUpdated)

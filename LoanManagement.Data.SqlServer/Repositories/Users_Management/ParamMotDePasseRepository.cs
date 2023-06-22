@@ -27,5 +27,14 @@
 			return await _context
 				.ParamMotDePasses.Where(x => x.Id == id).FirstOrDefaultAsync();
 		}
+
+		public async Task<ParamMotDePasse?> GetCurrentParameter()
+		{
+			var param = await _context.ParamMotDePasses.ToListAsync();
+			var result = param.FirstOrDefault();
+			if (result is null) return null;
+
+			return result;
+		}
 	}
 }

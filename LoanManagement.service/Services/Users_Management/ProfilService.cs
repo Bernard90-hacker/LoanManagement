@@ -53,5 +53,56 @@ namespace LoanManagement.service.Services.Users_Management
 
 			return profilToBeUpdated;
 		}
+
+		public async Task<Profil> UpdateProfilExpiryDate(Profil profil, string expiryDate)
+		{
+			profil.DateExpiration = expiryDate;
+			await _unitOfWork.CommitAsync();
+
+			return profil;
+		}
+
+		public async Task<Profil> UpdateProfilStatus(Profil profil, int statut)
+		{
+			profil.Statut = statut;
+			await _unitOfWork.CommitAsync();
+
+			return profil;
+		}
+
+		public async Task<PagedList<Profil>> GetDisabledProfiles()
+		{
+			var profiles = await _unitOfWork.Profils.GetAll();
+			var result = profiles.Where(x => x.Statut == 2).ToList().AsQueryable();
+			var pageNumber = new ProfilParameters().PageNumber;
+			var pageSize = new ProfilParameters().PageSize;
+
+			return PagedList<Profil>.ToPagedList(result, pageNumber, pageSize);
+		}
+
+		public async Task<PagedList<Profil>> GetActivatedProfiles()
+		{
+			var profiles = await _unitOfWork.Profils.GetAll();
+			var result = profiles.Where(x => x.Statut == 1).ToList().AsQueryable();
+			var pageNumber = new ProfilParameters().PageNumber;
+			var pageSize = new ProfilParameters().PageSize;
+
+			return PagedList<Profil>.ToPagedList(result, pageNumber, pageSize);
+		}
+
+		public async Task<HabilitationProfil?> GetProfilHabilitation(int id)
+		{
+			var habilitations = await _unitOfWork.HabilitationProfils.GetAll();
+
+			return habilitations.Where(x => x.ProfilId == id).FirstOrDefault();
+		}
+
+		public async Task<Profil> GetUserProfil(Utilisateur user)
+		{
+			var profils = await _unitOfWork.Profils.GetAll();
+			
+
+			return profils.Where(x => x.UtilisateurId == user.Id).First();
+		}
 	}
 }

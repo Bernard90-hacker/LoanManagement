@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Constants\Constants.csproj" />
     <ProjectReference Include="..\LoanManagement.Data.SqlServer\LoanManagement.Data.SqlServer.csproj" />
     <ProjectReference Include="..\LoggerService\LoggerService.csproj" />
   </ItemGroup>

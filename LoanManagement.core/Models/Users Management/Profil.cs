@@ -8,10 +8,12 @@ namespace LoanManagement.core.Models.Users_Management
         public string Code { get; set; } = string.Empty;
         public string Libelle { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
-        public DateTime DateExpiration { get; set; }
-        public string Statut { get; set; } = string.Empty;
-        public DateTime DateAjout { get; set; }
-        public DateTime DateModification { get; set; }
-        public List<HabilitationProfil> Habilitations { get; set; } = new();
+        public string DateExpiration { get; set; } = string.Empty;
+        public int Statut { get; set; }
+        public string DateAjout { get; set; } = string.Empty;
+        public string DateModification { get; set; } = string.Empty;
+        public int UtilisateurId { get; set; }
+        public virtual Utilisateur? Utilisateur { get; set; }
+        public virtual HabilitationProfil? Habilitation { get; set; }
     }
 }

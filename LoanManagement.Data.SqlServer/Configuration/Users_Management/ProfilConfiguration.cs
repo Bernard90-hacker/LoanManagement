@@ -28,18 +28,24 @@
 				.Property(x => x.DateExpiration)
 				.IsRequired();
 
-			builder
-				.Property(x => x.DateAjout)
+			builder.Property(x => x.DateAjout)
+				.HasDefaultValue(DateTime.Now.ToString("dd/MM/yyyy"))
 				.IsRequired();
 
 			builder
-				.Property(x => x.DateModification);
+				.Property(x => x.DateModification)
+				.HasDefaultValue(DateTime.Now.ToString("dd/MM/yyyy"));
 
 			builder
-				.HasMany(x => x.Habilitations)
+				.HasOne(x => x.Habilitation)
 				.WithOne(y => y.Profil)
-				.HasForeignKey(y => y.ProfilId)
+				.HasForeignKey<HabilitationProfil>(y => y.ProfilId)
 				.IsRequired();
+
+			builder
+				.HasOne(x => x.Utilisateur)
+				.WithOne(y => y.Profil)
+				.HasForeignKey<Profil>(x => x.UtilisateurId);
 
 			builder
 				.ToTable("Profils");

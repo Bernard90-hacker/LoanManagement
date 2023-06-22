@@ -26,12 +26,12 @@
 				.IsRequired()
 				.HasMaxLength(50);
 
-			builder
-				.Property(x => x.DateAjout)
+			builder.Property(x => x.DateAjout)
+				.HasDefaultValue(DateTime.Now.ToString("dd/MM/yyyy"))
 				.IsRequired();
 
-			builder
-				.Property(x => x.DateModification)
+			builder.Property(x => x.DateModification)
+				.HasDefaultValue(DateTime.Now.ToString("dd/MM/yyyy"))
 				.IsRequired();
 
 			builder
