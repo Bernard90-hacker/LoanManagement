@@ -11,7 +11,7 @@
         public int Position { get; set; }
         public string DateAjout { get; set; } = string.Empty;
         public string DateModification { get; set; } = string.Empty;
-        public int MenuId { get; set; }
+        public int? MenuId { get; set; }
         public ICollection<Menu> SousMenus { get;} = new List<Menu>();
         public int HabilitationProfilId { get; set; }
         public HabilitationProfil? HabilitationProfil { get; set; }

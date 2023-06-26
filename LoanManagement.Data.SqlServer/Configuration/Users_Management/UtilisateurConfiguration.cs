@@ -8,6 +8,10 @@
 				.HasKey(x => x.Id);
 
 			builder
+				.HasIndex(x => x.Username)
+				.IsUnique();
+
+			builder
 				.Property(x => x.Id)
 				.UseIdentityColumn();
 
@@ -35,6 +39,9 @@
 			builder
 				.Property(x => x.IsEditPassword)
 				.IsRequired();
+
+			builder
+				.Property(x => x.ProfilId);
 
 			builder
 				.Property(x => x.IsSuperAdmin)
@@ -67,6 +74,11 @@
 				.HasOne(x => x.Employe)
 				.WithOne(y => y.User)
 				.HasForeignKey<Employe>(y => y.UserId);
+
+			builder
+				.HasOne(x => x.Profil)
+				.WithMany(y => y.Utilisateurs)
+				.HasForeignKey(x => x.ProfilId);
 
 			builder
 				.ToTable("Utilisateurs");

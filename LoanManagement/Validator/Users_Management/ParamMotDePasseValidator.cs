@@ -5,31 +5,31 @@
         public ParamMotDePasseValidator()
         {
 			RuleFor(x => x.IncludeSpecialCharacters)
-				.NotEmpty()
+				.NotNull()
 				.WithMessage("Renseignez ce champ");
 
 			RuleFor(x => x.IncludeLowerCase)
-				.NotEmpty()
+				.NotNull()
 				.WithMessage("Renseignez ce champ");
 
 			RuleFor(x => x.IncludeUpperCase)
-				.NotEmpty()
+				.NotNull()
 				.WithMessage("Renseignez ce champ");
 
 			RuleFor(x => x.ExcludeUsername)
-				.NotEmpty()
+				.NotNull()
 				.WithMessage("Renseignez ce champ");
 
 			RuleFor(x => x.Taille)
-				.NotEmpty()
+				.NotNull()
 				.WithMessage("Renseignez ce champ");
 
 			RuleFor(x => x.DelaiExpiration)
-				.NotEmpty()
+				.NotNull()
 				.WithMessage("Renseignez ce champ");
 
 			RuleFor(x => x.IncludeDigits)
-				.NotEmpty()
+				.NotNull()
 				.WithMessage("Renseignez ce champ");
 
 		}

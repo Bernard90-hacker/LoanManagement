@@ -16,7 +16,7 @@
 				.NotNull()
 				.WithMessage("L'adresse mail doit être renseignée");
 
-			RuleFor(x => x.UserId)
+			RuleFor(x => x.Username)
 				.NotNull()
 				.WithMessage("L'utilisateur doit être renseigné");
 

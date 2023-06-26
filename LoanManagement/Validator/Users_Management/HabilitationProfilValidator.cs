@@ -5,23 +5,23 @@
         public HabilitationProfilValidator()
         {
 			RuleFor(x => x.Edition)
-				.NotEmpty()
+				.NotNull()
 				.WithMessage("Le droit d'édition doit être renseigné");
 
 			RuleFor(x => x.Suppression)
-				.NotEmpty()
+				.NotNull()
 				.WithMessage("Le droit de suppression doit être renseigné");
 
 			RuleFor(x => x.Generation)
-				.NotEmpty()
+				.NotNull()
 				.WithMessage("Le droit de génération doit être renseigné");
 
 			RuleFor(x => x.Insertion)
-				.NotEmpty()
+				.NotNull()
 				.WithMessage("Le droit d'insertion doit être renseigné");
 
 			RuleFor(x => x.Modification)
-				.NotEmpty()
+				.NotNull()
 				.WithMessage("Le droit de suppression doit être renseigné");
 		}
 	}

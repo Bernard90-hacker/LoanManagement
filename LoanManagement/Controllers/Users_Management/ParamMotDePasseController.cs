@@ -74,7 +74,7 @@
 			}
 		}
 
-		[HttpPatch("update")]
+		[HttpPut("update")]
 		public async Task<ActionResult<ParamMotDePasseRessource>> UpdatePasswordsExpiryFrequency(ParamMotDePasseUpdateExpiryDateRessource ressource)
 		{
 			try
@@ -98,7 +98,7 @@
 			}
 		}
 
-		[HttpPatch("IncludeDigits")]
+		[HttpPut("IncludeDigits")]
 		public async Task<ActionResult<ParamMotDePasseRessource>> PasswordsMustIncludeDigits(PasswordConfigurationRessource ressource)
 		{
 			try
@@ -122,7 +122,7 @@
 			}
 		}
 
-		[HttpPatch("IncludeLowerCase")]
+		[HttpPut("IncludeLowerCase")]
 		public async Task<ActionResult<ParamMotDePasseRessource>> PasswordsMustIncludeUpperCase(PasswordConfigurationRessource ressource)
 		{
 			try
@@ -146,7 +146,7 @@
 			}
 		}
 
-		[HttpPatch("ExcludeUsername")]
+		[HttpPut("ExcludeUsername")]
 		public async Task<ActionResult<ParamMotDePasseRessource>> PasswordsMustExcludeUsername(PasswordConfigurationRessource ressource)
 		{
 			try
@@ -170,7 +170,7 @@
 			}
 		}
 
-		[HttpPatch("PasswordLength")]
+		[HttpPut("PasswordLength")]
 		public async Task<ActionResult<ParamMotDePasseRessource>> PasswordsLength(PasswordLengthConfigurationRessource ressource)
 		{
 			try

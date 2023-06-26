@@ -12,8 +12,7 @@ namespace LoanManagement.core.Models.Users_Management
         public int Statut { get; set; }
         public string DateAjout { get; set; } = string.Empty;
         public string DateModification { get; set; } = string.Empty;
-        public int UtilisateurId { get; set; }
-        public virtual Utilisateur? Utilisateur { get; set; }
+        public virtual List<Utilisateur> Utilisateurs { get; set; } = new();
         public virtual HabilitationProfil? Habilitation { get; set; }
     }
 }

@@ -7,6 +7,7 @@ namespace LoanManagement.core.Models.Users_Management
         public int Id { get; set; }
         public string Nom { get; set; } = string.Empty;
         public string Prenoms { get; set; } =string.Empty;
+        public string NomComplet { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public string Photo { get; set; } = string.Empty;
         public string DateAjout { get; set; } = string.Empty;
@@ -15,5 +16,10 @@ namespace LoanManagement.core.Models.Users_Management
         public Utilisateur? User { get; set; }
         public int DepartementId { get; set; }
         public Departement? Departement { get; set; }
+
+        public Employe()
+        {
+            NomComplet = $"{Nom} {Prenoms}";
+        }
     }
 }

@@ -126,34 +126,31 @@ namespace LoanManagement.service.Services.Users_Management
 			return yourString.Any(ch => !char.IsLetterOrDigit(ch));
 		}
 
-		public async Task<bool> DidPasswordMatchAllRequirements(ParamMotDePasse param, string password, string username)
+		public async Task<bool> DidUserInformationsMatchAllRequirements(ParamMotDePasse param, string password, string username)
 		{
-			var result = false;
 			var currentParam = await _unitOfWork.ParamMotDePasses.GetCurrentParameter();
 			if (currentParam.IncludeUpperCase)
 			{
-				if (!password.Any(c => char.IsUpper(c))) result = false;
-				else result = true;
+				if (!password.Any(c => char.IsUpper(c))) return false;
 			}
-			else if (currentParam.IncludeLowerCase)
+			if (currentParam.IncludeLowerCase)
 			{
-				if (!password.Any(c => char.IsLower(c))) result = false;
-				else result = true;
+				if (!password.Any(c => char.IsLower(c))) return false;
 			}
-			else if (currentParam.IncludeSpecialCharacters)
+			if (currentParam.IncludeSpecialCharacters)
 			{
-				if (!HasSpecialChars(password)) result = false;
-				else result = true;
+				if (!HasSpecialChars(password)) return false;
 			}
-			else if (currentParam.IncludeDigits)
+			if (currentParam.IncludeDigits)
 			{
-				if (!password.Any(c => char.IsLetterOrDigit(c))) result = false;
-				else result = true;
+				if (!password.Any(c => char.IsLetterOrDigit(c))) return false;
 			}
-			else if (password.Length < param.Taille) result = false;
-			else result = MustPasswordContainsUsername(param, username, password);
-
-			return result;
+			if (currentParam.ExcludeUsername)
+			{
+				if(password.ToLower().Contains(username.ToLower())) return false;
+			}
+			if (password.Length < param.Taille) return false;
+			return true;
 		}
 
 		public static bool MustPasswordContainsUsername(ParamMotDePasse param, string username, string password)
@@ -174,17 +171,24 @@ namespace LoanManagement.service.Services.Users_Management
 			var configuration = "";
 			if (param is null) return null;
 			if (param.IncludeDigits)
-				configuration += " Le mot de passe doit contenir des chiffres\n";
+				configuration += "Le mot de passe doit contenir des chiffres\n";
 			if (param.IncludeLowerCase)
 				configuration += "Le mot de passe doit contenir des caractères minuscules\n";
 			if (param.IncludeUpperCase)
 				configuration += "Le mot de passe doit contenir des caractères majuscules\n";
 			if (param.ExcludeUsername)
-				configuration += "Le mot de passe ne doit pas contenir le nom d'utilisateur";
+				configuration += "Le mot de passe ne doit pas contenir le nom d'utilisateur\n";
 
 			configuration += $"Le mot de passe doit contenir au moins {param.Taille} caractères";
 
 			return configuration;
+		}
+
+		public async Task<Profil> GetUserProfil(Utilisateur user)
+		{
+			return
+				await _unitOfWork.Profils.GetProfilById((int)user.ProfilId);
+
 		}
 	}
 }

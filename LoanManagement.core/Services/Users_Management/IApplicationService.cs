@@ -10,6 +10,9 @@
 		Task<Application?> GetApplicationById(int id);
 		Task<Application> Create(Application app);
 		Task<Application> Update(Application app, Application appToBeUpdated);
+		Task<Application> UpdateVersion(Application app, string version);
+		Task<Application> UpdateStatus(Application app, int statut);
+		Task<IEnumerable<Application>> GetApplicationModules(int applicationId);
 		Task Delete(Application app);
 	}
 }

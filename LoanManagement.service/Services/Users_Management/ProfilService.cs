@@ -97,12 +97,12 @@ namespace LoanManagement.service.Services.Users_Management
 			return habilitations.Where(x => x.ProfilId == id).FirstOrDefault();
 		}
 
-		public async Task<Profil> GetUserProfil(Utilisateur user)
+		public async Task<IEnumerable<Utilisateur>> GetUsersByProfil(int profilId)
 		{
-			var profils = await _unitOfWork.Profils.GetAll();
-			
+			var users =  await _unitOfWork.Utilisateurs
+				.GetAllAsync();
 
-			return profils.Where(x => x.UtilisateurId == user.Id).First();
+			return users.Where(x => x.ProfilId == profilId).ToList();
 		}
 	}
 }

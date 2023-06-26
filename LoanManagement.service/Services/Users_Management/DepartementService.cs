@@ -53,5 +53,13 @@ namespace LoanManagement.service.Services.Users_Management
 
 			return deptToBeUpdated;
 		}
+
+		public async Task<Departement> Update(Departement dept, string libelle)
+		{
+			dept.Libelle = libelle;
+			await _unitOfWork.CommitAsync();
+
+			return dept;
+		}
 	}
 }

@@ -90,7 +90,7 @@ namespace LoanManagement.API.Controllers.Users_Management
 					return NotFound(new ApiResponse((int)CustomHttpCode.OBJECT_NOT_FOUND, description: "Aucun employé trouvé qui correspond au critère spécifié"));
 				}
 				var user = await _employeService.GetEmployeUserAccount(employe.UserId);
-				var result = _mapper.Map<UtilisateurRessource>(employe);
+				var result = _mapper.Map<UtilisateurRessource>(user);
 				_logger.LogInformation("'Détails du compte utilisateur d'un employé' : Opération effectuée avec succès");
 
 				return Ok(result);
@@ -138,17 +138,37 @@ namespace LoanManagement.API.Controllers.Users_Management
 					_logger.LogWarning("Enregistrement d'un employé : Champs obligatoires");
 					return BadRequest();
 				}
-				var user = await _utilisateurService.GetUserById(ressource.UserId);
+				var user = await _utilisateurService.GetUserByUsername(ressource.Username);
 				var departement = await _departementService.GetDepartmentById(ressource.DepartementId);
+				var nomComplet = $"{ressource.Nom} {ressource.Prenoms}";
+				var employeFullName = await _employeService.GetEmployeeByFullName(nomComplet);
+				if(employeFullName is not null)
+				{
+					_logger.LogWarning("Enregistrement d'un employé : Nom et prénoms de l'employé existe déjà");
+					return BadRequest("Nom et prénoms de l'employé existe déjà");
+				}
 				if(user is null || departement is null)
 				{
 					_logger.LogWarning("Enregistrement d'un employé : L'utilisateur ou le département renseigné n'existe pas");
-					return BadRequest();
+					return BadRequest("L'utilisateur ou le département renseigné n'existe pas");
 				}
-				var employe = _mapper.Map<Employe>(ressource);
-				employe.DateAjout = DateTime.Now.ToString("dd/MM/yyyy");
-				employe.DateModification = DateTime.Now.ToString("dd/MM/yyyy");
-				var employeCreated = await _employeService.Create(employe);
+				var employe = await _employeService.GetEmployeByEmail(ressource.Email);
+				if(employe is not null)
+				{
+					_logger.LogWarning("Enregistrement d'un employé : Un employé avec le même email existe, veuillez utiliser un autre");
+					return BadRequest("Un employé avec le même email existe, veuillez utiliser un autre");
+				}
+				var didUserAlreadyAfectedToEmploye = await _employeService.GetEmployeUserAccount(user.Id);
+				if (didUserAlreadyAfectedToEmploye is not null)
+				{
+					_logger.LogWarning("Enregistrement d'un employé : Un employé avec le même compte existe, veuillez utiliser un autre");
+					return BadRequest("Un employé avec le même compte existe, veuillez utiliser un autre");
+				}
+				var employeDb = _mapper.Map<Employe>(ressource);
+				employeDb.UserId = user.Id;
+				employeDb.DateAjout = DateTime.Now.ToString("dd/MM/yyyy");
+				employeDb.DateModification = DateTime.Now.ToString("dd/MM/yyyy");
+				var employeCreated = await _employeService.Create(employeDb);
 				var result = _mapper.Map<EmployeRessource>(employeCreated);
 
 				_logger.LogInformation("'Enregistrement d'un employé' : Opération effectuée avec succès");
@@ -163,11 +183,11 @@ namespace LoanManagement.API.Controllers.Users_Management
 		}
 
 		[HttpDelete("{id:int}")]
-		public async Task<ActionResult<EmployeRessource>> Delete(int Id)
+		public async Task<ActionResult<EmployeRessource>> Delete(int id)
 		{
 			try
 			{
-				var employe = await _employeService.GetEmployeById(Id);
+				var employe = await _employeService.GetEmployeById(id);
 				if (employe is null)
 				{
 					_logger.LogWarning("Suppression d'un employé : Aucun employé trouvé");
@@ -217,9 +237,10 @@ namespace LoanManagement.API.Controllers.Users_Management
 			try
 			{
 				var employe = await _employeService.GetEmployeById(ressource.Id);
-				if (employe is null)
+				var departement = await _departementService.GetDepartmentById(ressource.DepartementId);
+				if (employe is null || departement is null)
 				{
-					_logger.LogWarning("Suppression d'un employé : Aucun employé trouvé");
+					_logger.LogWarning("Suppression d'un employé : Aucun employé ou département trouvé");
 					return BadRequest();
 				}
 				var employeUpdated = await _employeService.UpdateEmployeDepartment(employe, ressource.DepartementId);

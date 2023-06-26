@@ -71,9 +71,11 @@ namespace LoanManagement.service.Services.Users_Management
 			return null;
 		}
 
-		public async Task<Utilisateur?> GetEmployeUserAccount(int userId)
+		public async Task<Employe?> GetEmployeUserAccount(int userId)
 		{
-			return await _unitOfWork.Utilisateurs.GetUserById(userId);
+			var employes = await _unitOfWork.Employes.GetAll();
+
+			return employes.Where(x => x.UserId == userId).FirstOrDefault();
 		}
 
 		public async Task<Employe> UpdateEmployePhoto(Employe emp, string photo)
@@ -101,6 +103,19 @@ namespace LoanManagement.service.Services.Users_Management
 			await _unitOfWork.CommitAsync();
 
 			return empToBeUpdated;
+		}
+
+		public async Task<Employe?> GetEmployeeByFullName(string FullName)
+		{
+			var fullName = FullName.Split(" ");
+			var lastName = string.Join(" ", fullName[1..]);
+			var employee = await _unitOfWork.Employes.GetAll();
+			var result = employee.Where(x => x.Nom == fullName[0] && x.Prenoms == string.Join(" ", fullName[1..])).FirstOrDefault();
+		
+			if (result is null) return null;
+
+			return result;
+
 		}
 	}
 }

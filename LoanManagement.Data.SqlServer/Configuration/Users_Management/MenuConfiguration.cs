@@ -8,6 +8,10 @@
 				.HasKey(x => x.Id);
 
 			builder
+				.HasIndex(x => x.Code)
+				.IsUnique();
+
+			builder
 				.Property(x => x.Id)
 				.UseIdentityColumn();
 
@@ -54,11 +58,6 @@
 			builder
 				.HasOne<Menu>()
 				.WithMany(x => x.SousMenus);
-
-			builder
-				.HasOne(x => x.Application)
-				.WithMany(x => x.Menus)
-				.HasForeignKey(x => x.ApplicationId);
 
 			builder
 				.HasOne(x => x.Application)

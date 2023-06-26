@@ -54,12 +54,12 @@
 
 
 		[HttpPost("add")]
-		public async Task<ActionResult<DepartementRessource>> Add(DepartementRessource ressource)
+		public async Task<ActionResult<DepartementRessource>> Add(SaveDepartementRessource ressource)
 		{
 			try
 			{
 				//Validation
-				var validation = new SaveDepartementValidator();
+				var validation = new SaveDepartementRessourceValidator();
 				var validationResult = await validation.ValidateAsync(ressource);
 				var directionAssociatedToDepartement = await _directionService.GetDirectionByCode(ressource.DirectionCode);
 				if (!validationResult.IsValid)
@@ -69,12 +69,20 @@
 				}
 				if (directionAssociatedToDepartement is null)
 				{
+					_logger.LogWarning("Enregistrement d'un département : La direction renseignée n'existe pas");
 					return NotFound(new ApiResponse((int)CustomHttpCode.OBJECT_NOT_FOUND, description: "Aucune direction trouvée"));
 				}
 				//Mappage
 				var departement = _mapper.Map<Departement>(ressource);
 				departement.DirectionId = (await _directionService.GetDirectionByCode(ressource.DirectionCode)).Id;
 				//Enregistrement
+				var departements = (await _departementService.GetAll());
+				string reference = string.Empty;
+				if (departements.Count() == 0)
+					reference = "000";
+				else
+					reference = departements.LastOrDefault().Code.Substring(7);
+				departement.Code = "DEPT - " + Constants.Utils.UtilsConstant.IncrementStringWithNumbers(reference);
 				var departementCreated = await _departementService.Create(departement);
 
 				//Mappage en vue de retourner la ressource à l'utilisateur
@@ -142,7 +150,7 @@
 		}
 
 		[HttpDelete("delete")]
-		public async Task<ActionResult<DirectionRessource>> Delete([FromQuery] string code)
+		public async Task<ActionResult<DepartementRessource>> Delete(string code)
 		{
 			try
 			{
@@ -169,15 +177,14 @@
 		}
 
 		[HttpPost("update")]
-		public async Task<ActionResult<DirectionRessource>> Update([FromQuery] string code, DepartementRessource ressource)
+		public async Task<ActionResult<DepartementRessource>> Update(UpdateDepartementRessource ressource)
 		{
 			try
 			{
 				//Validation
-				var departement = await _departementService.GetDepartmentByCode(code);
-				var validation = new SaveDepartementValidator();
+				var departement = await _departementService.GetDepartmentByCode(ressource.Code);
+				var validation = new UpdateDepartementValidator();
 				var validationResult = await validation.ValidateAsync(ressource);
-				var directionAssociatedToDepartement = await _directionService.GetDirectionByCode(ressource.DirectionCode);
 
 				if (departement is null)
 				{
@@ -186,25 +193,11 @@
 
 				if (!validationResult.IsValid)
 				{
-					_logger.LogWarning($"'Mise à jour du département {code} :  champs non conformes");
+					_logger.LogWarning($"'Mise à jour du département {ressource.Code} :  champs non conformes");
 					return NotFound(new ApiResponse((int)CustomHttpCode.OBJECT_NOT_FOUND, description: "Champs de validation non conformes"));
 				}
-
-				if (directionAssociatedToDepartement is null)
-				{
-					return NotFound(new ApiResponse((int)CustomHttpCode.OBJECT_NOT_FOUND, description: "Aucune direction trouvée"));
-				}
-
-				var newRessource = new DepartementRessource()
-				{
-					Code = departement.Code,
-					Libelle = ressource.Libelle
-				};
-
-				//Mappage
-				var departementToBeUpdated = _mapper.Map<Departement>(newRessource);
 				//Mise à jour
-				var departementUpdated = await _departementService.Update(departement, departementToBeUpdated);
+				var departementUpdated = await _departementService.Update(departement, ressource.Libelle);
 				//Mappage
 				var departementRessource = _mapper.Map<DepartementRessource>(departementUpdated);
 

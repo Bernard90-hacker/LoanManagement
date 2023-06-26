@@ -4,9 +4,6 @@
 	{
         public ProfilValidator()
         {
-			RuleFor(x => x.Code)
-				.NotEmpty()
-				.WithMessage("Le code doit être renseigné");
 
 			RuleFor(x => x.Libelle)
 				.NotEmpty()

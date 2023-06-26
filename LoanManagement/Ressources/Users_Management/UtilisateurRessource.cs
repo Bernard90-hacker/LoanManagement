@@ -8,7 +8,8 @@
 		public bool IsSuperAdmin { get; set; }
 		public bool IsAdmin { get; set; }
 		public string DateExpirationCompte { get; set; } = string.Empty;
-		public int? Statut { get; set; } = null; //1 = Actif, 2 = Non Actif
-		public string DateDesactivation { get; set; } = string.Empty;
+		public int Statut { get; set; } //1 = Actif, 2 = Non Actif
+        public int ProfilId { get; set; }
+        public string DateDesactivation { get; set; } = string.Empty;
 	}
 }

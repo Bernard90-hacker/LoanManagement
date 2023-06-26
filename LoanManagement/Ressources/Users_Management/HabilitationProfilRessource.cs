@@ -7,5 +7,6 @@
 		public bool Modification { get; set; }
 		public bool Suppression { get; set; }
 		public bool Generation { get; set; }
-	}
+        public int ProfilId { get; set; }
+    }
 }

@@ -48,5 +48,45 @@ namespace LoanManagement.service.Services.Users_Management
 
 			return habilitationProfilToBeUpdated;
 		}
+
+		public async Task<HabilitationProfil> UpdateInsertion(HabilitationProfil profil, bool response)
+		{
+			profil.Insertion = response;
+			await _unitOfWork.CommitAsync();
+
+			return profil;
+		}
+
+		public async Task<HabilitationProfil> UpdateModification(HabilitationProfil profil, bool response)
+		{
+			profil.Modification = response;
+			await _unitOfWork.CommitAsync();
+
+			return profil;
+		}
+
+		public async Task<HabilitationProfil> UpdateEdition(HabilitationProfil profil, bool response)
+		{
+			profil.Edition = response;
+			await _unitOfWork.CommitAsync();
+
+			return profil;
+		}
+
+		public async Task<HabilitationProfil> UpdateSuppression(HabilitationProfil profil, bool response)
+		{
+			profil.Suppression = response;
+			await _unitOfWork.CommitAsync();
+
+			return profil;
+		}
+
+		public async Task<HabilitationProfil> UpdateGeneration(HabilitationProfil profil, bool response)
+		{
+			profil.Generation = response;
+			await _unitOfWork.CommitAsync();
+
+			return profil;
+		}
 	}
 }

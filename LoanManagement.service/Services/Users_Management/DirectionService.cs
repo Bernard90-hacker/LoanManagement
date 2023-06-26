@@ -46,12 +46,12 @@ namespace LoanManagement.service.Services.Users_Management
 			return await _unitOfWork.Directions.GetDirectionById(id);
 		}
 
-		public async Task<Direction> Update(Direction direction, Direction directionToBeUpdated)
+		public async Task<Direction> Update(Direction direction, string libelle)
 		{
-			directionToBeUpdated.Libelle = direction.Libelle;
+			direction.Libelle = libelle;
 			await _unitOfWork.CommitAsync();
 
-			return directionToBeUpdated;
+			return direction;
 		}
 
 		public async Task<PagedList<Departement>?> GetAllDepartementsByDirection(string code)

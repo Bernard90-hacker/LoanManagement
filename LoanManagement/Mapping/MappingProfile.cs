@@ -9,10 +9,9 @@ namespace LoanManagement.API.Mapping
 		{
 			CreateMap<Direction, DirectionRessource>();
 			CreateMap<DirectionRessource, Direction>();
-			CreateMap<DepartementRessource, Departement>()
-				.ForMember(dest => dest.Code, act => act.MapFrom(src => src.DirectionCode));
+			CreateMap<SaveDepartementRessource, Departement>();
 			CreateMap<Departement, DepartementRessource>()
-				.ForMember(dest => dest.DirectionCode, act => act.MapFrom(src => src.Code));
+				.ForMember(dest => dest.DirectionCode, act => act.MapFrom(src => src.Direction.Code));
 			CreateMap<Utilisateur, UtilisateurRessource>();
 			CreateMap<UtilisateurRessource, Utilisateur>();
 			CreateMap<MotDePasseRessource, MotDePasse>();
@@ -24,8 +23,16 @@ namespace LoanManagement.API.Mapping
 			CreateMap<HabilitationProfilRessource, HabilitationProfil>();
 			CreateMap<ParamMotDePasseRessource, ParamMotDePasse>();
 			CreateMap<ParamMotDePasse, ParamMotDePasseRessource>();
-			CreateMap<Employe, EmployeRessource>();
+			CreateMap<Employe, EmployeRessource>()
+				.ForMember(dest => dest.Username, act => act.MapFrom(src => src.User.Username));
 			CreateMap<EmployeRessource, Employe>();
+			CreateMap<Application, GetApplicationRessource>();
+			CreateMap<ApplicationRessource, Application>();
+			CreateMap<MenuRessource, Menu>();
+			CreateMap<Menu, MenuRessource>();
+			CreateMap<SaveApplicationRessource, Application>();
+			CreateMap<TypeJournalRessource, TypeJournal>();
+			CreateMap<TypeJournal, TypeJournalRessource>();
 
 			CreateMap<Utilisateur, GetUtilisateurRessource>();
 		}

@@ -8,7 +8,7 @@
 		Task<Direction?> GetDirectionById(int id);
 		Task<Direction?> GetDirectionByCode(string code);
 		Task<Direction> Create(Direction direction);
-		Task<Direction> Update(Direction direction, Direction directionToBeUpdated);
+		Task<Direction> Update(Direction direction, string libelle);
 		Task Delete(Direction direction);
 
 	}

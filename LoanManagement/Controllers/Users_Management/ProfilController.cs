@@ -1,4 +1,5 @@
 ﻿using Constants.Pagination;
+using LoanManagement.core.Models.Users_Management;
 
 namespace LoanManagement.API.Controllers.Users_Management
 {
@@ -171,20 +172,20 @@ namespace LoanManagement.API.Controllers.Users_Management
 				//Validation
 				var validation = new ProfilValidator();
 				var validationResult = await validation.ValidateAsync(ressource);
-				var user = await _utilisateurService.GetUserById(ressource.UtilisateurId);
 				if (!validationResult.IsValid)
 				{
 					_logger.LogWarning("Enregistrement d'un profil : champs obligatoires");
 					return BadRequest();
 				}
-				if (user is null)
-				{
-					_logger.LogWarning("Enregistrement d'un profil : Utilisateur non trouvé");
-					return NotFound(new ApiResponse((int)CustomHttpCode.OBJECT_NOT_FOUND, description: "Aucun utilisateur trouvé"));
-				}
 				var profil = _mapper.Map<Profil>(ressource);
-				profil.UtilisateurId = user.Id;
 				//Enregistrement
+				var profils = (await _profilService.GetAll());
+				string reference = string.Empty;
+				if (profils.Count() == 0)
+					reference = "000";
+				else
+					reference = profils.LastOrDefault().Code.Substring(9);
+				profil.Code = "PROFIL - " + Constants.Utils.UtilsConstant.IncrementStringWithNumbers(reference);
 				var profilCreated = await _profilService.Create(profil);
 
 				//Mappage en vue de retourner la ressource à l'utilisateur
@@ -266,6 +267,14 @@ namespace LoanManagement.API.Controllers.Users_Management
 					_logger.LogWarning("'Détails d'un profil' : Aucun profil trouvé");
 					return NotFound(new ApiResponse((int)CustomHttpCode.OBJECT_NOT_FOUND, description: "Profil(s) non trouvé(s)"));
 				}
+				var users = await _utilisateurService.GetAll();
+				users = users.Where(x => x.ProfilId == id).ToList();
+				if(users is not null)
+				{
+					_logger.LogWarning("'Suppression d'un profil' : Des utilisateurs utilisent ce profil, " +
+						"impossible d'effectuer cette requête");
+					return BadRequest(new ApiResponse((int)CustomHttpCode.WARNING, description: "Des utilisateurs utilisent ce profil"));
+				}
 				await _profilService.Delete(profil);
 
 				_logger.LogInformation($"'Suppression d'un profil ': Opération effectuée avec succès");
@@ -297,6 +306,30 @@ namespace LoanManagement.API.Controllers.Users_Management
 					return NotFound(new ApiResponse((int)CustomHttpCode.OBJECT_NOT_FOUND, description: "Aucune habilitation affectée"));
 				}
 				var result = _mapper.Map<HabilitationProfilRessource>(habilitationProfil);
+
+				return Ok(result);
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError("Une erreur est survenue pendant le traitement de la requête");
+				return ValidationProblem(statusCode: (int)HttpCode.INTERNAL_SERVER_ERROR, title: "Erreur interne du serveur", detail: ex.Message);
+			}
+		}
+
+		[HttpGet("{id}/Utilisateurs")]
+		public async Task<ActionResult<GetUtilisateurRessource>> GetUsersByProfil(int id)
+		{
+			try
+			{
+				var profil = await _profilService.GetProfilById(id);
+				if (profil is null)
+				{
+					_logger.LogWarning("'Détails d'un profil' : Aucun profil trouvé");
+					return NotFound(new ApiResponse((int)CustomHttpCode.OBJECT_NOT_FOUND, description: "Aucun profil trouvé"));
+				}
+
+				var users = await _profilService.GetUsersByProfil(profil.Id);
+				var result = _mapper.Map<IEnumerable<GetUtilisateurRessource>>(users);
 
 				return Ok(result);
 			}

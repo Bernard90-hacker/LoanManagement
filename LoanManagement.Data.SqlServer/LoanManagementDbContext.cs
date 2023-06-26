@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Reflection.Emit;
 
 namespace LoanManagement.Data.SqlServer
 {
@@ -50,8 +51,9 @@ namespace LoanManagement.Data.SqlServer
 
 			foreach (var foreignKey in builder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
 			{
-				foreignKey.DeleteBehavior = DeleteBehavior.NoAction;
+				foreignKey.DeleteBehavior = DeleteBehavior.Restrict;
 			}
+				
 		}
 
 

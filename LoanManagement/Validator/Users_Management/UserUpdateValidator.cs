@@ -4,9 +4,9 @@
 	{
         public UserUpdateValidator()
         {
-            RuleFor(x => x.UserId)
+            RuleFor(x => x.Username)
                 .NotNull()
-                .WithMessage("L'id de l'utilisateur doit être renseigné");
+                .WithMessage("Le nom d'utilisateur doit être renseigné");
 
             RuleFor(x => x.OldPassword)
                 .NotNull()

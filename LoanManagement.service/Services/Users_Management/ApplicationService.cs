@@ -14,6 +14,7 @@ namespace LoanManagement.service.Services.Users_Management
 
 		public async Task<Application> Create(Application app)
 		{
+			app.DateAjout = DateTime.Now.ToString("dd/MM/yyyy");
 			await _unitOfWork.Applications.AddAsync(app);
 			await _unitOfWork.CommitAsync();
 
@@ -62,6 +63,32 @@ namespace LoanManagement.service.Services.Users_Management
 			await _unitOfWork.CommitAsync();
 
 			return appToBeUpdated;
+		}
+
+		public async Task<Application> UpdateVersion(Application app, string version)
+		{
+			app.Version = version;
+			app.DateModification = DateTime.Now.ToString("dd/MM/yyyy");
+			await _unitOfWork.CommitAsync();
+
+			return app;
+		}
+
+		public async Task<Application> UpdateStatus(Application app, int statut)
+		{
+			app.Statut = statut;
+			app.DateModification = DateTime.Now.ToString("dd/MM/yyyy");
+			await _unitOfWork.CommitAsync();
+
+			return app;
+		}
+
+		public async Task<IEnumerable<Application>> GetApplicationModules(int applicationId)
+		{
+			var modules = await _unitOfWork.Applications.GetAll();
+			var sousModules = modules.Where(x => x.ApplicationId == applicationId).ToList();
+
+			return sousModules;
 		}
 	}
 }

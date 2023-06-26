@@ -12,9 +12,17 @@
 				.UseIdentityColumn();
 
 			builder
+				.HasIndex(x => x.Email)
+				.IsUnique();
+
+			builder
 				.Property(x => x.Nom)
 				.IsRequired()
 				.HasMaxLength(30);
+
+			builder
+				.Ignore(x => x.NomComplet);
+
 
 			builder
 				.Property(x => x.Prenoms)

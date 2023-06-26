@@ -12,9 +12,7 @@ namespace LoanManagement.core.Models.Users_Management
         public int Statut { get; set; }
         public string DateAjout { get; set; } = string.Empty;
         public string DateModification { get; set; } = string.Empty;
-        public int ModuleId { get; set; }
-        public Application? Module { get; set; }
-        public ICollection<Application> Modules = new List<Application>();
+        public int? ApplicationId { get; set; } //Cet attribut veut dire que cet objet est un sous-module qui référence un module existant.
         public List<Menu> Menus { get; set; } = new();
-    }
+	}
 }

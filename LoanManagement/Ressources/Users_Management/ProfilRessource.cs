@@ -2,11 +2,9 @@
 {
 	public class ProfilRessource
 	{
-		public string Code { get; set; } = string.Empty;
 		public string Libelle { get; set; } = string.Empty;
 		public string Description { get; set; } = string.Empty;
 		public string DateExpiration { get; set; } = string.Empty;
 		public int Statut { get; set; }
-        public int UtilisateurId { get; set; }
     }
 }

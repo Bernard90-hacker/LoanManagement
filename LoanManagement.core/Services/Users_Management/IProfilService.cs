@@ -14,6 +14,6 @@
 		Task Delete(Profil profil);
 		Task<Profil> UpdateProfilExpiryDate(Profil profil, string expiryDate);
 		Task<Profil> UpdateProfilStatus(Profil profil, int statut);
-		Task<Profil> GetUserProfil(Utilisateur user);
+		Task<IEnumerable<Utilisateur>> GetUsersByProfil(int profilId);
 	}
 }

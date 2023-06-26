@@ -8,8 +8,16 @@
 				.HasKey(x => x.Id);
 
 			builder
+				.HasIndex(x => x.Code)
+				.IsUnique();
+
+			builder
 				.Property(x => x.Id)
 				.UseIdentityColumn();
+
+			builder
+				.HasIndex(x => x.Code)
+				.IsUnique();
 
 			builder
 				.Property(x => x.Code)
@@ -41,11 +49,6 @@
 				.WithOne(y => y.Profil)
 				.HasForeignKey<HabilitationProfil>(y => y.ProfilId)
 				.IsRequired();
-
-			builder
-				.HasOne(x => x.Utilisateur)
-				.WithOne(y => y.Profil)
-				.HasForeignKey<Profil>(x => x.UtilisateurId);
 
 			builder
 				.ToTable("Profils");

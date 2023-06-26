@@ -168,8 +168,8 @@ namespace LoanManagement.API.Controllers.Users_Management
 			}
 		}
 
-		[HttpPost("delete")]
-		public async Task<ActionResult<IEnumerable<DirectionRessource>>> Delete([FromQuery] string code)
+		[HttpDelete("{code}")]
+		public async Task<ActionResult> Delete(string code)
 		{
 			try
 			{
@@ -180,9 +180,14 @@ namespace LoanManagement.API.Controllers.Users_Management
 					_logger.LogWarning("Mise à jour d'une direction : Direction non trouvée");
 					return BadRequest();
 				}
-
+				var depts = await _directionService.GetAllDepartementsByDirection(code);
+				if(depts.Count() != 0)
+				{
+					_logger.LogWarning("Suppression d'une direction : Il existe des départements associés à cette direction");
+					return BadRequest("Impossible d'exécuter cette requête, veuillez supprimer les départements d'abord");
+				}
 				//Suppression
-				var directionRemoved =  _directionService.Delete(direction);
+				await _directionService.Delete(direction);
 
 
 				_logger.LogInformation("Suppression d'une direction : Opération effectuée avec succès");
@@ -195,13 +200,13 @@ namespace LoanManagement.API.Controllers.Users_Management
 			}
 		}
 
-		[HttpPost("update")]
-		public async Task<ActionResult<IEnumerable<DirectionRessource>>> Update([FromQuery] string code, DirectionRessource ressource)
+		[HttpPut("update")]
+		public async Task<ActionResult<DirectionRessource>> Update(DirectionRessource ressource)
 		{
 			try
 			{
 				//Validation
-				var direction = await _directionService.GetDirectionByCode(code);
+				var direction = await _directionService.GetDirectionByCode(ressource.Code);
 				var validation = new SaveDirectionValidator();
 				var validationResult = await validation.ValidateAsync(ressource);
 
@@ -212,20 +217,11 @@ namespace LoanManagement.API.Controllers.Users_Management
 
 				if (!validationResult.IsValid)
 				{
-					_logger.LogWarning($"'Mise à jour de la direction {code} :  champs non conformes");
+					_logger.LogWarning($"'Mise à jour de la direction {ressource.Code} :  champs non conformes");
 					return NotFound(new ApiResponse((int)CustomHttpCode.OBJECT_NOT_FOUND, description: "Champs de validation non conformes"));
 				}
-
-				var newRessource = new DirectionRessource()
-				{
-					Code = direction.Code,
-					Libelle = ressource.Libelle
-				};
-				
-				//Mappage
-				var directionToBeUpdated = _mapper.Map<Direction>(newRessource);
 				//Mise à jour
-				var directionUpdated = await _directionService.Update(direction, directionToBeUpdated);
+				var directionUpdated = await _directionService.Update(direction, ressource.Libelle);
 				//Mappage
 				var directionRessource = _mapper.Map<Direction, DirectionRessource>(directionUpdated);
 

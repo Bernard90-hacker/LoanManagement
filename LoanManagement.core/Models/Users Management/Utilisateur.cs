@@ -17,9 +17,10 @@
         public string DateDesactivation { get; set; } = string.Empty;
         public string DateAjout { get; set; } = string.Empty;
         public string DateModificationMotDePasse { get; set; } = string.Empty;
+        public int? ProfilId { get; set; }
+		public Profil? Profil { get; set; }
 
-        public Employe? Employe { get; set; }
-        public Profil? Profil { get; set; }
+		public Employe? Employe { get; set; }
         public List<MotDePasse> Passwords { get; set; } = new();
         public List<Journal> Journaux { get; set; } = new();
     }

@@ -8,6 +8,7 @@
 		Task<Departement?> GetDepartmentByCode(string code);
 		Task<Departement> Create(Departement departement);
 		Task<Departement> Update(Departement departement, Departement departementToBeUpdated);
+		Task<Departement> Update(Departement departement, string libelle);
 		Task Delete(Departement departement);
 	}
 }

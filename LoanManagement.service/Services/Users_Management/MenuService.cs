@@ -59,5 +59,20 @@ namespace LoanManagement.service.Services.Users_Management
 			return menuToBeUpdated;
 
 		}
+
+		public async Task<IEnumerable<Menu>> GetSousMenus(int MenuId)
+		{
+			var menus = await _unitOfWork.Menus.GetAll();
+
+			return menus.Where(x => x.MenuId == MenuId).ToList();
+		}
+
+		public async Task<Menu> UpdateMenuStatut(Menu menu, int statut)
+		{
+			menu.Statut = statut;
+			await _unitOfWork.CommitAsync();
+
+			return menu;
+		}
 	}
 }

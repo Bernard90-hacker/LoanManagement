@@ -8,16 +8,20 @@ namespace LoanManagement.API.Validator
         public UtilisateurValidator()
         {
 			RuleFor(x => x.Username)
-				.NotEmpty()
+				.NotNull()
 				.WithMessage("Le nom d'utilisateur doit être renseigné");
 
 			RuleFor(x => x.IsAdmin)
-				.NotEmpty()
+				.NotNull()
 				.WithMessage("Renseignez le champ Admin");
 
 			RuleFor(x => x.IsSuperAdmin)
-				.NotEmpty()
+				.NotNull()
 				.WithMessage("Renseignez le champ Super Admin");
+
+			RuleFor(x => x.ProfilId)
+				.NotNull()
+				.WithMessage("Le profil de l'utilisateur doit être renseigné");
 
 			RuleFor(x => x.DateDesactivation)
 				.NotNull()

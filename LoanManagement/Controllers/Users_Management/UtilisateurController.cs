@@ -11,13 +11,14 @@ namespace LoanManagement.API.Controllers.Users_Management
 		private readonly IUtilisateurService _utilisateurService;
 		private readonly IMotDePasseService _motDePasseService;
 		private readonly IParamMotDePasseService _paramMotDePasseService;
+		private readonly IEmployeService _employeService;
 		private readonly IProfilService _profilService;
 		private readonly ILoggerManager _logger;
 		private readonly IMapper _mapper;
 		private readonly IConfiguration _config;
 		public UtilisateurController(UtilisateurService utilisateurService, ILoggerManager logger,
 			IMapper mapper, IMotDePasseService motDePasseService, IConfiguration config, 
-			IProfilService profilService, IParamMotDePasseService param)
+			IProfilService profilService, IParamMotDePasseService param, IEmployeService employeService)
 		{
 			_utilisateurService = utilisateurService;
 			_logger = logger;
@@ -26,10 +27,11 @@ namespace LoanManagement.API.Controllers.Users_Management
 			_config = config;
 			_profilService = profilService;
 			_paramMotDePasseService = param;
+			_employeService = employeService;
 		}
 
 		[HttpPost("register")]
-		public async Task<ActionResult<UtilisateurRessource>> Register(UtilisateurRessource ressource)
+		public async Task<ActionResult<GetUtilisateurRessource>> Register(UtilisateurRessource ressource)
 		{
 			try
 			{
@@ -46,11 +48,23 @@ namespace LoanManagement.API.Controllers.Users_Management
 					_logger.LogWarning("Enregistrement d'un utilisateur : Aucun paramétrage des mots de passe n'a été effectué, veuillez contacter l'équipe d'assistance");
 					return NotFound(new ApiResponse((int)CustomHttpCode.OBJECT_NOT_FOUND, description: "Aucun paramétrage des mots de passe n'a été effectué, veuillez contacter l'équipe d'assistance"));
 				}
-				var doesPasswordMatchAllRequirements = await _utilisateurService.DidPasswordMatchAllRequirements(param, ressource.Password, ressource.Username);
+				var username = await _utilisateurService.GetUserByUsername(ressource.Username);
+				if(username is not null)
+				{
+					_logger.LogWarning("Enregistrement d'un utilisateur : Ce nom d'utilisateur a déjà été utilisé, veuillez le changer");
+					return BadRequest("Ce nom d'utilisateur a déjà été utilisé, veuillez le changer");
+				}
+				var profil = await _profilService.GetProfilById(ressource.ProfilId);
+				if(profil is null)
+				{
+					_logger.LogWarning("Enregistrement d'un utilisateur : Profil sélectionné non valable");
+					return NotFound(new ApiResponse((int)CustomHttpCode.OBJECT_NOT_FOUND, description: "Profil sélectionné invalide"));
+				}
+                var doesPasswordMatchAllRequirements = await _utilisateurService.DidUserInformationsMatchAllRequirements(param, ressource.Password, ressource.Username);
 				if (!doesPasswordMatchAllRequirements)
 				{
 					_logger.LogWarning("Enregistrement d'un utilisateur : Le mot de passe entré ne suit pas la convention fixée par l'administrateur");
-					return BadRequest();
+					return BadRequest("Le mot de passe ne suit pas la convention fixée par l'administrateur");
 				}
 				var utilisateur = _mapper.Map<Utilisateur>(ressource);
 				string hash = string.Empty;
@@ -61,7 +75,8 @@ namespace LoanManagement.API.Controllers.Users_Management
 				utilisateur.DateAjout = DateTime.Now.ToString("dd/MM/yyyy");
 				utilisateur.DateModificationMotDePasse = DateTime.Now.ToString("dd/MM/yyyy");
 				string refreshTokenTime = string.Empty;
-				utilisateur.RefreshToken = Constants.Utils.UtilsConstant.CreateRefreshToken(utilisateur.Username, _config.GetSection("JWT:RefreshToken").Value, out refreshTokenTime);
+				utilisateur.RefreshToken = Constants.Utils.UtilsConstant.CreateRefreshToken(utilisateur.Username, 
+					_config.GetSection("JWT:RefreshToken").Value, out refreshTokenTime);
 				utilisateur.RefreshTokenTime = refreshTokenTime;
 
 				var utilisateurCreated = await _utilisateurService.Create(utilisateur);
@@ -87,7 +102,7 @@ namespace LoanManagement.API.Controllers.Users_Management
 			}
 		}
 
-		[HttpGet("Passwords configuration")]
+		[HttpGet("PasswordsConfiguration")]
 		public async Task<ActionResult<string>> GetPasswordsConfiguration()
 		{
 			try
@@ -196,7 +211,13 @@ namespace LoanManagement.API.Controllers.Users_Management
 					_logger.LogWarning("'Détails d'un utilisateur' : Aucun utilisateur trouvé");
 					return NotFound(new ApiResponse((int)CustomHttpCode.OBJECT_NOT_FOUND, description: "Utilisateur(s) non trouvé(s)"));
 				}
-				await _utilisateurService.DeleteUtilisateur(user);
+				var employe = await _employeService.GetEmployeUserAccount(user.Id);
+				if(employe is not null)
+				{
+					_logger.LogWarning("Suppression d'un utilisateur : Ce compte d'utilisateur est rattaché à un employé");
+					return BadRequest("Impossible de supprimer cet utilisateur, ce compte est rattaché à un employé");
+				}
+                await _utilisateurService.DeleteUtilisateur(user);
 
 				_logger.LogInformation($"'Détails d'un utilisateur ': Opération effectuée avec succès");
 				return Ok();
@@ -213,7 +234,7 @@ namespace LoanManagement.API.Controllers.Users_Management
 		{
 			try
 			{
-				var userDb = await _utilisateurService.GetUserById(ressource.UserId);
+				var userDb = await _utilisateurService.GetUserByUsername(ressource.Username);
 				var users = await _utilisateurService.GetAll();
 				var isPasswordAlreadyUsed = false;
 				string hash;
@@ -229,13 +250,18 @@ namespace LoanManagement.API.Controllers.Users_Management
 					_logger.LogWarning("'Mise à jour d'un utilisateur' : Mot de passe incorrect");
 					return NotFound(new ApiResponse((int)CustomHttpCode.OBJECT_NOT_FOUND, description: "Aucun utilisateur ayant ce mot de passe n'a été trouvé"));
 				}
+				if(ressource.NewPassword != ressource.ConfirmPassword)
+				{
+					_logger.LogWarning("'Mise à jour d'un utilisateur' : Les mots de passe ne sont pas identiques");
+					return NotFound(new ApiResponse((int)CustomHttpCode.WARNING, description: "Les mots de passe ne sont pas identiques"));
+				}
 				var param = await _paramMotDePasseService.GetCurrentParameter();
 				if (param is null)
 				{
 					_logger.LogWarning("Enregistrement d'un utilisateur : Aucun paramétrage des mots de passe n'a été effectué, veuillez contacter l'équipe d'assistance");
 					return NotFound(new ApiResponse((int)CustomHttpCode.OBJECT_NOT_FOUND, description: "Aucun paramétrage des mots de passe n'a été effectué, veuillez contacter l'équipe d'assistance"));
 				}
-				var doesPasswordMatchAllRequirements = await _utilisateurService.DidPasswordMatchAllRequirements(param, ressource.NewPassword, userDb.Username);
+				var doesPasswordMatchAllRequirements = await _utilisateurService.DidUserInformationsMatchAllRequirements(param, ressource.NewPassword, userDb.Username);
 				if (!doesPasswordMatchAllRequirements)
 				{
 					_logger.LogWarning("Enregistrement d'un utilisateur : Le mot de passe entré ne suit pas la convention fixée par l'administrateur");
@@ -243,13 +269,13 @@ namespace LoanManagement.API.Controllers.Users_Management
 				}
 				var user = _mapper.Map<Utilisateur>(ressource);
 				//Vérifier si le mot de passe entré par l'utilisateur a été utilisé
-				isPasswordAlreadyUsed = await _utilisateurService.CheckIfPasswordHasBeenEverUsedByUser(ressource.UserId, ressource.NewPassword);
+				isPasswordAlreadyUsed = await _utilisateurService.CheckIfPasswordHasBeenEverUsedByUser(userDb.Id, ressource.NewPassword);
 				//Si oui, on renvoie une erreur à l'utilisateur.
 
 				if (isPasswordAlreadyUsed)
 				{
 					_logger.LogWarning("'Mise à jour d'un utilisateur' : Mot de passe déjà utilisé");
-					return NotFound(new ApiResponse((int)CustomHttpCode.OBJECT_ALREADY_EXISTS, description: "Ce mot de passe a déjà été utilisé, veuillez le changer"));
+					return NotFound(new ApiResponse((int)CustomHttpCode.OBJECT_ALREADY_EXISTS, description: "Veuillez entrer un autre mot de passe que vous n'avez jamais utilisé"));
 				}
 
 				Constants.Utils.UtilsConstant.HashPassword(ressource.NewPassword, out salt, out hash);
@@ -262,7 +288,7 @@ namespace LoanManagement.API.Controllers.Users_Management
 				{
 					OldPasswordHash = hash,
 					OldPasswordSalt = salt,
-					UtilisateurId = ressource.UserId,
+					UtilisateurId = userDb.Id,
 					DateAjout = DateTime.Now.ToString("dd/MM/yyyy")
 				};
 
@@ -379,7 +405,7 @@ namespace LoanManagement.API.Controllers.Users_Management
 		}
 
 		[HttpGet("disabledAccounts")]
-		public async Task<ActionResult<PagedList<GetUtilisateurRessource>>> GeDisabledAccounts()
+		public async Task<ActionResult<PagedList<GetUtilisateurRessource>>> GetDisabledAccounts()
 		{
 			try
 			{
@@ -410,22 +436,22 @@ namespace LoanManagement.API.Controllers.Users_Management
 			}
 		}
 
-		[HttpGet("{id}/profil")]
-		public async Task<ActionResult<ProfilRessource>> GetUtilisateurProfil(int id)
+		[HttpGet("profil")]
+		public async Task<ActionResult<ProfilRessource>> GetUserProfil(string username)
 		{
 			try
 			{
-				var user = await _utilisateurService.GetUserById(id);
-				if (user is null)
+				var userDb = await _utilisateurService.GetUserByUsername(username);
+				if(userDb is null)
 				{
-					_logger.LogWarning("'Profil utilisateur' : Aucun utilisateur trouvé");
+					_logger.LogWarning("'Profil d'un utilisateur' : Aucun utilisateur trouvé");
 					return NotFound(new ApiResponse((int)CustomHttpCode.OBJECT_NOT_FOUND, description: "Utilisateur(s) non trouvé(s)"));
 				}
-				var profil = await _profilService.GetUserProfil(user);
-				var profilResult = _mapper.Map<ProfilRessource>(profil);
+				var profil = await _utilisateurService.GetUserProfil(userDb);
+				var result = _mapper.Map<ProfilRessource>(profil);
+				_logger.LogInformation("Profil d'un utilisateur : Opération effectuée avec succès");
 
-				_logger.LogInformation($"'Profil d'un utilisateur': Opération effectuée avec succès");
-				return Ok(profilResult);
+				return Ok(result);
 			}
 			catch (Exception ex)
 			{
