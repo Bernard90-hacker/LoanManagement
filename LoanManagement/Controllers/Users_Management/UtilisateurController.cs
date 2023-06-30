@@ -11,6 +11,8 @@ namespace LoanManagement.API.Controllers.Users_Management
 		private readonly IUtilisateurService _utilisateurService;
 		private readonly IMotDePasseService _motDePasseService;
 		private readonly IParamMotDePasseService _paramMotDePasseService;
+		private readonly IJournalService _journalService;
+		private readonly ITypeJournalService _typeJournalService;
 		private readonly IEmployeService _employeService;
 		private readonly IProfilService _profilService;
 		private readonly ILoggerManager _logger;
@@ -18,7 +20,8 @@ namespace LoanManagement.API.Controllers.Users_Management
 		private readonly IConfiguration _config;
 		public UtilisateurController(UtilisateurService utilisateurService, ILoggerManager logger,
 			IMapper mapper, IMotDePasseService motDePasseService, IConfiguration config, 
-			IProfilService profilService, IParamMotDePasseService param, IEmployeService employeService)
+			IProfilService profilService, IParamMotDePasseService param, 
+			IEmployeService employeService, IJournalService journalService)
 		{
 			_utilisateurService = utilisateurService;
 			_logger = logger;
@@ -28,6 +31,7 @@ namespace LoanManagement.API.Controllers.Users_Management
 			_profilService = profilService;
 			_paramMotDePasseService = param;
 			_employeService = employeService;
+			_journalService = journalService;
 		}
 
 		[HttpPost("register")]

@@ -1,6 +1,8 @@
-﻿using Constants.Pagination;
+﻿using Azure.Core;
+using Constants.Pagination;
 using LoanManagement.core.Models.Users_Management;
 using LoanManagement.core.Pagination;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace LoanManagement.service.Services.Users_Management
 {
@@ -10,6 +12,7 @@ namespace LoanManagement.service.Services.Users_Management
         public UtilisateurService(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
+
         }
 
 		public async Task<Utilisateur> Create(Utilisateur utilisateur)
@@ -85,7 +88,7 @@ namespace LoanManagement.service.Services.Users_Management
 		public async Task UpdateUserAccountExpiryDate(Utilisateur user, string newDate)
 		{
 			user.DateExpirationCompte = newDate;
-			await _unitOfWork.CommitAsync();	
+			await _unitOfWork.CommitAsync();
 		}
 
 		public async Task DesactivateUserAccount(Utilisateur user)
@@ -189,6 +192,18 @@ namespace LoanManagement.service.Services.Users_Management
 			return
 				await _unitOfWork.Profils.GetProfilById((int)user.ProfilId);
 
+		}
+		
+		public async Task Connect(Utilisateur user)
+		{
+			user.IsConnected = true;
+			await _unitOfWork.CommitAsync();
+		}
+
+		public async Task Disconnect(Utilisateur user)
+		{
+			user.IsConnected = false;
+			await _unitOfWork.CommitAsync();
 		}
 	}
 }

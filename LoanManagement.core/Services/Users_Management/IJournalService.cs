@@ -6,6 +6,7 @@
 		Task<IEnumerable<Journal>> GetAll();
 		Task<Journal?> GetJournalById(int id);
 		Task<Journal?> GetJournalByUser(int userId);
+		Task<IEnumerable<Journal>> GetJournauxByType(int id);
 		Task<Journal> Create(Journal journal);
 		Task<Journal> Update(Journal journal, Journal journalToBeUpdated);
 		Task Delete(Journal journal);

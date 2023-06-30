@@ -23,6 +23,7 @@ namespace LoanManagement.Data.SqlServer
 		private ParamMotDePasseRepository _paramMotDePasseRepository;
 		private ProfilRepository _profilRepository;
 		private TypeJournalRepository _typeJournalRepository;
+		private IDbContextTransaction _transaction;
 		public UnitOfWork(LoanManagementDbContext context) => _context = context;
 
 
@@ -60,7 +61,15 @@ namespace LoanManagement.Data.SqlServer
 
 		public async Task CommitAsync(IDbContextTransaction transaction)
 		{
-			await transaction.CommitAsync();
+			try
+			{
+				await transaction.CommitAsync();
+			}
+			catch (Exception)
+			{
+
+				await transaction.RollbackAsync();
+			}
 		}
 
 		public async Task RollbackAsync(IDbContextTransaction transaction)

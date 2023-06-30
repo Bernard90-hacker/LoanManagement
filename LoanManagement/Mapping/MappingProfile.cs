@@ -33,6 +33,8 @@ namespace LoanManagement.API.Mapping
 			CreateMap<SaveApplicationRessource, Application>();
 			CreateMap<TypeJournalRessource, TypeJournal>();
 			CreateMap<TypeJournal, TypeJournalRessource>();
+			CreateMap<Journal, JournalRessource>();
+			CreateMap<JournalRessource, Journal>();
 
 			CreateMap<Utilisateur, GetUtilisateurRessource>();
 		}

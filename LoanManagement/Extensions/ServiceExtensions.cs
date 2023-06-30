@@ -1,5 +1,8 @@
-﻿using LoanManagement.core;
+﻿using FluentAssertions.Common;
+using LoanManagement.core;
 using LoanManagement.service.Services.Users_Management;
+using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace LoanManagement.API.Extensions
 {
@@ -21,6 +24,11 @@ namespace LoanManagement.API.Extensions
 		public static void ConfigureLoggingService(this IServiceCollection services)
 		{
 			services.AddSingleton<ILoggerManager, LoggerManager>();
+		}
+
+		public static void ConfigureDetectionService(this IServiceCollection services)
+		{
+			services.AddBrowserDetection();
 		}
 
 		public static void ConfigureApiService(this IServiceCollection services)
@@ -49,6 +57,7 @@ namespace LoanManagement.API.Extensions
 			services.AddTransient<ProfilService>();
 			services.AddTransient<TypeJournalService>();
 			services.AddTransient<UtilisateurService>();
+			services.AddTransient<JournalisationService>();
 		}
 
 		public static void ConfigureUnitOfWorkService(this IServiceCollection services)

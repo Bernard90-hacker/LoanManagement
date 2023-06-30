@@ -18,7 +18,9 @@
 		Task<PagedList<Utilisateur>> GetActivatedAccounts();
 		Task<bool> DidUserInformationsMatchAllRequirements(ParamMotDePasse param, string password, string username);
 		Task<string?> GetPasswordConfiguration();
-		Task<Profil> GetUserProfil(Utilisateur user); 
+		Task<Profil> GetUserProfil(Utilisateur user);
+		Task Connect(Utilisateur user);
+		Task Disconnect(Utilisateur user);
 
 	}
 }

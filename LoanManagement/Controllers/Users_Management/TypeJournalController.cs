@@ -7,12 +7,15 @@
 		private readonly ILoggerManager _logger;
 		private readonly IMapper _mapper;
 		private readonly ITypeJournalService _typeJournalService;
+		private readonly IJournalService _journalService;
 
-        public TypeJournalController(ITypeJournalService typeJournalService, IMapper mapper, ILoggerManager logger)
+        public TypeJournalController(ITypeJournalService typeJournalService, IMapper mapper, 
+			ILoggerManager logger, IJournalService journalService)
         {
 			_logger = logger;
 			_mapper = mapper;
 			_typeJournalService = typeJournalService;
+			_journalService = journalService;
         }
 
 		[HttpGet("all")]
@@ -62,6 +65,12 @@
 				}
 				//Mappage
 				var type = _mapper.Map<TypeJournal>(ressource);
+				var doesTypeJournalCodeIsAlreadyUsed = await _typeJournalService.GetTypeJournalByCode(ressource.Code);
+				if(doesTypeJournalCodeIsAlreadyUsed is not null)
+				{
+					_logger.LogWarning("Enregistrement d'un type de journal : Ce code a déjà été utilisé veuillez le changer");
+					return BadRequest(new ApiResponse((int)CustomHttpCode.OBJECT_ALREADY_EXISTS, description : "Ce code a déjà été utilisé"));
+				}
 
 				//Enregistrement
 				var typeCreated = await _typeJournalService.Create(type);
@@ -70,7 +79,7 @@
 				var result = _mapper.Map<TypeJournalRessource>(typeCreated);
 
 				_logger.LogInformation("Enregistrement d'une direction : Opération effectuée avec succès");
-				return Ok(typeCreated);
+				return Ok(result);
 			}
 			catch (Exception ex)
 			{
@@ -173,11 +182,16 @@
 					_logger.LogWarning("Suppression d'un type de journal : Ressource non trouvée");
 					return BadRequest();
 				}
+				var journaux = await _journalService.GetJournauxByType(type.Id);
+				if(journaux.Count() != 0)
+				{
+					_logger.LogWarning("Suppression d'un type : Plusieurs journaux en dépendent");
+					return BadRequest(new ApiResponse((int)CustomHttpCode.WARNING, description: "Plusieurs journaux dépendent de ce type, impossible d'exécuter cette requête"));
+				}
 				//Suppression
 				await _typeJournalService.Delete(type);
-
-
 				_logger.LogInformation("Suppression d'un type de journal : Opération effectuée avec succès");
+				
 				return Ok();
 			}
 			catch (Exception ex)

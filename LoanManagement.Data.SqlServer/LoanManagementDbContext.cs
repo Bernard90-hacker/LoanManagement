@@ -53,8 +53,71 @@ namespace LoanManagement.Data.SqlServer
 			{
 				foreignKey.DeleteBehavior = DeleteBehavior.Restrict;
 			}
+
+			builder
+				.Entity<TypeJournal>().HasData(
+					new TypeJournal()
+					{
+						Id = 1,
+						Code = "CONN",
+						Libelle = "Connexion"
+					},
+					new TypeJournal()
+					{
+						Id = 2,
+						Code = "DECONN",
+						Libelle = "Déconnexion"
+					},
+					new TypeJournal()
+					{
+						Id = 3,
+						Code = "UPDATE",
+						Libelle = "Modification de données"
+					},
+					new TypeJournal()
+					{
+						Id = 4,
+						Code = "DELETE",
+						Libelle = "Suppression des données"
+					},
+					new TypeJournal()
+					{
+						Id = 5,
+						Code = "ADD",
+						Libelle = "Ajout de données"
+					},
+					new TypeJournal()
+					{
+						Id = 6,
+						Code = "GETBYID",
+						Libelle = "Rechercher un objet par son id"
+					},
+					new TypeJournal()
+					{
+						Id = 7,
+						Code = "GETBYCODE",
+						Libelle = "Rechercher un objet par son code"
+					}
+				);
+
+			builder
+				.Entity<ParamMotDePasse>().HasData(
+
+					new ParamMotDePasse()
+					{
+						Id = 1,
+						IncludeDigits = true,
+						IncludeLowerCase = true,
+						IncludeSpecialCharacters = true,
+						ExcludeUsername = true,
+						IncludeUpperCase = true,
+						DelaiExpiration = 6,
+						Taille = 8
+					}
+				);
 				
 		}
+
 
 
 

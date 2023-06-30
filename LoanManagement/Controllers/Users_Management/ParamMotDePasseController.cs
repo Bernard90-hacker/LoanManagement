@@ -8,14 +8,16 @@
 		private readonly IMotDePasseService _motDePasseService;
 		private readonly ILoggerManager _logger;
 		private readonly IMapper _mapper;
+		private readonly JournalisationService _journalisationService;
 
         public ParamMotDePasseController(IParamMotDePasseService param, ILoggerManager logger, 
-			IMapper mapper, IMotDePasseService motDePasseService)
+			IMapper mapper, IMotDePasseService motDePasseService, JournalisationService service)
         {
 			_paramMotDePasseService = param;
 			_logger = logger;
 			_mapper = mapper;
 			_motDePasseService = motDePasseService;
+			_journalisationService = service;
         }
 
 		[HttpGet("all")]
@@ -31,7 +33,8 @@
 				}
 				var result = _mapper.Map<IEnumerable<ParamMotDePasseRessource>>(param);
 				_logger.LogInformation("Récupération des configurations des mots de passe : Opération effectuée avec succès");
-
+				var journal = new Journal() { Libelle = "Liste des paramètres de configuration des mots de passe" };
+				await _journalisationService.Journalize(journal);
 				return Ok(result);
 			}
 			catch (Exception ex)
@@ -62,6 +65,7 @@
 
 				var paramDb = _mapper.Map<ParamMotDePasse>(ressource);
 				var paramAdded = await _paramMotDePasseService.Create(paramDb);
+				
 				var result = _mapper.Map<ParamMotDePasseRessource>(paramAdded);
 				_logger.LogInformation("Configuration des paramètres des mots de passe : Opération effectuée avec succès");
 
@@ -69,6 +73,7 @@
 			}
 			catch (Exception ex)
 			{
+				
 				_logger.LogError("Une erreur est survenue pendant le traitement de la requête");
 				return ValidationProblem(statusCode: (int)HttpCode.INTERNAL_SERVER_ERROR, title: "Erreur interne du serveur", detail: ex.Message);
 			}
@@ -86,6 +91,8 @@
 					return NotFound(new ApiResponse((int)CustomHttpCode.OBJECT_NOT_FOUND, description: "Aucun paramètre existant"));
 				}
 				var paramUpdated = await _paramMotDePasseService.UpdatePasswordsExpiryFrequency(param, ressource.ExpiryFrequency);
+				var journal = new Journal() { Libelle = "Mise à jour de la fréquence d'expiration des mots de passe" };
+				await _journalisationService.Journalize(journal);
 				var paramResult = _mapper.Map<ParamMotDePasseRessource>(paramUpdated);
 
 				_logger.LogInformation("Modification du délai d'expiration des mots de passe : Opération effectuée avec succès");
@@ -93,6 +100,7 @@
 			}
 			catch (Exception ex)
 			{
+				
 				_logger.LogError("Une erreur est survenue pendant le traitement de la requête");
 				return ValidationProblem(statusCode: (int)HttpCode.INTERNAL_SERVER_ERROR, title: "Erreur interne du serveur", detail: ex.Message);
 			}
@@ -110,13 +118,16 @@
 					return NotFound(new ApiResponse((int)CustomHttpCode.OBJECT_NOT_FOUND, description: "Aucun paramètre existant"));
 				}
 				var paramUpdated = await _paramMotDePasseService.PasswordMustIncludeDigits(param, ressource.Response);
+				
 				var paramResult = _mapper.Map<ParamMotDePasseRessource>(paramUpdated);
-
+				var journal = new Journal() { Libelle = "Modification des paramètres des mots de passe : Doit-il contenir des chiffres" };
+				await _journalisationService.Journalize(journal);
 				_logger.LogInformation("Modification du délai d'expiration des mots de passe : Opération effectuée avec succès");
 				return Ok(paramResult);
 			}
 			catch (Exception ex)
 			{
+				
 				_logger.LogError("Une erreur est survenue pendant le traitement de la requête");
 				return ValidationProblem(statusCode: (int)HttpCode.INTERNAL_SERVER_ERROR, title: "Erreur interne du serveur", detail: ex.Message);
 			}
@@ -134,13 +145,15 @@
 					return NotFound(new ApiResponse((int)CustomHttpCode.OBJECT_NOT_FOUND, description: "Aucun paramètre existant"));
 				}
 				var paramUpdated = await _paramMotDePasseService.PasswordMustIncludeUpperCase(param, ressource.Response);
+				
 				var paramResult = _mapper.Map<ParamMotDePasseRessource>(paramUpdated);
-
+				var journal = new Journal() { Libelle = "Modification des paramètres des mots de passe : Doit-il contenir des caractères majuscules" };
 				_logger.LogInformation("Modification du délai d'expiration des mots de passe : Opération effectuée avec succès");
 				return Ok(paramResult);
 			}
 			catch (Exception ex)
 			{
+				
 				_logger.LogError("Une erreur est survenue pendant le traitement de la requête");
 				return ValidationProblem(statusCode: (int)HttpCode.INTERNAL_SERVER_ERROR, title: "Erreur interne du serveur", detail: ex.Message);
 			}
@@ -158,13 +171,15 @@
 					return NotFound(new ApiResponse((int)CustomHttpCode.OBJECT_NOT_FOUND, description: "Aucun paramètre existant"));
 				}
 				var paramUpdated = await _paramMotDePasseService.PasswordMustExcludeUsername(param, ressource.Response);
+				
 				var paramResult = _mapper.Map<ParamMotDePasseRessource>(paramUpdated);
-
+				var journal = new Journal() { Libelle = "Modification des paramètres des mots de passe :Exclusion du username" };
 				_logger.LogInformation("Modification du délai d'expiration des mots de passe : Opération effectuée avec succès");
 				return Ok(paramResult);
 			}
 			catch (Exception ex)
 			{
+				
 				_logger.LogError("Une erreur est survenue pendant le traitement de la requête");
 				return ValidationProblem(statusCode: (int)HttpCode.INTERNAL_SERVER_ERROR, title: "Erreur interne du serveur", detail: ex.Message);
 			}
@@ -182,13 +197,15 @@
 					return NotFound(new ApiResponse((int)CustomHttpCode.OBJECT_NOT_FOUND, description: "Aucun paramètre existant"));
 				}
 				var paramUpdated = await _paramMotDePasseService.PasswordLength(param, ressource.Taille);
+				
 				var paramResult = _mapper.Map<ParamMotDePasseRessource>(paramUpdated);
-
+				var journal = new Journal() { Libelle = "Modification de la taille des mots de passe" };
 				_logger.LogInformation("Modification du délai d'expiration des mots de passe : Opération effectuée avec succès");
 				return Ok(paramResult);
 			}
 			catch (Exception ex)
 			{
+				
 				_logger.LogError("Une erreur est survenue pendant le traitement de la requête");
 				return ValidationProblem(statusCode: (int)HttpCode.INTERNAL_SERVER_ERROR, title: "Erreur interne du serveur", detail: ex.Message);
 			}
@@ -212,12 +229,14 @@
 					return NotFound(new ApiResponse((int)CustomHttpCode.OBJECT_NOT_FOUND, description: "Aucun paramètre existant"));
 				}
 				await _paramMotDePasseService.Delete(param);
+				var journal = new Journal() { Libelle = "Suppression des paramètres des mots de passe" };
 
 				_logger.LogInformation("Suppression des paramètres mot de passe: Opération effectuée avec succès");
 				return Ok();
 			}
 			catch (Exception ex)
 			{
+				
 				_logger.LogError("Une erreur est survenue pendant le traitement de la requête");
 				return ValidationProblem(statusCode: (int)HttpCode.INTERNAL_SERVER_ERROR, title: "Erreur interne du serveur", detail: ex.Message);
 			}

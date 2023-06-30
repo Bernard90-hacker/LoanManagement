@@ -14,7 +14,8 @@ namespace LoanManagement.API.Controllers.Users_Management
 		private readonly ILoggerManager _logger;
 		private readonly IApplicationService _applicationService;
         public MenuController(IMapper mapper, IMenuService menuService, 
-			ILoggerManager logger, IApplicationService applicationService, IHabilitationProfilService profil)
+			ILoggerManager logger, IApplicationService applicationService, 
+			IHabilitationProfilService profil)
         {
 			_mapper = mapper;
 			_menuService = menuService;
@@ -151,6 +152,7 @@ namespace LoanManagement.API.Controllers.Users_Management
 				menuDb.Code = "MENU - " + Constants.Utils.UtilsConstant.IncrementStringWithNumbers(reference);
 				menuDb.DateAjout = DateTime.Now.ToString("dd/MM/yyyy");
 				var menuCreated = await _menuService.Create(menuDb);
+				
 				var result = _mapper.Map<MenuRessource>(menuCreated);
 				_logger.LogInformation("Enregistrement d'un menu : Opération effectuée avec succès");
 				return Ok(result);
@@ -174,6 +176,7 @@ namespace LoanManagement.API.Controllers.Users_Management
 					return NotFound(new ApiResponse((int)CustomHttpCode.OBJECT_NOT_FOUND, description: "Menu indiqué introuvable"));
 				}
 				var menuUpdated = await _menuService.UpdateMenuStatut(menu, ressource.statut);
+				
 				var menuResult = _mapper.Map<MenuRessource>(menuUpdated);
 				_logger.LogInformation("Modification d'un menu/sous-menu : Opération effectuée avec succès");
 
@@ -204,11 +207,13 @@ namespace LoanManagement.API.Controllers.Users_Management
 					return NotFound(new ApiResponse((int)CustomHttpCode.OBJECT_NOT_FOUND, description: "Impossible d'effectuer cette action, le menu a des sous-menus"));
 				}
 				await _menuService.Delete(menu);
+				
 				_logger.LogInformation("Suppression d'un menu/sous-menu : Opération effectuée avec succès");
 				return Ok();
 			}
 			catch (Exception ex)
 			{
+				
 				_logger.LogError("Une erreur est survenue pendant le traitement de la requête");
 				return ValidationProblem(statusCode: (int)HttpCode.INTERNAL_SERVER_ERROR, title: "Erreur interne du serveur", detail: ex.Message);
 			}

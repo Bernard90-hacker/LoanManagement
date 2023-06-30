@@ -1,4 +1,7 @@
 
+using Microsoft.EntityFrameworkCore.Storage;
+using System.Data.Common;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.WebHost.ConfigureKestrel(options =>
@@ -9,6 +12,8 @@ builder.WebHost.ConfigureKestrel(options =>
 
 // Add services to the container.
 builder.Services.ConfigureLoggerService();
+builder.Services.AddDetection();
+builder.Services.ConfigureDetectionService();
 builder.Services.AddControllers(config =>
 {
 	config.CacheProfiles.Add("LocalCacheProfile", new CacheProfile
@@ -27,6 +32,9 @@ builder.Services.ConfigureDbContextService(builder.Configuration);
 //Configuration for UnitOfWork
 builder.Services.ConfigureUnitOfWorkService();
 builder.Services.ConfigureApiService();
+//builder.Services.AddHttpContextAccessor();
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddSingleton<HttpContextAccessor>();
 //Configuration for AutoMapper
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -37,11 +45,11 @@ builder.Services.AddSwaggerGen(c =>
 });
 //Configuration for AutoMapper
 //Configuration for Response Caching
+
 builder.Services.AddResponseCaching();
 //Configuration for Memory Cache
 builder.Services.AddMemoryCache();
 //builder.Services.ConfigureCacheService();
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -50,6 +58,7 @@ if (app.Environment.IsDevelopment())
 	app.UseDeveloperExceptionPage();
 	app.UseSwagger();
 	app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Example.API v1"));
+	app.UseDetection();
 }
 else
 {
@@ -69,7 +78,6 @@ app.Use(async (context, next) =>
 //app.ConfigureCustomExceptionMiddleware();
 
 app.UseHttpsRedirection();
-
 app.UseResponseCaching();
 
 app.UseRouting();

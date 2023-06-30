@@ -11,15 +11,18 @@ namespace LoanManagement.API.Controllers.Users_Management
 		private readonly IDepartmentService _departementService;
 		private readonly ILoggerManager _logger;
 		private readonly IMapper _mapper;
+		private readonly JournalisationService _journalisationService;
 
         public EmployeController(IUtilisateurService utilisateurService, IEmployeService employeService,
-			ILoggerManager logger, IMapper mapper, IDepartmentService departementService)
+			ILoggerManager logger, IMapper mapper, IDepartmentService departementService,
+			JournalisationService service)
         {
 			_utilisateurService = utilisateurService;
 			_employeService = employeService;
 			_logger = logger;
 			_mapper = mapper;
 			_departementService = departementService;
+			_journalisationService = service;
         }
 
 		[HttpGet("all")]
@@ -45,6 +48,8 @@ namespace LoanManagement.API.Controllers.Users_Management
 				};
 				Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
 				_logger.LogInformation("'Liste des employés' : Opération effectuée avec succès");
+				var journal = new Journal() { Libelle = "Liste des employés" };
+				await _journalisationService.Journalize(journal);
 				return Ok(result);
 			}
 			catch (Exception ex)
@@ -68,7 +73,8 @@ namespace LoanManagement.API.Controllers.Users_Management
 
 				var result = _mapper.Map<EmployeRessource>(employe);
 				_logger.LogInformation("'Détails d'un employé' : Opération effectuée avec succès");
-
+				var journal = new Journal() { Libelle = "Identification d'un employé par son id" };
+				await _journalisationService.Journalize(journal);
 				return Ok(result);
 			}
 			catch (Exception ex)
@@ -90,6 +96,8 @@ namespace LoanManagement.API.Controllers.Users_Management
 					return NotFound(new ApiResponse((int)CustomHttpCode.OBJECT_NOT_FOUND, description: "Aucun employé trouvé qui correspond au critère spécifié"));
 				}
 				var user = await _employeService.GetEmployeUserAccount(employe.UserId);
+				var journal = new Journal() { Libelle = "Identification du compte utilisateur d'un employé par son id" };
+				await _journalisationService.Journalize(journal);
 				var result = _mapper.Map<UtilisateurRessource>(user);
 				_logger.LogInformation("'Détails du compte utilisateur d'un employé' : Opération effectuée avec succès");
 
@@ -116,7 +124,7 @@ namespace LoanManagement.API.Controllers.Users_Management
 
 				var result = _mapper.Map<EmployeRessource>(employe);
 				_logger.LogInformation("'Détails d'un employé' : Opération effectuée avec succès");
-
+				
 				return Ok(result);
 			}
 			catch (Exception ex)
@@ -169,14 +177,17 @@ namespace LoanManagement.API.Controllers.Users_Management
 				employeDb.DateAjout = DateTime.Now.ToString("dd/MM/yyyy");
 				employeDb.DateModification = DateTime.Now.ToString("dd/MM/yyyy");
 				var employeCreated = await _employeService.Create(employeDb);
+				
 				var result = _mapper.Map<EmployeRessource>(employeCreated);
-
+				var journal = new Journal() { Libelle = "Enregistrement d'un employé" };
+				await _journalisationService.Journalize(journal);
 				_logger.LogInformation("'Enregistrement d'un employé' : Opération effectuée avec succès");
 
 				return Ok(result);
 			}
 			catch (Exception ex)
 			{
+				
 				_logger.LogError("Une erreur est survenue pendant le traitement de la requête");
 				return ValidationProblem(statusCode: (int)HttpCode.INTERNAL_SERVER_ERROR, title: "Erreur interne du serveur", detail: ex.Message);
 			}
@@ -194,7 +205,8 @@ namespace LoanManagement.API.Controllers.Users_Management
 					return BadRequest();
 				}
 				await _employeService.Delete(employe);
-
+				var journal = new Journal() { Libelle = "Suppression d'un employé" };
+				await _journalisationService.Journalize(journal);
 				_logger.LogInformation("'Suppression d'un employé' : Opération effectuée avec succès");
 
 				return Ok();
@@ -219,6 +231,8 @@ namespace LoanManagement.API.Controllers.Users_Management
 				}
 				var employeUpdated = await _employeService.UpdateEmployePhoto(employe, ressource.Photo);
 				var result = _mapper.Map<EmployeRessource>(employeUpdated);
+				var journal = new Journal() { Libelle = "Mise à jour de la photo d'un employé" };
+				await _journalisationService.Journalize(journal);
 
 				_logger.LogInformation("'Mise à jour de la modification de la photo d'un employé' : Opération effectuée avec succès");
 
@@ -245,7 +259,8 @@ namespace LoanManagement.API.Controllers.Users_Management
 				}
 				var employeUpdated = await _employeService.UpdateEmployeDepartment(employe, ressource.DepartementId);
 				var result = _mapper.Map<EmployeRessource>(employeUpdated);
-
+				var journal = new Journal() { Libelle = "Modification du département d'un employé" };
+				await _journalisationService.Journalize(journal);
 				_logger.LogInformation("'Mise à jour de la modification de la photo d'un employé' : Opération effectuée avec succès");
 
 				return Ok(result);

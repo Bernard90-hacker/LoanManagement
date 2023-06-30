@@ -9,15 +9,18 @@
 		private readonly ILoggerManager _logger;
 		private readonly IMapper _mapper;
 		private readonly IConfiguration _config;
+		private readonly JournalisationService _journalisationService;
 
 		public DepartementController(IDepartmentService departmentService,
-			ILoggerManager logger, IConfiguration config, IMapper mapper, IDirectionService directionService)
+			ILoggerManager logger, IConfiguration config, IMapper mapper, 
+			IDirectionService directionService, JournalisationService journalisationService)
 		{
 			_departementService = departmentService;
 			_logger = logger;
 			_config = config;
 			_mapper = mapper;
 			_directionService = directionService;
+			_journalisationService = journalisationService;
 		}
 
 		[HttpGet("all")]
@@ -79,20 +82,24 @@
 				var departements = (await _departementService.GetAll());
 				string reference = string.Empty;
 				if (departements.Count() == 0)
-					reference = "000";
+					reference = "00";
 				else
 					reference = departements.LastOrDefault().Code.Substring(7);
 				departement.Code = "DEPT - " + Constants.Utils.UtilsConstant.IncrementStringWithNumbers(reference);
 				var departementCreated = await _departementService.Create(departement);
+				
 
 				//Mappage en vue de retourner la ressource à l'utilisateur
 				var departementResult = _mapper.Map<DepartementRessource>(departementCreated);
+				var journal = new Journal() { Libelle = "Enregistrement d'un département" };
+				await _journalisationService.Journalize(journal);
 
 				_logger.LogInformation("Enregistrement d'un département : Opération effectuée avec succès");
 				return Ok(departementResult);
 			}
 			catch (Exception ex)
 			{
+				
 				_logger.LogError("Une erreur est survenue pendant le traitement de la requête");
 				return ValidationProblem(statusCode: (int)HttpCode.INTERNAL_SERVER_ERROR, title: "Erreur interne du serveur", detail: ex.Message);
 			}
@@ -171,6 +178,7 @@
 			}
 			catch (Exception ex)
 			{
+				
 				_logger.LogError("Une erreur est survenue pendant le traitement de la requête");
 				return ValidationProblem(statusCode: (int)HttpCode.INTERNAL_SERVER_ERROR, title: "Erreur interne du serveur", detail: ex.Message);
 			}

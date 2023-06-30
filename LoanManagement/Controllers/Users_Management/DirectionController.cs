@@ -80,6 +80,7 @@ namespace LoanManagement.API.Controllers.Users_Management
 			}
 			catch (Exception ex)
 			{
+				
 				_logger.LogError("Une erreur est survenue pendant le traitement de la requête");
 				return ValidationProblem(statusCode: (int)HttpCode.INTERNAL_SERVER_ERROR, title: "Erreur interne du serveur", detail: ex.Message);
 			}
@@ -188,8 +189,7 @@ namespace LoanManagement.API.Controllers.Users_Management
 				}
 				//Suppression
 				await _directionService.Delete(direction);
-
-
+				
 				_logger.LogInformation("Suppression d'une direction : Opération effectuée avec succès");
 				return Ok();
 			}

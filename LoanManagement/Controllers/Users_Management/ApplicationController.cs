@@ -1,5 +1,6 @@
 ﻿using Constants.Pagination;
 using LoanManagement.core.Models.Users_Management;
+using Microsoft.AspNetCore.Http.Extensions;
 
 namespace LoanManagement.API.Controllers.Users_Management
 {
@@ -10,12 +11,22 @@ namespace LoanManagement.API.Controllers.Users_Management
 		private readonly IApplicationService _applicationService;
 		private readonly IMapper _mapper;
 		private readonly ILoggerManager _logger;
+		private readonly IJournalService _journalService;
+		private readonly JournalisationService _journalisationService;
+		private readonly IUtilisateurService _utilisateurService;
+		private readonly ITypeJournalService _typeJournalService;
         public ApplicationController(IApplicationService applicationService, 
-			IMapper mapper, ILoggerManager logger)
+			IMapper mapper, ILoggerManager logger, IJournalService journalService,
+			IUtilisateurService utilisateurService, ITypeJournalService typeJournalService,
+			JournalisationService journalisationService)
         {
 			_applicationService = applicationService;
 			_mapper = mapper;
 			_logger = logger;
+			_journalService = journalService;
+			_utilisateurService = utilisateurService;
+			_typeJournalService = typeJournalService;
+			_journalisationService = journalisationService;
         }
 
 		[HttpGet("all")]
@@ -29,6 +40,8 @@ namespace LoanManagement.API.Controllers.Users_Management
 					_logger.LogWarning("'Détails module : Aucun module n'a pas été trouvée");
 					return NotFound(new ApiResponse((int)CustomHttpCode.OBJECT_NOT_FOUND, description: "Departement(s) non trouvée(s)"));
 				}
+				var journalisation = new Journal() { Libelle = "Liste des modules" };
+				await _journalisationService.Journalize(journalisation);
 				var allResult = _mapper.Map<IEnumerable<GetApplicationRessource>>(all);
 				var metadata = new
 				{
@@ -39,6 +52,27 @@ namespace LoanManagement.API.Controllers.Users_Management
 					all.HasNext,
 					all.HasPrevious
 				};
+				var journalRessource = new JournalRessource()
+				{
+					Libelle = "Liste des modules de l'application"
+				};
+				if (Request.Cookies["Username"] == null || Request.Cookies["Username"] == string.Empty)
+				{
+					_logger.LogWarning("L'utilisateur actuel est déconnecté : Impossible d'effectuer la journalisation");
+					return BadRequest("L'utilisateur actuel est déconnecté : Impossible d'effectuer la journalisation");
+				}
+				journalRessource.Username = Request.Cookies["Username"].ToString();
+				var user = await _utilisateurService.GetUserByUsername(journalRessource.Username);
+				if(user is null)
+				{
+					_logger.LogWarning("Quelque chose s'est mal passé : Impossible d'effectuer la journalisation");
+					return BadRequest("Quelque chose s'est mal passé: Impossible d'effectuer la journalisation");
+				}
+				var journal = _mapper.Map<Journal>(journalRessource);
+				journal.UtilisateurId = user.Id;
+				var typeJournal = await _typeJournalService.GetTypeJournalByCode("CONN");
+				journal.TypeJournalId = typeJournal.Id;
+				var journalCreated = await _journalService.Create(journal);
 				Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
 				_logger.LogInformation($"'Liste des modules ': Opération effectuée avec succès, {all.Count} modules retournés");
 				return Ok(allResult);
@@ -65,6 +99,7 @@ namespace LoanManagement.API.Controllers.Users_Management
 				var appRessource = _mapper.Map<GetApplicationRessource>(app);
 
 				_logger.LogInformation("Opération effectuée avec succès");
+				var journalisation = new Journal() { Libelle = "Récupération d'un module par son id" };
 
 				return Ok(appRessource);
 			}
@@ -91,7 +126,7 @@ namespace LoanManagement.API.Controllers.Users_Management
 				var appRessource = _mapper.Map<GetApplicationRessource>(app);
 
 				_logger.LogInformation("Opération effectuée avec succès");
-
+				var journalisation = new Journal() { Libelle = "Identification d'un module par son code" };
 				return Ok(appRessource);
 			}
 			catch (Exception ex)
@@ -117,6 +152,8 @@ namespace LoanManagement.API.Controllers.Users_Management
 				var appRessource = _mapper.Map<IEnumerable<GetApplicationRessource>>(sousModules);
 
 				_logger.LogInformation($"Liste des sous-modules du module {app.Code} : Opération effectuée avec succès");
+				var journal = new Journal() { Libelle = "Listes des sous-modules d'un module" };
+				await _journalisationService.Journalize(journal);
 
 				return Ok(appRessource);
 			}
@@ -175,6 +212,8 @@ namespace LoanManagement.API.Controllers.Users_Management
 				var appResult = _mapper.Map<GetApplicationRessource>(appCreated);
 
 				_logger.LogInformation("Enregistrement d'une application : Opération effectuée avec succès");
+				var journalisation = new Journal() { Libelle = "Enregistrement d'un module" };
+				await _journalisationService.Journalize(journalisation);
 				return Ok(appResult);
 			}
 			catch (Exception ex)
@@ -210,6 +249,8 @@ namespace LoanManagement.API.Controllers.Users_Management
 				var appResult = _mapper.Map<GetApplicationRessource>(appUpdated);
 
 				_logger.LogInformation("Modification d'un module : Opération effectuée avec succès");
+				var journal = new Journal() { Libelle = "Mise à jour de la version d'un module" };
+				await _journalisationService.Journalize(journal);
 				return Ok(appResult);
 			}
 			catch (Exception ex)
@@ -244,7 +285,9 @@ namespace LoanManagement.API.Controllers.Users_Management
 				//Mappage en vue de retourner la ressource à l'utilisateur
 				var appResult = _mapper.Map<GetApplicationRessource>(appUpdated);
 
-				_logger.LogInformation("Modification d'un module : Opération effectuée avec succès");
+				_logger.LogInformation("Modification du statut d'un module : Opération effectuée avec succès");
+				var journal = new Journal() { Libelle = "Modification du statut d'un module" };
+				await _journalisationService.Journalize(journal);
 				return Ok(appResult);
 			}
 			catch (Exception ex)
@@ -266,15 +309,16 @@ namespace LoanManagement.API.Controllers.Users_Management
 					return BadRequest("Le module renseigné n'existe pas");
 				}
 				var sousModules = await _applicationService.GetApplicationModules(application.Id);
-				if(sousModules.Count() == 0)
+				if(sousModules.Count() != 0)
 				{
-					await _applicationService.Delete(application);
-					_logger.LogWarning("Suppression d'un module : Opération effectuée avec succès");
-					return Ok();
+					_logger.LogWarning("Suppression d'un module : Impossible d'effectuer cette action, veuillez supprimer les sous-modules d'abord");
+					return BadRequest("Impossible d\'effectuer cette action, veuillez supprimer les sous-modules d\'abord");
 				}
-
-				_logger.LogWarning("Suppression d'un module : Impossible d'effectuer cette action, veuillez supprimer les sous-modules d'abord");
-				return BadRequest("Impossible d\'effectuer cette action, veuillez supprimer les sous-modules d\'abord");
+				await _applicationService.Delete(application);
+				var journal = new Journal() { Libelle = "Suppression d'un module" };
+				await _journalisationService.Journalize(journal);
+				_logger.LogWarning("Suppression d'un module : Opération effectuée avec succès");
+				return Ok();
 			}
 			catch (Exception ex)
 			{

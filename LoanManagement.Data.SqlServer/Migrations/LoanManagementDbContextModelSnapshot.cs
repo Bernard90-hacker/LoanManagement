@@ -42,13 +42,13 @@ namespace LoanManagement.Data.SqlServer.Migrations
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(max)")
-                        .HasDefaultValue("25/06/2023");
+                        .HasDefaultValue("29/06/2023");
 
                     b.Property<string>("DateModification")
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(max)")
-                        .HasDefaultValue("25/06/2023");
+                        .HasDefaultValue("29/06/2023");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -146,13 +146,13 @@ namespace LoanManagement.Data.SqlServer.Migrations
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(max)")
-                        .HasDefaultValue("25/06/2023");
+                        .HasDefaultValue("29/06/2023");
 
                     b.Property<string>("DateModification")
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(max)")
-                        .HasDefaultValue("25/06/2023");
+                        .HasDefaultValue("29/06/2023");
 
                     b.Property<int>("DepartementId")
                         .HasColumnType("int");
@@ -246,7 +246,7 @@ namespace LoanManagement.Data.SqlServer.Migrations
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(max)")
-                        .HasDefaultValue("25/06/2023");
+                        .HasDefaultValue("29/06/2023");
 
                     b.Property<string>("DateSysteme")
                         .IsRequired()
@@ -329,7 +329,7 @@ namespace LoanManagement.Data.SqlServer.Migrations
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(max)")
-                        .HasDefaultValue("25/06/2023");
+                        .HasDefaultValue("29/06/2023");
 
                     b.Property<string>("DateModification")
                         .IsRequired()
@@ -385,7 +385,7 @@ namespace LoanManagement.Data.SqlServer.Migrations
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(max)")
-                        .HasDefaultValue("25/06/2023");
+                        .HasDefaultValue("29/06/2023");
 
                     b.Property<string>("OldPasswordHash")
                         .IsRequired()
@@ -437,6 +437,19 @@ namespace LoanManagement.Data.SqlServer.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ParamMotDePasses", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            DelaiExpiration = 6,
+                            ExcludeUsername = true,
+                            IncludeDigits = true,
+                            IncludeLowerCase = true,
+                            IncludeSpecialCharacters = true,
+                            IncludeUpperCase = true,
+                            Taille = 8
+                        });
                 });
 
             modelBuilder.Entity("LoanManagement.core.Models.Users_Management.Profil", b =>
@@ -455,7 +468,7 @@ namespace LoanManagement.Data.SqlServer.Migrations
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(max)")
-                        .HasDefaultValue("25/06/2023");
+                        .HasDefaultValue("29/06/2023");
 
                     b.Property<string>("DateExpiration")
                         .IsRequired()
@@ -465,7 +478,7 @@ namespace LoanManagement.Data.SqlServer.Migrations
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(max)")
-                        .HasDefaultValue("25/06/2023");
+                        .HasDefaultValue("29/06/2023");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -501,8 +514,8 @@ namespace LoanManagement.Data.SqlServer.Migrations
 
                     b.Property<string>("Libelle")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<int>("Statut")
                         .HasColumnType("int");
@@ -513,6 +526,57 @@ namespace LoanManagement.Data.SqlServer.Migrations
                         .IsUnique();
 
                     b.ToTable("TypeJournaux", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Code = "CONN",
+                            Libelle = "Connexion",
+                            Statut = 0
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Code = "DECONN",
+                            Libelle = "Déconnexion",
+                            Statut = 0
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Code = "UPDATE",
+                            Libelle = "Modification de données",
+                            Statut = 0
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Code = "DELETE",
+                            Libelle = "Suppression des données",
+                            Statut = 0
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Code = "ADD",
+                            Libelle = "Ajout de données",
+                            Statut = 0
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Code = "GETBYID",
+                            Libelle = "Rechercher un objet par son id",
+                            Statut = 0
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Code = "GETBYCODE",
+                            Libelle = "Rechercher un objet par son code",
+                            Statut = 0
+                        });
                 });
 
             modelBuilder.Entity("LoanManagement.core.Models.Users_Management.Utilisateur", b =>
@@ -527,7 +591,7 @@ namespace LoanManagement.Data.SqlServer.Migrations
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(max)")
-                        .HasDefaultValue("25/06/2023");
+                        .HasDefaultValue("29/06/2023");
 
                     b.Property<string>("DateDesactivation")
                         .IsRequired()

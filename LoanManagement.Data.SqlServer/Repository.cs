@@ -1,4 +1,5 @@
-﻿using System.Linq.Expressions;
+﻿using Microsoft.EntityFrameworkCore.Storage;
+using System.Linq.Expressions;
 
 namespace LoanManagement.Data.SqlServer
 {
@@ -12,7 +13,7 @@ namespace LoanManagement.Data.SqlServer
         public async Task AddAsync(TEntity entity)
 		{
 			await _context.Set<TEntity>().AddAsync(entity);
-			await _context.SaveChangesAsync();
+				await _context.SaveChangesAsync();
 		}
 
 		public async Task AddRangeAsync(IEnumerable<TEntity> entities)

@@ -48,10 +48,11 @@ namespace LoanManagement.service.Services.Users_Management
 
 		public async Task<TypeJournal> Update(TypeJournal type, TypeJournal typeToBeUpdated)
 		{
-			typeToBeUpdated = type;
+			type.Libelle = typeToBeUpdated.Libelle;
+			type.Statut = typeToBeUpdated.Statut;
 			await _unitOfWork.CommitAsync();
 
-			return typeToBeUpdated;
+			return type;
 		}
 	}
 }

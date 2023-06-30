@@ -11,7 +11,8 @@ namespace LoanManagement.API.Controllers.Users_Management
 		private readonly ILoggerManager _logger;
 		private readonly IMapper _mapper;
 
-        public HabilitationProfilController(IHabilitationProfilService habilitationProfilService, 
+
+		public HabilitationProfilController(IHabilitationProfilService habilitationProfilService, 
 			ILoggerManager logger, IMapper mapper, IProfilService profilService)
         {
 			_logger = logger;
@@ -83,6 +84,7 @@ namespace LoanManagement.API.Controllers.Users_Management
 
 				//Enregistrement
 				var droitCreated = await _habilitationProfilService.Create(droit);
+				
 
 				//Mappage en vue de retourner la ressource à l'utilisateur
 				var result = _mapper.Map<HabilitationProfilRessource>(droitCreated);
@@ -92,6 +94,7 @@ namespace LoanManagement.API.Controllers.Users_Management
 			}
 			catch (Exception ex)
 			{
+				
 				_logger.LogError("Une erreur est survenue pendant le traitement de la requête");
 				return ValidationProblem(statusCode: (int)HttpCode.INTERNAL_SERVER_ERROR, title: "Erreur interne du serveur", detail: ex.Message);
 			}
