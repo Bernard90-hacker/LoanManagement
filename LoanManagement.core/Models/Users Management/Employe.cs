@@ -5,6 +5,7 @@ namespace LoanManagement.core.Models.Users_Management
 	public class Employe
 	{
         public int Id { get; set; }
+        public int Matricule { get; set; }
         public string Nom { get; set; } = string.Empty;
         public string Prenoms { get; set; } =string.Empty;
         public string NomComplet { get; set; } = string.Empty;

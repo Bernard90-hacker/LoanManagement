@@ -58,6 +58,8 @@ namespace LoanManagement.API.Extensions
 			services.AddTransient<TypeJournalService>();
 			services.AddTransient<UtilisateurService>();
 			services.AddTransient<JournalisationService>();
+			services.AddTransient<EmailService>();
+			services.AddTransient<TokenService>();
 		}
 
 		public static void ConfigureUnitOfWorkService(this IServiceCollection services)

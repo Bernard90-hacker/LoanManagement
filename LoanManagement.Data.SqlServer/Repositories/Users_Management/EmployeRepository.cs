@@ -33,5 +33,10 @@
 			return await _context.Employes
 				.Where(x => x.Id == id).FirstOrDefaultAsync();
 		}
+
+		public async Task<Employe?> GetEmployeByMatricule(int matricule)
+		{
+			return await _context.Employes.Where(x => x.Matricule == matricule).FirstOrDefaultAsync();
+		}
 	}
 }

@@ -340,7 +340,7 @@ namespace LoanManagement.API.Controllers.Users_Management
 		}
 
 		[HttpGet("{id}/Utilisateurs")]
-		public async Task<ActionResult<GetUtilisateurRessource>> GetUsersByProfil(int id)
+		public async Task<ActionResult<IEnumerable<GetUtilisateurRessource>>> GetUsersByProfil(int id)
 		{
 			try
 			{

@@ -20,13 +20,16 @@ namespace LoanManagement.API.Controllers.Users_Management
 		private readonly ILoggerManager _logger;
 		private readonly IMapper _mapper;
 		private readonly IDirectionService _directionService;
-
+		private readonly EmailService _mailService;
+		private readonly TokenService _tokenService;
+		private readonly IConfiguration _config;
         public AuthController(UtilisateurService utilisateurService, ILoggerManager logger,
 			IMapper mapper, IMotDePasseService motDePasseService,
 			IProfilService profilService, IParamMotDePasseService param,
 			IEmployeService employeService, IJournalService journalService, 
 			IDepartmentService department, IDirectionService directionService,
-			ITypeJournalService typeJournalService, JournalisationService journalisationService)
+			ITypeJournalService typeJournalService, JournalisationService journalisationService,
+			EmailService mailService, TokenService tokenService, IConfiguration conf)
         {
 			_utilisateurService = utilisateurService;
 			_logger = logger;
@@ -40,11 +43,14 @@ namespace LoanManagement.API.Controllers.Users_Management
 			_directionService = directionService;
 			_typeJournalService = typeJournalService;
 			_journalisationService = journalisationService;
+			_mailService = mailService;
+			_tokenService = tokenService;
+			_config = conf;
 		}
 
 
 
-		[HttpPost("login")]
+		[HttpPost("Login")]
 		public async Task<ActionResult> Login(LoginRessource ressource)
 		{
 			try
@@ -92,14 +98,20 @@ namespace LoanManagement.API.Controllers.Users_Management
 					_logger.LogWarning("Connexion d'un utilisateur : Profil expiré");
 					return BadRequest(new ApiResponse((int)CustomHttpCode.OBJECT_NOT_FOUND, description: "Profil expiré"));
 				}
-				var cookieOptions = new CookieOptions()
-				{
-					Expires = DateTime.Now.AddHours(5)
-				};
-				Response.Cookies.Append("Username", user.Username, cookieOptions);
 				await _utilisateurService.Connect(user);
-				var journal = new Journal() { Libelle = "Connexion d'un utilisateur" };
+				var journal = new Journal() { Libelle = "Connexion d'un utilisateur", UtilisateurId = user.Id };
+				string role = string.Empty;
+				if (user.Username.Contains("admin"))
+					role = "Admin";
+				else
+					role = "User";
+				journal.Entite = role;
 				await _journalisationService.Journalize(journal);
+				CookieOptions cookieOptions = new();
+				cookieOptions.Expires = DateTime.Now.AddHours(2);
+				cookieOptions.HttpOnly = true; //This will make the cookies only accessible by the backend.
+				Response.Cookies.Append("refresh_token", user.RefreshToken, cookieOptions);
+
 				return Ok(new
 				{
 					Email = employe.Email,
@@ -110,7 +122,8 @@ namespace LoanManagement.API.Controllers.Users_Management
 					CodeDepartement = departement.Code,
 					Direction = direction.Code,
 					Username = user.Username
-				});
+
+				}) ;
 			}
 			catch (Exception ex)
 			{
@@ -120,7 +133,7 @@ namespace LoanManagement.API.Controllers.Users_Management
 			}
 		}
 
-		[HttpPost("logout")]
+		[HttpPost("Logout")]
 		public async Task<ActionResult> Logout(string username)
 		{
 			try
@@ -132,13 +145,55 @@ namespace LoanManagement.API.Controllers.Users_Management
 					return NotFound(new ApiResponse((int)CustomHttpCode.OBJECT_NOT_FOUND, description: "Utilisateur inexistant"));
 				}
 				await _utilisateurService.Disconnect(user);
-				string? value = string.Empty;
-				Request.Cookies.TryGetValue("Username", out value);
-				Response.Cookies.Delete("Username");
+				Response.Cookies.Delete("refresh_token");
 				var journal = new Journal() { Libelle = "Déconnexion d'un utilisateur" };
 				await _journalisationService.Journalize(journal);
 
 				return Ok();
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError("Une erreur est survenue pendant le traitement de la requête");
+				return ValidationProblem(statusCode: (int)HttpCode.INTERNAL_SERVER_ERROR, title: "Erreur interne du serveur", detail: ex.Message);
+			}
+		}
+
+		[HttpPost("ForgotPassword")]
+		public async Task<ActionResult> Forgot(string username)
+		{
+			try
+			{
+				var user = await _utilisateurService.GetUserByUsername(username);
+				if(user is null)
+				{
+					_logger.LogWarning("Oubli du mot de passe : Nom d'utilisateur inexistant");
+					return NotFound(new ApiResponse((int)CustomHttpCode.OBJECT_NOT_FOUND, description: "Utilisateur inexistant"));
+				}
+				var currentParam = await _paramMotDePasseService.GetCurrentParameter();
+				var generatedPassword = Constants.Utils.UtilsConstant.GeneratePassword(currentParam.Taille, 1);
+				string hash = string.Empty;
+				byte[] salt;
+				var newUser = new Utilisateur()
+				{
+					PasswordHash = Constants.Utils.UtilsConstant.HashPassword(generatedPassword, out salt, out hash),
+					PasswordSalt = salt,
+					Username = user.Username,
+					DateModificationMotDePasse = DateTime.Now.ToString("dd/MM/yyyy")
+				};
+				var userUpdated = await _utilisateurService.Update(user, newUser);
+				var employe = await _employeService.GetEmployeByUsername(user.Username);
+				try
+				{
+					_mailService.SendPasswordResetMailAsync(generatedPassword, employe.Email);
+				}
+				catch (Exception)
+				{
+					_logger.LogError("Une erreur est survenue pendant l'envoi du mail : Oubli de mot de passe");
+					return BadRequest("Une erreur est survenue pendant l'envoi du mail");
+				}
+				_logger.LogInformation("Oubli de mot de passe : Opération effectuée avec succès");
+				return Ok();
+
 			}
 			catch (Exception ex)
 			{

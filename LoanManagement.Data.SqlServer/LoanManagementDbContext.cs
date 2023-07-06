@@ -97,6 +97,18 @@ namespace LoanManagement.Data.SqlServer
 						Id = 7,
 						Code = "GETBYCODE",
 						Libelle = "Rechercher un objet par son code"
+					},
+					new TypeJournal()
+					{
+						Id = 8,
+						Code = "GET",
+						Libelle = "Récupération de données"
+					},
+					new TypeJournal()
+					{
+						Id = 9,
+						Code = "MNT",
+						Libelle = "Montage de dossier crédit"
 					}
 				);
 
@@ -112,10 +124,143 @@ namespace LoanManagement.Data.SqlServer
 						ExcludeUsername = true,
 						IncludeUpperCase = true,
 						DelaiExpiration = 6,
-						Taille = 8
+						Taille = 8,
 					}
 				);
-				
+
+			builder
+				.Entity<Direction>().HasData(
+
+					new Direction()
+					{
+						Id = 1,
+						Code = "DSIOSI",
+						Libelle = "Direction informatique"
+					},
+					new Direction()
+					{
+						Id = 2,
+						Code = "DRC",
+						Libelle = "Direction commerciale"
+					},
+					new Direction()
+					{
+						Id = 3,
+						Code = "GGE",
+						Libelle = "Direction gestion des engagements"
+					}
+				);
+
+			builder
+				.Entity<Departement>().HasData(
+
+					new Departement()
+					{
+						Id = 1,
+						Code = "ETUDEV",
+						Libelle = "Etudes et développement",
+						DirectionId = 1
+					},
+					new Departement()
+					{
+						Id = 2,
+						Code = "EXPL",
+						Libelle = "Exploitation",
+						DirectionId = 1
+					},
+					new Departement()
+					{
+						Id = 3,
+						Code = "ORG",
+						Libelle = "Organisation",
+						DirectionId = 1
+					},
+					new Departement()
+					{
+						Id = 4,
+						Code = "CLI",
+						Libelle = "Chargé clientèle",
+						DirectionId = 2
+					},
+					new Departement()
+					{
+						Id = 5,
+						Code = "ANL",
+						Libelle = "Analyse",
+						DirectionId = 2
+					}
+				);
+			builder
+				.Entity<Profil>().HasData(
+
+					new Profil()
+					{
+						Id = 1,
+						Code = "PROFIL-001",
+						Libelle = "Commercial",
+						Description = "Profil destiné aux commerciaux",
+						DateAjout = DateTime.Now.ToString("dd/MM/yyyy"),
+						Statut = 1,
+						DateExpiration = "03/09/2024"
+					},
+					new Profil()
+					{
+						Id = 2,
+						Code = "PROFIL-002",
+						Libelle = "Informatique",
+						Description = "Profil destiné aux informaticiens",
+						DateAjout = DateTime.Now.ToString("dd/MM/yyyy"),
+						Statut = 1,
+						DateExpiration = "03/09/2024"
+					},
+					new Profil()
+					{
+						Id = 3,
+						Code = "PROFIL-003",
+						Libelle = "Analyste",
+						Description = "Profil destiné aux analystes",
+						DateAjout = DateTime.Now.ToString("dd/MM/yyyy"),
+						Statut = 1,
+						DateExpiration = "03/09/2024"
+					}
+				);
+			builder.Entity<HabilitationProfil>().HasData(
+				new HabilitationProfil()
+				{
+					Id = 1,
+					Edition = true,
+					Insertion = true,
+					Modification = true,
+					Generation = true,
+					Suppression = true,
+					ProfilId = 2,
+					DateAjout = DateTime.Now.ToString("dd/MM/yyyy")
+				},
+				new HabilitationProfil()
+				{
+					Id = 2,
+					Edition = true,
+					Insertion = true,
+					Modification = true,
+					Generation = false,
+					Suppression = false,
+					ProfilId = 1,
+					DateAjout = DateTime.Now.ToString("dd/MM/yyyy")
+				},
+				new HabilitationProfil()
+				{
+					Id = 3,
+					Edition = true,
+					Insertion = true,
+					Modification = true,
+					Generation = false,
+					Suppression = false,
+					ProfilId = 3,
+					DateAjout = DateTime.Now.ToString("dd/MM/yyyy")
+				}
+			);
+
+
 		}
 
 

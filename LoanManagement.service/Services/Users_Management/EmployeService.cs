@@ -117,5 +117,10 @@ namespace LoanManagement.service.Services.Users_Management
 			return result;
 
 		}
+
+		public async Task<Employe?> GetEmployeByMatricule(int matricule)
+		{
+			return await _unitOfWork.Employes.GetEmployeByMatricule(matricule);
+		}
 	}
 }

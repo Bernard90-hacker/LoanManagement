@@ -84,6 +84,31 @@ namespace LoanManagement.API.Controllers.Users_Management
 			}
 		}
 
+		[HttpGet("{matricule:int}")]
+		public async Task<ActionResult<EmployeRessource>> GetEmployeByMatricule(int matricule)
+		{
+			try
+			{
+				var employe = await _employeService.GetEmployeByMatricule(matricule);
+				if (employe is null)
+				{
+					_logger.LogWarning("Détails d'un employé : aucun employé trouvé");
+					return NotFound(new ApiResponse((int)CustomHttpCode.OBJECT_NOT_FOUND, description: "Aucun employé trouvé qui correspond au critère spécifié"));
+				}
+
+				var result = _mapper.Map<EmployeRessource>(employe);
+				_logger.LogInformation("'Détails d'un employé' : Opération effectuée avec succès");
+				var journal = new Journal() { Libelle = "Identification d'un employé par son matricule" };
+				await _journalisationService.Journalize(journal);
+				return Ok(result);
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError("Une erreur est survenue pendant le traitement de la requête");
+				return ValidationProblem(statusCode: (int)HttpCode.INTERNAL_SERVER_ERROR, title: "Erreur interne du serveur", detail: ex.Message);
+			}
+		}
+
 		[HttpGet("{id:int}/Utilisateur")]
 		public async Task<ActionResult<UtilisateurRessource>> GetEmployeUserAccount(int id)
 		{

@@ -12,7 +12,15 @@
 				.UseIdentityColumn();
 
 			builder
+				.Property(x => x.Matricule)
+				.IsRequired();
+
+			builder
 				.HasIndex(x => x.Email)
+				.IsUnique();
+
+			builder
+				.HasIndex(x => x.Matricule)
 				.IsUnique();
 
 			builder

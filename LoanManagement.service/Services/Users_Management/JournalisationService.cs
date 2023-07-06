@@ -41,15 +41,10 @@ namespace LoanManagement.service.Services.Users_Management
 						journal.IPAdress = Constants.Config.ConfigConstants.GetIpAddress(_accessor);
 						journal.Machine = Constants.Config.ConfigConstants.GetDeviceName();
 						journal.Peripherique = Constants.Config.ConfigConstants.GetWebBrowserDeviceType(_browserDetector);
-						journal.Entite = "User";
 						journal.PageURL = _request.GetDisplayUrl();
 						journal.MethodeHTTP = (!_request.IsHttps).ToString();
 						journal.DateOperation = DateTime.Now.ToString("dd/MM/yyyy/HH:mm:ss");
 						journal.DateSysteme = DateTime.Now.ToString("dd/MM/yyyy");
-						if (_request.Cookies["Username"] == null)
-							throw new Exception();
-						var user = await _unitOfWork.Utilisateurs.GetUserByUsername(_request.Cookies["username"]);
-						journal.UtilisateurId = user.Id;
 
 						switch (journal.PageURL)
 						{
@@ -59,7 +54,6 @@ namespace LoanManagement.service.Services.Users_Management
 								await _unitOfWork.Journaux.AddAsync(journal);
 								transaction.Commit();
 								return ;
-								
 							case "https://localhost:44304/api/users/Auth/Logout":
 								journal.TypeJournalId = 2;
 								await _unitOfWork.Journaux.AddAsync(journal);
@@ -78,6 +72,8 @@ namespace LoanManagement.service.Services.Users_Management
 							journal.TypeJournalId = 6;
 						if (_request.Method == "GET" && journal.PageURL.Contains("code"))
 							journal.TypeJournalId = 7;
+						if (_request.Method == "GET")
+							journal.TypeJournalId = 8;
 						journal.Niveau = 2;
 						await _unitOfWork.Journaux.AddAsync(journal);
 

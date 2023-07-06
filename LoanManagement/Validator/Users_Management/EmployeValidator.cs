@@ -24,6 +24,10 @@
 				.NotNull()
 				.WithMessage("Le département doit être renseigné");
 
+			RuleFor(x => x.Matricule)
+				.NotNull()
+				.WithMessage("Le matricule doit être renseigné");
+
 		}
 	}
 }
