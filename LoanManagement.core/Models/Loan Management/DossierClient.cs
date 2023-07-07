@@ -7,8 +7,6 @@ namespace LoanManagement.core.Models.Loan_Management
         public string NumeroDossier { get; set; } = string.Empty;
         public string Nom { get; set; } = string.Empty;
         public string Prenoms { get; set; } = string.Empty;
-        public int StatutMaritalId { get; set; }
-        public StatutMarital? StatutMarital { get; set; }
         public string Profession { get; set; } = string.Empty;
         public int EmployeurId { get; set; }
         public Employeur? Employeur { get; set; }
@@ -22,6 +20,15 @@ namespace LoanManagement.core.Models.Loan_Management
         public string Distractions { get; set; } = string.Empty;
         public bool EstSportif { get; set; }
         public int CategorieSport { get; set; } //1. Amateur 2. Professionnel.
+        public bool EstInfirme { get; set; }
+        public string NatureInfirmite { get; set; } = string.Empty;
+        public string DateSurvenance { get; set; } = string.Empty;
+        public int InfoSanteClientId { get; set; }
+        public virtual InfoSanteClient? InfoSanteClient { get; set; }
+		public int StatutMaritalId { get; set; }
+		public virtual StatutMarital? StatutMarital { get; set; }
+        public List<TypeDocument>? TypeDocuments { get; set; }
+
 
     }
 }
