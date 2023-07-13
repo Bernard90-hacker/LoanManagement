@@ -47,6 +47,8 @@ namespace LoanManagement.API.Mapping
 			CreateMap<DeroulementRessource, Deroulement>();
 			CreateMap<Deroulement, GetDeroulementRessource>();
 			CreateMap<UpdateDeroulementRessource, Deroulement>();
+			CreateMap<RoleOrgane, RoleOrganeRessource>();
+			CreateMap<RoleOrganeRessource, RoleOrgane>();
 
 			CreateMap<Utilisateur, GetUtilisateurRessource>();
 		}

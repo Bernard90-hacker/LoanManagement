@@ -34,7 +34,8 @@
 
 		public async Task<RoleOrgane> Update(RoleOrgane roleUpdated, RoleOrgane role)
 		{
-			role = roleUpdated;
+			role.Libelle = roleUpdated.Libelle;
+			role.DureeTraitement = roleUpdated.DureeTraitement;
 			await _unitOfWork.CommitAsync();
 
 			return role;

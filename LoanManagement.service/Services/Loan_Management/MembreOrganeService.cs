@@ -33,6 +33,11 @@ namespace LoanManagement.service.Services.Loan_Management
 			return await _unitOfWork.MembreOrganes.GetAll(parameters);
 		}
 
+		public async Task<MembreOrgane?> GetById(int Id)
+		{
+			return await _unitOfWork.MembreOrganes.GetByIdAsync(Id);
+		}
+
 		public async Task<IEnumerable<Utilisateur>> GetUsersByMembreOrgane(int membreOrganeId)
 		{
 			return await _unitOfWork.MembreOrganes.GetUsersByMembreOrgane(membreOrganeId);
@@ -42,7 +47,15 @@ namespace LoanManagement.service.Services.Loan_Management
 		{
 			return await _unitOfWork.MembreOrganes.GetUsersByOrganeDecision(organeDecisionId);
 		}
+		public async Task<string?> GetMembreUsername(int memberId)
+		{
+			var membre = await _unitOfWork.MembreOrganes.GetByIdAsync(memberId);
+			var result = (from x in (await _unitOfWork.Utilisateurs.GetAllAsync())
+						 where membre.UtilisateurId == x.Id
+						 select x.Username).FirstOrDefault();
 
+			return result;
+		}
 		public async Task<MembreOrgane> Update(MembreOrgane membreUpdated, MembreOrgane membre)
 		{
 			membre = membreUpdated;
