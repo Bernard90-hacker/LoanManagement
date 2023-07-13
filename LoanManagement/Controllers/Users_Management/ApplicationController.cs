@@ -72,7 +72,7 @@ namespace LoanManagement.API.Controllers.Users_Management
 				journal.UtilisateurId = user.Id;
 				var typeJournal = await _typeJournalService.GetTypeJournalByCode("CONN");
 				journal.TypeJournalId = typeJournal.Id;
-				var journalCreated = await _journalService.Create(journal);
+				await _journalisationService.Journalize(journal);
 				Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
 				_logger.LogInformation($"'Liste des modules ': Opération effectuée avec succès, {all.Count} modules retournés");
 				return Ok(allResult);

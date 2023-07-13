@@ -22,6 +22,639 @@ namespace LoanManagement.Data.SqlServer.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("LoanManagement.core.Models.Loan_Management.Client", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("DateNaissance")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<int>("Indice")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Nom")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<string>("Prenoms")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<string>("Profession")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Quartier")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Residence")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Tel")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Ville")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Indice")
+                        .IsUnique();
+
+                    b.ToTable("Clients", (string)null);
+                });
+
+            modelBuilder.Entity("LoanManagement.core.Models.Loan_Management.Compte", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ClientId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("NumeroCompte")
+                        .IsRequired()
+                        .HasMaxLength(13)
+                        .HasColumnType("nvarchar(13)");
+
+                    b.Property<double>("Solde")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("float")
+                        .HasDefaultValue(0.0);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClientId");
+
+                    b.HasIndex("NumeroCompte")
+                        .IsUnique();
+
+                    b.ToTable("Comptes", (string)null);
+                });
+
+            modelBuilder.Entity("LoanManagement.core.Models.Loan_Management.Deroulement", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Libelle")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("NiveauInstance")
+                        .HasColumnType("int");
+
+                    b.Property<double>("Plafond")
+                        .HasColumnType("float");
+
+                    b.Property<double>("Plancher")
+                        .HasColumnType("float");
+
+                    b.Property<int>("TypePretId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TypePretId");
+
+                    b.ToTable("Deroulements", (string)null);
+                });
+
+            modelBuilder.Entity("LoanManagement.core.Models.Loan_Management.DossierClient", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("BuveurOccasionnel")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("BuveurRegulier")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("CategorieSport")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ClientId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("DateSurvenance")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Distractions")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("EmployeurId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("EstInfirme")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("EstSportif")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("Fumeur")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("InfoSanteClientId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("NatureInfirmite")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("NbrCigarettes")
+                        .HasColumnType("int");
+
+                    b.Property<string>("NumeroDossier")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("Poids")
+                        .HasColumnType("float");
+
+                    b.Property<int>("PretAccordId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StatutDossierClientId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StatutMaritalId")
+                        .HasColumnType("int");
+
+                    b.Property<double>("Taille")
+                        .HasColumnType("float");
+
+                    b.Property<double>("TensionArterielle")
+                        .HasColumnType("float");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClientId");
+
+                    b.HasIndex("EmployeurId");
+
+                    b.HasIndex("InfoSanteClientId")
+                        .IsUnique();
+
+                    b.HasIndex("PretAccordId")
+                        .IsUnique();
+
+                    b.HasIndex("StatutDossierClientId");
+
+                    b.HasIndex("StatutMaritalId");
+
+                    b.ToTable("DossierClients", (string)null);
+                });
+
+            modelBuilder.Entity("LoanManagement.core.Models.Loan_Management.Employeur", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("BoitePostale")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Nom")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Tel")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BoitePostale")
+                        .IsUnique();
+
+                    b.HasIndex("Tel")
+                        .IsUnique();
+
+                    b.ToTable("Employeurs", (string)null);
+                });
+
+            modelBuilder.Entity("LoanManagement.core.Models.Loan_Management.EtapeDeroulement", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("DeroulementId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Etape")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DeroulementId");
+
+                    b.HasIndex("Id");
+
+                    b.ToTable("EtapeDeroulements", (string)null);
+                });
+
+            modelBuilder.Entity("LoanManagement.core.Models.Loan_Management.InfoSanteClient", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("DureeTraitement")
+                        .HasColumnType("int");
+
+                    b.Property<int>("NatureQuestionId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PeriodeTraitement")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("ReponseBoolenne")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("ReponsePrecision")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NatureQuestionId")
+                        .IsUnique();
+
+                    b.ToTable("InfoSanteClients", (string)null);
+                });
+
+            modelBuilder.Entity("LoanManagement.core.Models.Loan_Management.MembreOrgane", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Libelle")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("OrganeDecisionId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UtilisateurId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrganeDecisionId");
+
+                    b.HasIndex("UtilisateurId");
+
+                    b.ToTable("MembreOrganes", (string)null);
+                });
+
+            modelBuilder.Entity("LoanManagement.core.Models.Loan_Management.NatureQuestion", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Libelle")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("NatureQuestions", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Libelle = "Avez-vous été malade au cours des 6 derniers mois ?"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Libelle = "Êtes vous souvent fatigué (e)?"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Libelle = "Avez-vous maigri les 6 derniers mois ?"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Libelle = "Avez-vous des ganglions, des furoncles, des abcès ou des maladies de la peau ?"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Libelle = "Toussez-vous depuis quelque temps avec en plus de la fièvre ?"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Libelle = "Avez-vous des plaies dans la bouche ?"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Libelle = "Faites-vous souvent la diarrhée ?"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Libelle = "Êtes vous souvent ballonné (e) ?"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Libelle = "Avez-vous des OEdèmes des Membres Inférieurs (O.M.I) ?"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Libelle = "Êtes vous essoufflé (e) au moindre effort ?"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Libelle = "Avez-vous déjà reçu une perfusion ?"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            Libelle = "Avez-vous déjà reçu une transfusion de sang ?"
+                        },
+                        new
+                        {
+                            Id = 13,
+                            Libelle = "Avez-vous déjà subi une opération ?"
+                        },
+                        new
+                        {
+                            Id = 14,
+                            Libelle = "Avez-vous des informations complémentaires sur votre état de santé susceptibles de renseignerl'assureur ?"
+                        });
+                });
+
+            modelBuilder.Entity("LoanManagement.core.Models.Loan_Management.OrganeDecision", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Libelle")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("RoleOrganeId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoleOrganeId");
+
+                    b.ToTable("OrganeDecisions", (string)null);
+                });
+
+            modelBuilder.Entity("LoanManagement.core.Models.Loan_Management.PeriodicitePaiement", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Libelle")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PeriodicitePaiements", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Libelle = "Unique"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Libelle = "Mensuelle"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Libelle = "Annuelle"
+                        });
+                });
+
+            modelBuilder.Entity("LoanManagement.core.Models.Loan_Management.PretAccord", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("DateDepartRetraite")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DateDerniereEcheance")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DatePremiereEcheance")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("Mensualite")
+                        .HasColumnType("float");
+
+                    b.Property<double>("MontantPret")
+                        .HasColumnType("float");
+
+                    b.Property<double>("MontantPrime")
+                        .HasColumnType("float");
+
+                    b.Property<int>("PeriodicitePaiementId")
+                        .HasColumnType("int");
+
+                    b.Property<double>("PrimeTotale")
+                        .HasColumnType("float");
+
+                    b.Property<double>("QuotiteCessible")
+                        .HasColumnType("float");
+
+                    b.Property<double>("SalaireNetMensuel")
+                        .HasColumnType("float");
+
+                    b.Property<double>("Surprime")
+                        .HasColumnType("float");
+
+                    b.Property<int>("TauxEngagement")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TypePretId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PeriodicitePaiementId");
+
+                    b.HasIndex("TypePretId");
+
+                    b.ToTable("PretAccords", (string)null);
+                });
+
+            modelBuilder.Entity("LoanManagement.core.Models.Loan_Management.RoleOrgane", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("DureeTraitement")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Libelle")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("RoleOrganes", (string)null);
+                });
+
+            modelBuilder.Entity("LoanManagement.core.Models.Loan_Management.StatutDossierClient", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Libelle")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("StatutDossierClients");
+                });
+
+            modelBuilder.Entity("LoanManagement.core.Models.Loan_Management.StatutMarital", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Libelle")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("StatutMaritals");
+                });
+
+            modelBuilder.Entity("LoanManagement.core.Models.Loan_Management.TypePret", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Libelle")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TypePrets");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Libelle = "Court terme (1 à 2 ans)"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Libelle = "Court terme (2 à 4 ans)"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Libelle = "Découvert"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Libelle = "Crédit Moyen Terme"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Libelle = "C.D.M.H"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Libelle = "Autre Prêt Immobilier"
+                        });
+                });
+
             modelBuilder.Entity("LoanManagement.core.Models.Users_Management.Application", b =>
                 {
                     b.Property<int>("Id")
@@ -42,13 +675,13 @@ namespace LoanManagement.Data.SqlServer.Migrations
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(max)")
-                        .HasDefaultValue("03/07/2023");
+                        .HasDefaultValue("13/07/2023");
 
                     b.Property<string>("DateModification")
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(max)")
-                        .HasDefaultValue("03/07/2023");
+                        .HasDefaultValue("13/07/2023");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -203,13 +836,13 @@ namespace LoanManagement.Data.SqlServer.Migrations
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(max)")
-                        .HasDefaultValue("03/07/2023");
+                        .HasDefaultValue("13/07/2023");
 
                     b.Property<string>("DateModification")
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(max)")
-                        .HasDefaultValue("03/07/2023");
+                        .HasDefaultValue("13/07/2023");
 
                     b.Property<int>("DepartementId")
                         .HasColumnType("int");
@@ -300,7 +933,7 @@ namespace LoanManagement.Data.SqlServer.Migrations
                         new
                         {
                             Id = 1,
-                            DateAjout = "03/07/2023",
+                            DateAjout = "13/07/2023",
                             DateModification = "",
                             Edition = true,
                             Generation = true,
@@ -312,7 +945,7 @@ namespace LoanManagement.Data.SqlServer.Migrations
                         new
                         {
                             Id = 2,
-                            DateAjout = "03/07/2023",
+                            DateAjout = "13/07/2023",
                             DateModification = "",
                             Edition = true,
                             Generation = false,
@@ -324,7 +957,7 @@ namespace LoanManagement.Data.SqlServer.Migrations
                         new
                         {
                             Id = 3,
-                            DateAjout = "03/07/2023",
+                            DateAjout = "13/07/2023",
                             DateModification = "",
                             Edition = true,
                             Generation = false,
@@ -343,11 +976,14 @@ namespace LoanManagement.Data.SqlServer.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("ClientId")
+                        .HasColumnType("int");
+
                     b.Property<string>("DateOperation")
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(max)")
-                        .HasDefaultValue("03/07/2023");
+                        .HasDefaultValue("13/07/2023");
 
                     b.Property<string>("DateSysteme")
                         .IsRequired()
@@ -406,8 +1042,6 @@ namespace LoanManagement.Data.SqlServer.Migrations
 
                     b.HasIndex("TypeJournalId");
 
-                    b.HasIndex("UtilisateurId");
-
                     b.ToTable("Journaux", (string)null);
                 });
 
@@ -430,7 +1064,7 @@ namespace LoanManagement.Data.SqlServer.Migrations
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(max)")
-                        .HasDefaultValue("03/07/2023");
+                        .HasDefaultValue("13/07/2023");
 
                     b.Property<string>("DateModification")
                         .IsRequired()
@@ -486,7 +1120,7 @@ namespace LoanManagement.Data.SqlServer.Migrations
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(max)")
-                        .HasDefaultValue("03/07/2023");
+                        .HasDefaultValue("13/07/2023");
 
                     b.Property<string>("OldPasswordHash")
                         .IsRequired()
@@ -569,7 +1203,7 @@ namespace LoanManagement.Data.SqlServer.Migrations
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(max)")
-                        .HasDefaultValue("03/07/2023");
+                        .HasDefaultValue("13/07/2023");
 
                     b.Property<string>("DateExpiration")
                         .IsRequired()
@@ -579,7 +1213,7 @@ namespace LoanManagement.Data.SqlServer.Migrations
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(max)")
-                        .HasDefaultValue("03/07/2023");
+                        .HasDefaultValue("13/07/2023");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -605,7 +1239,7 @@ namespace LoanManagement.Data.SqlServer.Migrations
                         {
                             Id = 1,
                             Code = "PROFIL-001",
-                            DateAjout = "03/07/2023",
+                            DateAjout = "13/07/2023",
                             DateExpiration = "03/09/2024",
                             DateModification = "",
                             Description = "Profil destiné aux commerciaux",
@@ -616,7 +1250,7 @@ namespace LoanManagement.Data.SqlServer.Migrations
                         {
                             Id = 2,
                             Code = "PROFIL-002",
-                            DateAjout = "03/07/2023",
+                            DateAjout = "13/07/2023",
                             DateExpiration = "03/09/2024",
                             DateModification = "",
                             Description = "Profil destiné aux informaticiens",
@@ -627,7 +1261,7 @@ namespace LoanManagement.Data.SqlServer.Migrations
                         {
                             Id = 3,
                             Code = "PROFIL-003",
-                            DateAjout = "03/07/2023",
+                            DateAjout = "13/07/2023",
                             DateExpiration = "03/09/2024",
                             DateModification = "",
                             Description = "Profil destiné aux analystes",
@@ -741,7 +1375,7 @@ namespace LoanManagement.Data.SqlServer.Migrations
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(max)")
-                        .HasDefaultValue("03/07/2023");
+                        .HasDefaultValue("13/07/2023");
 
                     b.Property<string>("DateDesactivation")
                         .IsRequired()
@@ -805,6 +1439,150 @@ namespace LoanManagement.Data.SqlServer.Migrations
                     b.ToTable("Utilisateurs", (string)null);
                 });
 
+            modelBuilder.Entity("LoanManagement.core.Models.Loan_Management.Compte", b =>
+                {
+                    b.HasOne("LoanManagement.core.Models.Loan_Management.Client", "Client")
+                        .WithMany("Comptes")
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Client");
+                });
+
+            modelBuilder.Entity("LoanManagement.core.Models.Loan_Management.Deroulement", b =>
+                {
+                    b.HasOne("LoanManagement.core.Models.Loan_Management.TypePret", "TypePret")
+                        .WithMany("Deroulements")
+                        .HasForeignKey("TypePretId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("TypePret");
+                });
+
+            modelBuilder.Entity("LoanManagement.core.Models.Loan_Management.DossierClient", b =>
+                {
+                    b.HasOne("LoanManagement.core.Models.Loan_Management.Client", "Client")
+                        .WithMany("DossierClients")
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("LoanManagement.core.Models.Loan_Management.Employeur", "Employeur")
+                        .WithMany("DossierClients")
+                        .HasForeignKey("EmployeurId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("LoanManagement.core.Models.Loan_Management.InfoSanteClient", "InfoSanteClient")
+                        .WithOne("Dossier")
+                        .HasForeignKey("LoanManagement.core.Models.Loan_Management.DossierClient", "InfoSanteClientId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("LoanManagement.core.Models.Loan_Management.PretAccord", "PretAccord")
+                        .WithOne("Dossier")
+                        .HasForeignKey("LoanManagement.core.Models.Loan_Management.DossierClient", "PretAccordId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("LoanManagement.core.Models.Loan_Management.StatutDossierClient", "StatutDossierClient")
+                        .WithMany("Dossiers")
+                        .HasForeignKey("StatutDossierClientId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("LoanManagement.core.Models.Loan_Management.StatutMarital", "StatutMarital")
+                        .WithMany("Dossiers")
+                        .HasForeignKey("StatutMaritalId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Client");
+
+                    b.Navigation("Employeur");
+
+                    b.Navigation("InfoSanteClient");
+
+                    b.Navigation("PretAccord");
+
+                    b.Navigation("StatutDossierClient");
+
+                    b.Navigation("StatutMarital");
+                });
+
+            modelBuilder.Entity("LoanManagement.core.Models.Loan_Management.EtapeDeroulement", b =>
+                {
+                    b.HasOne("LoanManagement.core.Models.Loan_Management.Deroulement", "Deroulement")
+                        .WithMany("Etapes")
+                        .HasForeignKey("DeroulementId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Deroulement");
+                });
+
+            modelBuilder.Entity("LoanManagement.core.Models.Loan_Management.InfoSanteClient", b =>
+                {
+                    b.HasOne("LoanManagement.core.Models.Loan_Management.NatureQuestion", "NatureQuestion")
+                        .WithOne("InfoSanteClient")
+                        .HasForeignKey("LoanManagement.core.Models.Loan_Management.InfoSanteClient", "NatureQuestionId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("NatureQuestion");
+                });
+
+            modelBuilder.Entity("LoanManagement.core.Models.Loan_Management.MembreOrgane", b =>
+                {
+                    b.HasOne("LoanManagement.core.Models.Loan_Management.OrganeDecision", "OrganeDecision")
+                        .WithMany("Membres")
+                        .HasForeignKey("OrganeDecisionId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("LoanManagement.core.Models.Users_Management.Utilisateur", "Utilisateur")
+                        .WithMany("Membres")
+                        .HasForeignKey("UtilisateurId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("OrganeDecision");
+
+                    b.Navigation("Utilisateur");
+                });
+
+            modelBuilder.Entity("LoanManagement.core.Models.Loan_Management.OrganeDecision", b =>
+                {
+                    b.HasOne("LoanManagement.core.Models.Loan_Management.RoleOrgane", "Role")
+                        .WithMany("OrganeDecisions")
+                        .HasForeignKey("RoleOrganeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Role");
+                });
+
+            modelBuilder.Entity("LoanManagement.core.Models.Loan_Management.PretAccord", b =>
+                {
+                    b.HasOne("LoanManagement.core.Models.Loan_Management.PeriodicitePaiement", "PeriodicitePaiement")
+                        .WithMany("PretAccords")
+                        .HasForeignKey("PeriodicitePaiementId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("LoanManagement.core.Models.Loan_Management.TypePret", "TypePret")
+                        .WithMany("PretAccords")
+                        .HasForeignKey("TypePretId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("PeriodicitePaiement");
+
+                    b.Navigation("TypePret");
+                });
+
             modelBuilder.Entity("LoanManagement.core.Models.Users_Management.Departement", b =>
                 {
                     b.HasOne("LoanManagement.core.Models.Users_Management.Direction", "Direction")
@@ -854,15 +1632,7 @@ namespace LoanManagement.Data.SqlServer.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("LoanManagement.core.Models.Users_Management.Utilisateur", "Utilisateur")
-                        .WithMany("Journaux")
-                        .HasForeignKey("UtilisateurId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.Navigation("TypeJournal");
-
-                    b.Navigation("Utilisateur");
                 });
 
             modelBuilder.Entity("LoanManagement.core.Models.Users_Management.Menu", b =>
@@ -910,6 +1680,70 @@ namespace LoanManagement.Data.SqlServer.Migrations
                     b.Navigation("Profil");
                 });
 
+            modelBuilder.Entity("LoanManagement.core.Models.Loan_Management.Client", b =>
+                {
+                    b.Navigation("Comptes");
+
+                    b.Navigation("DossierClients");
+                });
+
+            modelBuilder.Entity("LoanManagement.core.Models.Loan_Management.Deroulement", b =>
+                {
+                    b.Navigation("Etapes");
+                });
+
+            modelBuilder.Entity("LoanManagement.core.Models.Loan_Management.Employeur", b =>
+                {
+                    b.Navigation("DossierClients");
+                });
+
+            modelBuilder.Entity("LoanManagement.core.Models.Loan_Management.InfoSanteClient", b =>
+                {
+                    b.Navigation("Dossier");
+                });
+
+            modelBuilder.Entity("LoanManagement.core.Models.Loan_Management.NatureQuestion", b =>
+                {
+                    b.Navigation("InfoSanteClient");
+                });
+
+            modelBuilder.Entity("LoanManagement.core.Models.Loan_Management.OrganeDecision", b =>
+                {
+                    b.Navigation("Membres");
+                });
+
+            modelBuilder.Entity("LoanManagement.core.Models.Loan_Management.PeriodicitePaiement", b =>
+                {
+                    b.Navigation("PretAccords");
+                });
+
+            modelBuilder.Entity("LoanManagement.core.Models.Loan_Management.PretAccord", b =>
+                {
+                    b.Navigation("Dossier");
+                });
+
+            modelBuilder.Entity("LoanManagement.core.Models.Loan_Management.RoleOrgane", b =>
+                {
+                    b.Navigation("OrganeDecisions");
+                });
+
+            modelBuilder.Entity("LoanManagement.core.Models.Loan_Management.StatutDossierClient", b =>
+                {
+                    b.Navigation("Dossiers");
+                });
+
+            modelBuilder.Entity("LoanManagement.core.Models.Loan_Management.StatutMarital", b =>
+                {
+                    b.Navigation("Dossiers");
+                });
+
+            modelBuilder.Entity("LoanManagement.core.Models.Loan_Management.TypePret", b =>
+                {
+                    b.Navigation("Deroulements");
+
+                    b.Navigation("PretAccords");
+                });
+
             modelBuilder.Entity("LoanManagement.core.Models.Users_Management.Application", b =>
                 {
                     b.Navigation("Menus");
@@ -951,7 +1785,7 @@ namespace LoanManagement.Data.SqlServer.Migrations
                 {
                     b.Navigation("Employe");
 
-                    b.Navigation("Journaux");
+                    b.Navigation("Membres");
 
                     b.Navigation("Passwords");
                 });

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using LoanManagement.core.Models.Loan_Management;
+using Microsoft.AspNetCore.Http;
 
 namespace LoanManagement.core.Models.Users_Management
 {

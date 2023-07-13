@@ -16,6 +16,8 @@ global using Microsoft.Extensions.Configuration;
 global using LoanManagement.core.Models.Users_Management;
 global using LoanManagement.core.Repositories.Users_Management;
 global using LoanManagement.Data.SqlServer.Configuration.Users_Management;
+global using LoanManagement.core.Models.Loan_Management;
+global using LoanManagement.core.Repositories.Loan_Management;
 
 
 

@@ -48,7 +48,7 @@ namespace LoanManagement.API.Controllers.Users_Management
 				};
 				Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
 				_logger.LogInformation("'Liste des employés' : Opération effectuée avec succès");
-				var journal = new Journal() { Libelle = "Liste des employés" };
+				var journal = new Journal() { Libelle = "Liste des employés", TypeJournalId = 8, Entite="User" };
 				await _journalisationService.Journalize(journal);
 				return Ok(result);
 			}
@@ -204,7 +204,7 @@ namespace LoanManagement.API.Controllers.Users_Management
 				var employeCreated = await _employeService.Create(employeDb);
 				
 				var result = _mapper.Map<EmployeRessource>(employeCreated);
-				var journal = new Journal() { Libelle = "Enregistrement d'un employé" };
+				var journal = new Journal() { Libelle = "Enregistrement d'un employé", TypeJournalId = 5, Entite="User" };
 				await _journalisationService.Journalize(journal);
 				_logger.LogInformation("'Enregistrement d'un employé' : Opération effectuée avec succès");
 

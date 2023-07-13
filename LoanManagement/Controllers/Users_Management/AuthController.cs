@@ -99,7 +99,7 @@ namespace LoanManagement.API.Controllers.Users_Management
 					return BadRequest(new ApiResponse((int)CustomHttpCode.OBJECT_NOT_FOUND, description: "Profil expiré"));
 				}
 				await _utilisateurService.Connect(user);
-				var journal = new Journal() { Libelle = "Connexion d'un utilisateur", UtilisateurId = user.Id };
+				var journal = new Journal() { Libelle = "Connexion d'un utilisateur", UtilisateurId = user.Id, TypeJournalId = 1};
 				string role = string.Empty;
 				if (user.Username.Contains("admin"))
 					role = "Admin";
@@ -112,6 +112,7 @@ namespace LoanManagement.API.Controllers.Users_Management
 				cookieOptions.HttpOnly = true; //This will make the cookies only accessible by the backend.
 				Response.Cookies.Append("refresh_token", user.RefreshToken, cookieOptions);
 
+				
 				return Ok(new
 				{
 					Email = employe.Email,
@@ -122,8 +123,7 @@ namespace LoanManagement.API.Controllers.Users_Management
 					CodeDepartement = departement.Code,
 					Direction = direction.Code,
 					Username = user.Username
-
-				}) ;
+				});
 			}
 			catch (Exception ex)
 			{

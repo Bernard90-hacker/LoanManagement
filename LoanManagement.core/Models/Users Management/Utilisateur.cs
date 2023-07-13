@@ -19,9 +19,8 @@
         public string DateModificationMotDePasse { get; set; } = string.Empty;
         public int? ProfilId { get; set; }
 		public Profil? Profil { get; set; }
-
 		public Employe? Employe { get; set; }
         public List<MotDePasse> Passwords { get; set; } = new();
-        public List<Journal> Journaux { get; set; } = new();
+        public List<MembreOrgane> Membres { get; set; } = new();
     }
 }

@@ -12,6 +12,7 @@
         public string Quartier { get; set; } = string.Empty;
         public string Tel { get; set; } = string.Empty;
         public string Profession { get; set; } = string.Empty;
-        public virtual List<Compte> Comptes { get; set; }
+        public virtual List<Compte>? Comptes { get; set; }
+        public virtual List<DossierClient>? DossierClients { get; set; }
     }
 }

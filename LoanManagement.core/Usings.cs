@@ -5,4 +5,6 @@ global using LoanManagement.core.Models;
 global using LoanManagement.core.Repositories;
 global using Microsoft.EntityFrameworkCore.Storage;
 global using LoanManagement.core.Models.Users_Management;
+global using LoanManagement.core.Models.Loan_Management;
+global using LoanManagement.core.Pagination.Loan_Management;
 

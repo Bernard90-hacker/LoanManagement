@@ -14,7 +14,11 @@
         public double Mensualite { get; set; } //Le montant qu'il doit payer à la fin de chaque mois.
         public int TauxEngagement { get; set; }
         public string DateDepartRetraite { get; set; } = string.Empty;
-        public int TypeContratId { get; set; }
-        public TypeContrat? TypeContrat { get; set; }
+		public int TypePretId { get; set; }
+		public TypePret? TypePret { get; set; }
+		public int PeriodicitePaiementId { get; set; }
+        public PeriodicitePaiement? PeriodicitePaiement { get; set; }
+        public DossierClient? Dossier { get; set; }
+
     }
 }

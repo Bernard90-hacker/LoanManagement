@@ -9,6 +9,7 @@
         public string PeriodeTraitement { get; set; } = string.Empty;
         public int NatureQuestionId { get; set; }
         public NatureQuestion? NatureQuestion { get; set; }
+        public DossierClient? Dossier { get; set; }
 
     }
 }

@@ -26,6 +26,13 @@ global using System.Numerics;
 global using FluentValidation;
 global using LoanManagement.API.Validator.Users_Management;
 global using LoanManagement.service.Services.Users_Management;
+global using LoanManagement.core.Services.Loan_Management;
+global using LoanManagement.core.Pagination.Loan_Management;
+global using LoanManagement.core.Models.Loan_Management;
+global using LoanManagement.API.Ressources.Loan_Management;
+global	using LoanManagement.API.Validator.Loan_Management;
+global	using Microsoft.AspNetCore.Http.Extensions;
+global	using Microsoft.Data.SqlClient;
 
 
 

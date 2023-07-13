@@ -1,5 +1,6 @@
 ﻿using LoanManagement.API.Dto;
 using LoanManagement.API.Ressources;
+using LoanManagement.core.Models.Loan_Management;
 
 namespace LoanManagement.API.Mapping
 {
@@ -35,6 +36,17 @@ namespace LoanManagement.API.Mapping
 			CreateMap<TypeJournal, TypeJournalRessource>();
 			CreateMap<Journal, JournalRessource>();
 			CreateMap<JournalRessource, Journal>();
+			CreateMap<ClientRessource, Client>();
+			CreateMap<Client, ClientRessource>();
+			CreateMap<Compte, CompteRessource>();
+			CreateMap<Compte, GetCompteDto>();
+			CreateMap<CompteRessource, Compte>();
+			CreateMap<TypePretRessource, TypePret>();
+			CreateMap<TypePret, TypePretRessource>();
+			CreateMap<Deroulement, DeroulementRessource>();
+			CreateMap<DeroulementRessource, Deroulement>();
+			CreateMap<Deroulement, GetDeroulementRessource>();
+			CreateMap<UpdateDeroulementRessource, Deroulement>();
 
 			CreateMap<Utilisateur, GetUtilisateurRessource>();
 		}

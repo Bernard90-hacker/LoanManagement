@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="QuestPDF" Version="2023.6.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Constants\Constants.csproj" />
     <ProjectReference Include="..\LoanManagement.Data.SqlServer\LoanManagement.Data.SqlServer.csproj" />
     <ProjectReference Include="..\LoggerService\LoggerService.csproj" />

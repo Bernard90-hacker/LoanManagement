@@ -44,7 +44,7 @@ namespace LoanManagement.API.Controllers.Users_Management
 					profils.HasNext,
 					profils.HasPrevious
 				};
-				var journal = new Journal() { Libelle = "Liste des profils" };
+				var journal = new Journal() { Libelle = "Liste des profils", TypeJournalId = 8 };
 				await _journalisationService.Journalize(journal);
 				Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
 				_logger.LogInformation($"'Liste des utilisateurs ': Opération effectuée avec succès, {profils.Count} utilisateurs retournés");

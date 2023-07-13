@@ -1,5 +1,6 @@
 ﻿using FluentAssertions.Common;
 using LoanManagement.core;
+using LoanManagement.service.Services.Loan_Management;
 using LoanManagement.service.Services.Users_Management;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -60,6 +61,37 @@ namespace LoanManagement.API.Extensions
 			services.AddTransient<JournalisationService>();
 			services.AddTransient<EmailService>();
 			services.AddTransient<TokenService>();
+			services.AddTransient<FicheAssuranceService>();
+			services.AddTransient<IClientService, ClientService>();
+			services.AddTransient<ClientService>();
+			services.AddTransient<ICompteService, CompteService>();
+			services.AddTransient<CompteService>();
+			services.AddTransient<IDeroulementService, DeroulementService>();
+			services.AddTransient<DeroulementService>();
+			services.AddTransient<IDossierClientService, DossierClientService>();
+			services.AddTransient<DossierClientService>();
+			services.AddTransient<IEtapeDeroulementService, EtapeDeroulementService>();
+			services.AddTransient<EtapeDeroulementService>();
+			services.AddTransient<ISanteClientService, InfoSanteClientService>();
+			services.AddTransient<InfoSanteClientService>();
+			services.AddTransient<IMembreOrganeService, MembreOrganeService>();
+			services.AddTransient<MembreOrganeService>();
+			services.AddTransient<INatureQuestionService, NatureQuestionService>();
+			services.AddTransient<NatureQuestionService>();
+			services.AddTransient<IOrganeDecisionService, OrganeDecisionService>();
+			services.AddTransient<OrganeDecisionService>();
+			services.AddTransient<IRoleOrganeService, RoleOrganeService>();
+			services.AddTransient<RoleOrganeService>();
+			services.AddTransient<IStatutDossierClientService, StatutDossierClientService>();
+			services.AddTransient<StatutDossierClientService>();
+			services.AddTransient<IPretAccordService, PretAccordService>();
+			services.AddTransient<PretAccordService>();
+			services.AddTransient<IPeriodicitePaiementService, PeriodicitePaiementService>();
+			services.AddTransient<PeriodicitePaiementService>();
+			services.AddTransient<IStatutMaritalService, StatutMaritalService>();
+			services.AddTransient<StatutMaritalService>();
+			services.AddTransient<ITypePretService, TypePretService>();
+			services.AddTransient<TypePretService>();	
 		}
 
 		public static void ConfigureUnitOfWorkService(this IServiceCollection services)

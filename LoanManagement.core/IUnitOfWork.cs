@@ -1,4 +1,5 @@
 ﻿
+using LoanManagement.core.Repositories.Loan_Management;
 using LoanManagement.core.Repositories.Users_Management;
 
 namespace LoanManagement.core
@@ -17,6 +18,22 @@ namespace LoanManagement.core
 		IParamMotDePasseRepository ParamMotDePasses { get; }
 		IProfilRepository Profils { get; }
 		ITypeJournalRepository TypeJournaux { get; }
+		IClientRepository Clients { get; }
+		ICompteRepository Comptes { get; }
+		IDeroulementRepository Deroulements { get; }
+		IDossierClientRepository DossierClients { get; }
+		IEmployeurRepository Employeurs { get; }
+		IEtapeDeroulementRepository Etapes { get; }
+		IMembreOrganeRepository MembreOrganes { get; }
+		INatureQuestionRepository Natures { get; }
+		IOrganeDecisionRepository OrganeDecisions { get; }
+		IPeriodicitePaiementRepository PeriodicitePaiements { get; }
+		IPretAccordRepository PretAccords { get; }
+		IRoleOrganeRepository Roles { get; }
+		ISanteClientRepository InfoSantes { get; }
+		IStatutDossierClientRepository StatutDossierClients { get; }
+		IStatutMaritalRepository StatutMaritals { get; }
+		ITypePretRepository TypePrets { get;  }
 
 		Task<int> CommitAsync();
 		Task<IDbContextTransaction> BeginTransactionAsync();

@@ -3,7 +3,7 @@
 	public class Journal
 	{
         public int Id { get; set; }
-        public int Niveau { get; set; } //ECHEC, SUCCES, INFORMATION
+        public int Niveau { get; set; } //1.ECHEC, 2.SUCCES, 3.INFORMATION
         public string Libelle { get; set; } = string.Empty;
         public string Machine { get; set; } = string.Empty;
         public string Peripherique { get; set; } = string.Empty;
@@ -17,7 +17,7 @@
         public string DateOperation { get; set; } = string.Empty;
         public string DateSysteme { get; set; } = string.Empty;
         public int UtilisateurId { get; set; }
-        public Utilisateur? Utilisateur { get; set; }
+		public int ClientId { get; set; }
         public int TypeJournalId { get; set; }
         public TypeJournal? TypeJournal { get; set; }
     }
