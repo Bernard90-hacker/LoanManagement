@@ -102,6 +102,9 @@ namespace LoanManagement.Data.SqlServer
 			builder
 				.ApplyConfiguration(new TypePretConfiguration());
 
+			builder
+				.ApplyConfiguration(new ParametrageFraisDossierConfiguration());
+
 
 
 			foreach (var foreignKey in builder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
@@ -164,13 +167,19 @@ namespace LoanManagement.Data.SqlServer
 						Id = 9,
 						Code = "MNT",
 						Libelle = "Montage de dossier crédit"
+					},
+					new TypeJournal()
+					{
+						Id = 10,
+						Code = "GEN",
+						Libelle = "Génération de fiches d'assurance"
 					}
 				);
 
 			builder
-				.Entity<ParamMotDePasse>().HasData(
+				.Entity<ParamGlobal>().HasData(
 
-					new ParamMotDePasse()
+					new ParamGlobal()
 					{
 						Id = 1,
 						IncludeDigits = true,
@@ -448,6 +457,98 @@ namespace LoanManagement.Data.SqlServer
 					}
 				);
 
+			builder
+				.Entity<ParametrageFraisDossier>()
+				.HasData
+				(
+					new ParametrageFraisDossier()
+					{
+						Id = 1,
+						Plancher = 1,
+						Plafond = 100000,
+						FraisDossiers = 0,
+						PourcentageCommissionEngagement = 0,
+						FraisFixe = 0,
+						PourcentageTAF = 0
+					},
+					new ParametrageFraisDossier()
+					{
+						Id = 2,
+						Plancher = 500001,
+						Plafond = 1000000,
+						FraisDossiers = 10000,
+						PourcentageCommissionEngagement = 25,
+						FraisFixe = 1000,
+						PourcentageTAF = 10
+					},
+					new ParametrageFraisDossier()
+					{
+						Id = 3,
+						Plancher = 100001,
+						Plafond = 500000,
+						FraisDossiers = 5000,
+						PourcentageCommissionEngagement = 25,
+						FraisFixe = 1000,
+						PourcentageTAF = 10
+					},
+					new ParametrageFraisDossier()
+					{
+						Id = 4,
+						Plancher = 1000001,
+						Plafond = 2000000,
+						FraisDossiers = 25000,
+						PourcentageCommissionEngagement = 25,
+						FraisFixe = 1000,
+						PourcentageTAF = 10
+					},
+					new ParametrageFraisDossier()
+					{
+						Id = 5,
+						Plancher = 2000001,
+						Plafond = 5000000,
+						FraisDossiers = 50000,
+						PourcentageCommissionEngagement = 25,
+						FraisFixe = 1000,
+						PourcentageTAF = 10
+					},
+					new ParametrageFraisDossier()
+					{
+						Id = 6,
+						Plancher = 5000001,
+						FraisDossiers = 65000,
+						FraisFixe = 1000, 
+						PourcentageTAF = 10,
+						PourcentageCommissionEngagement = 25
+					}
+
+				);
+
+			builder
+				.Entity<StatutMarital>()
+				.HasData
+				(
+					new StatutMarital()
+					{
+						Id = 1,
+						Libelle = "Célibataire"
+					},
+					new StatutMarital()
+					{
+						Id = 2,
+						Libelle = "Divorcé(e)"
+					},
+					new StatutMarital()
+					{
+						Id = 3,
+						Libelle = "Marié(e)"
+					},
+					new StatutMarital()
+					{
+						Id = 4,
+						Libelle = "Divorcé(e)"
+					}
+				);
+
 
 		}
 
@@ -462,7 +563,7 @@ namespace LoanManagement.Data.SqlServer
         public DbSet<Journal> Journaux { get; set; }
         public DbSet<Menu> Menus { get; set; }
         public DbSet<MotDePasse> MotDePasses { get; set; }
-        public DbSet<ParamMotDePasse> ParamMotDePasses { get; set; }
+        public DbSet<ParamGlobal> ParamGlobals { get; set; }
         public DbSet<Profil> Profils { get; set; }
         public DbSet<TypeJournal> TypeJournaux { get; set; }
         public DbSet<Utilisateur> Utilisateurs { get; set; }

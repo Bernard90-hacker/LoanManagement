@@ -16,13 +16,9 @@
 				.IsRequired();
 
 			builder
-				.Property(x => x.RoleOrganeId)
-				.IsRequired();
-
-			builder
-				.HasOne(x => x.Role)
-				.WithMany(y => y.OrganeDecisions)
-				.HasForeignKey(x => x.RoleOrganeId);
+				.HasMany(x => x.Roles)
+				.WithOne(y => y.OrganeDecision)
+				.HasForeignKey(x => x.OrganeDecisionId);
 
 			builder
 				.ToTable("OrganeDecisions");

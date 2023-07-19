@@ -48,9 +48,33 @@ namespace LoanManagement.Data.SqlServer.Repositories.Loan_Management
 			DossierClient? dossierClient = await GetById(id);
 			if (dossierClient == null) throw new Exception("Dossier inexistant");
 
-			return await _context.StatutDossierClients.Where(x => x.Id == 
-			dossierClient.StatutDossierClientId)
+			return await _context.StatutDossierClients.Where(x => x.DossierClientId == 
+			dossierClient.Id)
 				.FirstOrDefaultAsync();
+		}
+
+		public async Task<Deroulement?> GetDossierDeroulement(int typePretId, double montant)
+		{
+			var deroulements = await _context.Deroulements.Where(x => x.TypePretId == typePretId)
+				.ToListAsync();
+			var typePrets = await _context.TypePrets.ToListAsync();
+			var result = (from x in deroulements
+						 from y in typePrets
+						 where x.TypePretId == y.Id
+						 where montant >= x.Plancher
+						 where montant <= x.Plafond
+						 select x).FirstOrDefault();
+
+			return result;
+		}
+
+		public async Task<IEnumerable<InfoSanteClient>> GetInfoSanteByDossier(int dossierId)
+		{
+			var result = await _context.InfoSanteClients.Where
+				(x => x.DossierClientId == dossierId)
+				.ToListAsync();
+
+			return result;
 		}
 	}
 }

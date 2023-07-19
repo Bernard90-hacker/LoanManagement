@@ -47,6 +47,18 @@
 			return await _unitOfWork.Employeurs.GetByPhoneNumber(number);
 		}
 
+		public async Task<PretAccord?> GetDossier(int employeurId)
+		{
+			var employeur = await _unitOfWork.Employeurs.GetById(employeurId);
+			var dossiers = await _unitOfWork.PretAccords.GetAll();
+			if (employeur is null) throw new Exception("Employeur inexistant");
+			var result = (from x in dossiers
+						 where x.EmployeurId == employeurId
+						 select x).AsQueryable().FirstOrDefault();
+
+			return result;
+		}
+
 		public async Task<Employeur> Update(Employeur empUpdated, Employeur emp)
 		{
 			emp = empUpdated;

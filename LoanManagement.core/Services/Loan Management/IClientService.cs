@@ -6,7 +6,7 @@
 		Task<IEnumerable<Client>> GetAll();
 		Task<Client?> GetById(int id);
 		Task<Client?> GetByIndice(int indice);
-		Task<IEnumerable<Compte>> GetComptes(int clientId);
+		Task<Compte> GetCompte(int clientId);
 		Task<IEnumerable<DossierClient>> GetDossierClient(int clientId);
 		Task<Client?> GetCustomerByFullName(string FullName);
 		Task<Client?> GetByPhoneNumber(string phoneNumber);

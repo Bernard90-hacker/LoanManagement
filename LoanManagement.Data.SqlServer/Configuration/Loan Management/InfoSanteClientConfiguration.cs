@@ -25,7 +25,14 @@
 				.Property(x => x.PeriodeTraitement);
 
 			builder
+				.Property(x => x.LieuTraitement);
+
+			builder
 				.Property(x => x.NatureQuestionId)
+				.IsRequired();
+
+			builder
+				.Property(x => x.DossierClientId)
 				.IsRequired();
 
 			builder

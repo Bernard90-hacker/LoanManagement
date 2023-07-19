@@ -3,7 +3,8 @@
 	public interface IRoleOrganeService
 	{
 		Task<IEnumerable<RoleOrgane>> GetAll();
-		Task<RoleOrgane> GetById(int id);
+		Task<OrganeDecision> GetOrganeByRole(int roleId);
+		Task<RoleOrgane?> GetById(int id);
 		Task<RoleOrgane> Create(RoleOrgane role);
 		Task<RoleOrgane> Update(RoleOrgane roleUpdated, RoleOrgane role);
 		Task Delete(RoleOrgane role);	

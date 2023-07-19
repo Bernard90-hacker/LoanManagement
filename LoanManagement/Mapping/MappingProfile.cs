@@ -22,8 +22,8 @@ namespace LoanManagement.API.Mapping
 			CreateMap<Profil, ProfilRessource>();
 			CreateMap<HabilitationProfil, HabilitationProfilRessource>();
 			CreateMap<HabilitationProfilRessource, HabilitationProfil>();
-			CreateMap<ParamMotDePasseRessource, ParamMotDePasse>();
-			CreateMap<ParamMotDePasse, ParamMotDePasseRessource>();
+			CreateMap<ParamMotDePasseRessource, ParamGlobal>();
+			CreateMap<ParamGlobal, ParamMotDePasseRessource>();
 			CreateMap<Employe, EmployeRessource>()
 				.ForMember(dest => dest.Username, act => act.MapFrom(src => src.User.Username));
 			CreateMap<EmployeRessource, Employe>();
@@ -49,6 +49,27 @@ namespace LoanManagement.API.Mapping
 			CreateMap<UpdateDeroulementRessource, Deroulement>();
 			CreateMap<RoleOrgane, RoleOrganeRessource>();
 			CreateMap<RoleOrganeRessource, RoleOrgane>();
+			CreateMap<MembreOrgane, MembreOrganeRessource>();
+			CreateMap<MembreOrganeRessource, MembreOrgane>();
+			CreateMap<OrganeDecision, OrganeDecisionRessource>();
+			CreateMap<OrganeDecisionRessource, OrganeDecision>();
+			CreateMap<TypePretRessource, TypePret>();
+			CreateMap<TypePret, TypePretRessource>();
+			CreateMap<UpdateRoleOrganeRessource, RoleOrgane>();
+			CreateMap<EtapeDeroulementRessource, EtapeDeroulement>();
+			CreateMap<EtapeDeroulement, EtapeDeroulementRessource>();
+			CreateMap<DossierClient, DossierClientRessource>();
+			CreateMap<DossierClientRessource, DossierClient>();
+			CreateMap<InfoSanteClientRessource, InfoSanteClient>();
+			CreateMap<InfoSanteClient, InfoSanteClientRessource>();
+			CreateMap<TypePret, TypePretRessource>();
+			CreateMap<TypePretRessource, TypePret>();
+			CreateMap<OrganeDecision, OrganeDecisionRessource>();
+			CreateMap<OrganeDecisionRessource, OrganeDecision>();
+			CreateMap<PretAccordRessource, PretAccord>();
+			CreateMap<PretAccord, PretAccordRessource>();
+			CreateMap<EmployeurRessource, Employeur>();
+			CreateMap<Employeur, EmployeurRessource>();
 
 			CreateMap<Utilisateur, GetUtilisateurRessource>();
 		}

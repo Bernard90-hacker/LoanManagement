@@ -21,9 +21,11 @@ namespace LoanManagement.Data.SqlServer.Repositories.Loan_Management
 				.FirstOrDefaultAsync();
 		}
 
-		public Task<InfoSanteClient> GetById(int id)
+		public async Task<InfoSanteClient?> GetById(int id)
 		{
-			throw new NotImplementedException();
+			return await _context.InfoSanteClients
+				.Where(x => x.Id == id)
+				.FirstOrDefaultAsync();
 		}
 	}
 }

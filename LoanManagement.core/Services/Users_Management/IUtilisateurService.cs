@@ -16,7 +16,7 @@
 		Task DesactivateUserAccount(Utilisateur user);
 		Task<PagedList<Utilisateur>> GetDisableAccounts();
 		Task<PagedList<Utilisateur>> GetActivatedAccounts();
-		Task<bool> DidUserInformationsMatchAllRequirements(ParamMotDePasse param, string password, string username);
+		Task<bool> DidUserInformationsMatchAllRequirements(ParamGlobal param, string password, string username);
 		Task<string?> GetPasswordConfiguration();
 		Task<Profil> GetUserProfil(Utilisateur user);
 		Task Connect(Utilisateur user);

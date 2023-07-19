@@ -17,6 +17,9 @@
 		public int TypePretId { get; set; }
 		public TypePret? TypePret { get; set; }
 		public int PeriodicitePaiementId { get; set; }
+        public int DossierClientId { get; set; }
+        public int EmployeurId { get; set; }
+        public Employeur? Employeur { get; set; }
         public PeriodicitePaiement? PeriodicitePaiement { get; set; }
         public DossierClient? Dossier { get; set; }
 

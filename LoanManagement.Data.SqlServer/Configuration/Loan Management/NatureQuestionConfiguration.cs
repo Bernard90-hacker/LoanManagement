@@ -16,9 +16,9 @@
 				.HasMaxLength(200);
 
 			builder
-				.HasOne(x => x.InfoSanteClient)
+				.HasMany(x => x.InfoSanteClient)
 				.WithOne(y => y.NatureQuestion)
-				.HasForeignKey<InfoSanteClient>(x => x.NatureQuestionId);
+				.HasForeignKey(x => x.NatureQuestionId);
 
 			builder
 				.ToTable("NatureQuestions");

@@ -45,9 +45,9 @@ namespace LoanManagement.service.Services.Loan_Management
 			return await _unitOfWork.Clients.GetByIndice(indice);
 		}
 
-		public async Task<IEnumerable<Compte>> GetComptes(int clientId)
+		public async Task<Compte> GetCompte(int clientId)
 		{
-			return await _unitOfWork.Clients.GetComptes(clientId);
+			return await _unitOfWork.Clients.GetCompte(clientId);
 		}
 
 		public async Task<IEnumerable<DossierClient>> GetDossierClient(int clientId)

@@ -8,6 +8,8 @@ namespace LoanManagement.API.Controllers.Loan_Management
 	public class ClientController : Controller
 	{
 		private readonly IClientService _clientService;
+		private readonly IDossierClientService _dossierClientService;
+		private readonly IPretAccordService _pretAccordService;
 		private readonly IMapper _mapper;
 		private readonly ILoggerManager _logger;
 		private readonly IJournalService _journalService;
@@ -18,7 +20,8 @@ namespace LoanManagement.API.Controllers.Loan_Management
 
 		public ClientController(IClientService clientService, IMapper mapper, ILoggerManager logger,
 			IJournalService journalService, IUtilisateurService utilisateurService,
-			ITypeJournalService typeJournalService, 
+			ITypeJournalService typeJournalService, IDossierClientService dossierClientService,
+			IPretAccordService pretAccordService,
 			JournalisationService journalisationService, IConfiguration config)
         {
 			_clientService = clientService;
@@ -28,6 +31,8 @@ namespace LoanManagement.API.Controllers.Loan_Management
 			_utilisateurService = utilisateurService;
 			_typeJournalService = typeJournalService;
 			_journalisationService = journalisationService;
+			_dossierClientService = dossierClientService;
+			_pretAccordService = pretAccordService;
 			_configuration = config;
         }
 
@@ -70,6 +75,46 @@ namespace LoanManagement.API.Controllers.Loan_Management
 				}
 			}
 			
+		}
+
+		[HttpGet("{id}/prets")]
+		public async Task<ActionResult> GetLoan(int id)
+		{
+			using (var connection = new SqlConnection(_configuration.GetConnectionString("Default")))
+			{
+				connection.Open();
+				using (var transaction = connection.BeginTransaction())
+				{
+					var Journal = new Journal() { Libelle = "Liste des demandes de prêt d'un client", TypeJournalId = 8, Entite = "User" };
+					try
+					{
+						var client = await _clientService.GetById(id);
+						if(client is null)
+						{
+							Journal.Niveau = 1;
+							await _journalisationService.Journalize(Journal);
+							await transaction.CommitAsync();
+							_logger.LogWarning("Liste des demandes de prêts d'un client : Client sélectionné introuvable");
+
+							return NotFound(new ApiResponse((int)CustomHttpCode.OBJECT_NOT_FOUND,
+								description: "Client sélectionné introuvable"));
+						}
+						var dossiers = await _clientService.GetDossierClient(id);
+						Journal.Niveau = 3; //INFORMATION
+						await _journalisationService.Journalize(Journal);
+						await transaction.CommitAsync();
+
+						return Ok(dossiers);
+					}
+					catch (Exception ex)
+					{
+						Journal.Niveau = 1;
+						await _journalisationService.Journalize(Journal);
+						_logger.LogError("Une erreur est survenue pendant le traitement de la requête");
+						return ValidationProblem(statusCode: (int)HttpCode.INTERNAL_SERVER_ERROR, title: "Erreur interne du serveur", detail: ex.Message);
+					}
+				}
+			}
 		}
 
 		[HttpPost("login")]
@@ -259,11 +304,12 @@ namespace LoanManagement.API.Controllers.Loan_Management
 							return NotFound(new ApiResponse((int)CustomHttpCode.OBJECT_NOT_FOUND, description: "Client introuvable"));
 						}
 
-						var comptes = await _clientService.GetComptes(id);
+						var comptes = await _clientService.GetCompte(id);
 						Journal.Niveau = 3;
 						await _journalisationService.Journalize(Journal);
 						_logger.LogInformation("Liste des comptes du client n° {id} : Opération effectuée avec succès");
-						var result = _mapper.Map<IEnumerable<GetCompteDto>>(comptes);
+						var result = _mapper.Map<GetCompteDto>(comptes);
+
 						return Ok(result);
 					}
 					catch (Exception ex)

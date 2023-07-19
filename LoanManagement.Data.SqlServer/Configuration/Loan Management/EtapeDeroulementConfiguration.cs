@@ -20,6 +20,12 @@
 				.IsRequired();
 
 			builder
+				.HasMany(x => x.Statuts)
+				.WithOne(y => y.EtapeDeroulement)
+				.HasForeignKey(y => y.EtapeDeroulementId);
+
+
+			builder
 				.ToTable("EtapeDeroulements");
 		}
 	}

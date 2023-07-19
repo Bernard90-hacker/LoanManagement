@@ -22,6 +22,99 @@ namespace LoanManagement.Data.SqlServer.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("LoanManagement.Data.SqlServer.Configuration.Loan_Management.ParametrageFraisDossier", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<double>("FraisDossiers")
+                        .HasColumnType("float");
+
+                    b.Property<double>("FraisFixe")
+                        .HasColumnType("float");
+
+                    b.Property<double>("Plafond")
+                        .HasColumnType("float");
+
+                    b.Property<double>("Plancher")
+                        .HasColumnType("float");
+
+                    b.Property<int>("PourcentageCommissionEngagement")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PourcentageTAF")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ParametrageFraisDossiers", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            FraisDossiers = 0.0,
+                            FraisFixe = 0.0,
+                            Plafond = 100000.0,
+                            Plancher = 1.0,
+                            PourcentageCommissionEngagement = 0,
+                            PourcentageTAF = 0
+                        },
+                        new
+                        {
+                            Id = 2,
+                            FraisDossiers = 10000.0,
+                            FraisFixe = 1000.0,
+                            Plafond = 1000000.0,
+                            Plancher = 500001.0,
+                            PourcentageCommissionEngagement = 25,
+                            PourcentageTAF = 10
+                        },
+                        new
+                        {
+                            Id = 3,
+                            FraisDossiers = 5000.0,
+                            FraisFixe = 1000.0,
+                            Plafond = 500000.0,
+                            Plancher = 100001.0,
+                            PourcentageCommissionEngagement = 25,
+                            PourcentageTAF = 10
+                        },
+                        new
+                        {
+                            Id = 4,
+                            FraisDossiers = 25000.0,
+                            FraisFixe = 1000.0,
+                            Plafond = 2000000.0,
+                            Plancher = 1000001.0,
+                            PourcentageCommissionEngagement = 25,
+                            PourcentageTAF = 10
+                        },
+                        new
+                        {
+                            Id = 5,
+                            FraisDossiers = 50000.0,
+                            FraisFixe = 1000.0,
+                            Plafond = 5000000.0,
+                            Plancher = 2000001.0,
+                            PourcentageCommissionEngagement = 25,
+                            PourcentageTAF = 10
+                        },
+                        new
+                        {
+                            Id = 6,
+                            FraisDossiers = 65000.0,
+                            FraisFixe = 1000.0,
+                            Plafond = 0.0,
+                            Plancher = 5000001.0,
+                            PourcentageCommissionEngagement = 25,
+                            PourcentageTAF = 10
+                        });
+                });
+
             modelBuilder.Entity("LoanManagement.core.Models.Loan_Management.Client", b =>
                 {
                     b.Property<int>("Id")
@@ -30,6 +123,10 @@ namespace LoanManagement.Data.SqlServer.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("AdressePostale")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("DateNaissance")
                         .IsRequired()
                         .HasMaxLength(10)
@@ -37,6 +134,10 @@ namespace LoanManagement.Data.SqlServer.Migrations
 
                     b.Property<int>("Indice")
                         .HasColumnType("int");
+
+                    b.Property<string>("LieuNaissance")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Nom")
                         .IsRequired()
@@ -170,9 +271,6 @@ namespace LoanManagement.Data.SqlServer.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("EmployeurId")
-                        .HasColumnType("int");
-
                     b.Property<bool>("EstInfirme")
                         .HasColumnType("bit");
 
@@ -181,9 +279,6 @@ namespace LoanManagement.Data.SqlServer.Migrations
 
                     b.Property<bool>("Fumeur")
                         .HasColumnType("bit");
-
-                    b.Property<int>("InfoSanteClientId")
-                        .HasColumnType("int");
 
                     b.Property<string>("NatureInfirmite")
                         .IsRequired()
@@ -199,12 +294,6 @@ namespace LoanManagement.Data.SqlServer.Migrations
                     b.Property<double>("Poids")
                         .HasColumnType("float");
 
-                    b.Property<int>("PretAccordId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("StatutDossierClientId")
-                        .HasColumnType("int");
-
                     b.Property<int>("StatutMaritalId")
                         .HasColumnType("int");
 
@@ -217,16 +306,6 @@ namespace LoanManagement.Data.SqlServer.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ClientId");
-
-                    b.HasIndex("EmployeurId");
-
-                    b.HasIndex("InfoSanteClientId")
-                        .IsUnique();
-
-                    b.HasIndex("PretAccordId")
-                        .IsUnique();
-
-                    b.HasIndex("StatutDossierClientId");
 
                     b.HasIndex("StatutMaritalId");
 
@@ -278,11 +357,16 @@ namespace LoanManagement.Data.SqlServer.Migrations
                     b.Property<int>("Etape")
                         .HasColumnType("int");
 
+                    b.Property<int>("MembreOrganeId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("DeroulementId");
 
                     b.HasIndex("Id");
+
+                    b.HasIndex("MembreOrganeId");
 
                     b.ToTable("EtapeDeroulements", (string)null);
                 });
@@ -295,8 +379,15 @@ namespace LoanManagement.Data.SqlServer.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("DossierClientId")
+                        .HasColumnType("int");
+
                     b.Property<int>("DureeTraitement")
                         .HasColumnType("int");
+
+                    b.Property<string>("LieuTraitement")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("NatureQuestionId")
                         .HasColumnType("int");
@@ -314,8 +405,9 @@ namespace LoanManagement.Data.SqlServer.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("NatureQuestionId")
-                        .IsUnique();
+                    b.HasIndex("DossierClientId");
+
+                    b.HasIndex("NatureQuestionId");
 
                     b.ToTable("InfoSanteClients", (string)null);
                 });
@@ -449,12 +541,7 @@ namespace LoanManagement.Data.SqlServer.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("RoleOrganeId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("RoleOrganeId");
 
                     b.ToTable("OrganeDecisions", (string)null);
                 });
@@ -513,6 +600,12 @@ namespace LoanManagement.Data.SqlServer.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("DossierClientId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EmployeurId")
+                        .HasColumnType("int");
+
                     b.Property<double>("Mensualite")
                         .HasColumnType("float");
 
@@ -545,6 +638,11 @@ namespace LoanManagement.Data.SqlServer.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("DossierClientId")
+                        .IsUnique();
+
+                    b.HasIndex("EmployeurId");
+
                     b.HasIndex("PeriodicitePaiementId");
 
                     b.HasIndex("TypePretId");
@@ -567,7 +665,12 @@ namespace LoanManagement.Data.SqlServer.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("OrganeDecisionId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("OrganeDecisionId");
 
                     b.ToTable("RoleOrganes", (string)null);
                 });
@@ -580,11 +683,28 @@ namespace LoanManagement.Data.SqlServer.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Libelle")
+                    b.Property<string>("Date")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool?>("DecisionFinale")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("DossierClientId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EtapeDeroulementId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Motif")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("DossierClientId");
+
+                    b.HasIndex("EtapeDeroulementId");
 
                     b.ToTable("StatutDossierClients");
                 });
@@ -604,6 +724,28 @@ namespace LoanManagement.Data.SqlServer.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("StatutMaritals");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Libelle = "Célibataire"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Libelle = "Divorcé(e)"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Libelle = "Marié(e)"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Libelle = "Divorcé(e)"
+                        });
                 });
 
             modelBuilder.Entity("LoanManagement.core.Models.Loan_Management.TypePret", b =>
@@ -675,13 +817,13 @@ namespace LoanManagement.Data.SqlServer.Migrations
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(max)")
-                        .HasDefaultValue("13/07/2023");
+                        .HasDefaultValue("19/07/2023");
 
                     b.Property<string>("DateModification")
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(max)")
-                        .HasDefaultValue("13/07/2023");
+                        .HasDefaultValue("19/07/2023");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -836,13 +978,13 @@ namespace LoanManagement.Data.SqlServer.Migrations
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(max)")
-                        .HasDefaultValue("13/07/2023");
+                        .HasDefaultValue("19/07/2023");
 
                     b.Property<string>("DateModification")
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(max)")
-                        .HasDefaultValue("13/07/2023");
+                        .HasDefaultValue("19/07/2023");
 
                     b.Property<int>("DepartementId")
                         .HasColumnType("int");
@@ -933,7 +1075,7 @@ namespace LoanManagement.Data.SqlServer.Migrations
                         new
                         {
                             Id = 1,
-                            DateAjout = "13/07/2023",
+                            DateAjout = "19/07/2023",
                             DateModification = "",
                             Edition = true,
                             Generation = true,
@@ -945,7 +1087,7 @@ namespace LoanManagement.Data.SqlServer.Migrations
                         new
                         {
                             Id = 2,
-                            DateAjout = "13/07/2023",
+                            DateAjout = "19/07/2023",
                             DateModification = "",
                             Edition = true,
                             Generation = false,
@@ -957,7 +1099,7 @@ namespace LoanManagement.Data.SqlServer.Migrations
                         new
                         {
                             Id = 3,
-                            DateAjout = "13/07/2023",
+                            DateAjout = "19/07/2023",
                             DateModification = "",
                             Edition = true,
                             Generation = false,
@@ -983,7 +1125,7 @@ namespace LoanManagement.Data.SqlServer.Migrations
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(max)")
-                        .HasDefaultValue("13/07/2023");
+                        .HasDefaultValue("19/07/2023");
 
                     b.Property<string>("DateSysteme")
                         .IsRequired()
@@ -1064,7 +1206,7 @@ namespace LoanManagement.Data.SqlServer.Migrations
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(max)")
-                        .HasDefaultValue("13/07/2023");
+                        .HasDefaultValue("19/07/2023");
 
                     b.Property<string>("DateModification")
                         .IsRequired()
@@ -1120,7 +1262,7 @@ namespace LoanManagement.Data.SqlServer.Migrations
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(max)")
-                        .HasDefaultValue("13/07/2023");
+                        .HasDefaultValue("19/07/2023");
 
                     b.Property<string>("OldPasswordHash")
                         .IsRequired()
@@ -1140,7 +1282,7 @@ namespace LoanManagement.Data.SqlServer.Migrations
                     b.ToTable("MotDePasses", (string)null);
                 });
 
-            modelBuilder.Entity("LoanManagement.core.Models.Users_Management.ParamMotDePasse", b =>
+            modelBuilder.Entity("LoanManagement.core.Models.Users_Management.ParamGlobal", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -1203,7 +1345,7 @@ namespace LoanManagement.Data.SqlServer.Migrations
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(max)")
-                        .HasDefaultValue("13/07/2023");
+                        .HasDefaultValue("19/07/2023");
 
                     b.Property<string>("DateExpiration")
                         .IsRequired()
@@ -1213,7 +1355,7 @@ namespace LoanManagement.Data.SqlServer.Migrations
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(max)")
-                        .HasDefaultValue("13/07/2023");
+                        .HasDefaultValue("19/07/2023");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -1239,7 +1381,7 @@ namespace LoanManagement.Data.SqlServer.Migrations
                         {
                             Id = 1,
                             Code = "PROFIL-001",
-                            DateAjout = "13/07/2023",
+                            DateAjout = "19/07/2023",
                             DateExpiration = "03/09/2024",
                             DateModification = "",
                             Description = "Profil destiné aux commerciaux",
@@ -1250,7 +1392,7 @@ namespace LoanManagement.Data.SqlServer.Migrations
                         {
                             Id = 2,
                             Code = "PROFIL-002",
-                            DateAjout = "13/07/2023",
+                            DateAjout = "19/07/2023",
                             DateExpiration = "03/09/2024",
                             DateModification = "",
                             Description = "Profil destiné aux informaticiens",
@@ -1261,7 +1403,7 @@ namespace LoanManagement.Data.SqlServer.Migrations
                         {
                             Id = 3,
                             Code = "PROFIL-003",
-                            DateAjout = "13/07/2023",
+                            DateAjout = "19/07/2023",
                             DateExpiration = "03/09/2024",
                             DateModification = "",
                             Description = "Profil destiné aux analystes",
@@ -1360,6 +1502,13 @@ namespace LoanManagement.Data.SqlServer.Migrations
                             Code = "MNT",
                             Libelle = "Montage de dossier crédit",
                             Statut = 0
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Code = "GEN",
+                            Libelle = "Génération de fiches d'assurance",
+                            Statut = 0
                         });
                 });
 
@@ -1375,7 +1524,7 @@ namespace LoanManagement.Data.SqlServer.Migrations
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(max)")
-                        .HasDefaultValue("13/07/2023");
+                        .HasDefaultValue("19/07/2023");
 
                     b.Property<string>("DateDesactivation")
                         .IsRequired()
@@ -1469,30 +1618,6 @@ namespace LoanManagement.Data.SqlServer.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("LoanManagement.core.Models.Loan_Management.Employeur", "Employeur")
-                        .WithMany("DossierClients")
-                        .HasForeignKey("EmployeurId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("LoanManagement.core.Models.Loan_Management.InfoSanteClient", "InfoSanteClient")
-                        .WithOne("Dossier")
-                        .HasForeignKey("LoanManagement.core.Models.Loan_Management.DossierClient", "InfoSanteClientId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("LoanManagement.core.Models.Loan_Management.PretAccord", "PretAccord")
-                        .WithOne("Dossier")
-                        .HasForeignKey("LoanManagement.core.Models.Loan_Management.DossierClient", "PretAccordId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("LoanManagement.core.Models.Loan_Management.StatutDossierClient", "StatutDossierClient")
-                        .WithMany("Dossiers")
-                        .HasForeignKey("StatutDossierClientId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("LoanManagement.core.Models.Loan_Management.StatutMarital", "StatutMarital")
                         .WithMany("Dossiers")
                         .HasForeignKey("StatutMaritalId")
@@ -1500,14 +1625,6 @@ namespace LoanManagement.Data.SqlServer.Migrations
                         .IsRequired();
 
                     b.Navigation("Client");
-
-                    b.Navigation("Employeur");
-
-                    b.Navigation("InfoSanteClient");
-
-                    b.Navigation("PretAccord");
-
-                    b.Navigation("StatutDossierClient");
 
                     b.Navigation("StatutMarital");
                 });
@@ -1520,16 +1637,32 @@ namespace LoanManagement.Data.SqlServer.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("LoanManagement.core.Models.Loan_Management.MembreOrgane", "MembreOrgane")
+                        .WithMany()
+                        .HasForeignKey("MembreOrganeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("Deroulement");
+
+                    b.Navigation("MembreOrgane");
                 });
 
             modelBuilder.Entity("LoanManagement.core.Models.Loan_Management.InfoSanteClient", b =>
                 {
-                    b.HasOne("LoanManagement.core.Models.Loan_Management.NatureQuestion", "NatureQuestion")
-                        .WithOne("InfoSanteClient")
-                        .HasForeignKey("LoanManagement.core.Models.Loan_Management.InfoSanteClient", "NatureQuestionId")
+                    b.HasOne("LoanManagement.core.Models.Loan_Management.DossierClient", "Dossier")
+                        .WithMany("InfoSanteClients")
+                        .HasForeignKey("DossierClientId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("LoanManagement.core.Models.Loan_Management.NatureQuestion", "NatureQuestion")
+                        .WithMany("InfoSanteClient")
+                        .HasForeignKey("NatureQuestionId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Dossier");
 
                     b.Navigation("NatureQuestion");
                 });
@@ -1553,19 +1686,20 @@ namespace LoanManagement.Data.SqlServer.Migrations
                     b.Navigation("Utilisateur");
                 });
 
-            modelBuilder.Entity("LoanManagement.core.Models.Loan_Management.OrganeDecision", b =>
+            modelBuilder.Entity("LoanManagement.core.Models.Loan_Management.PretAccord", b =>
                 {
-                    b.HasOne("LoanManagement.core.Models.Loan_Management.RoleOrgane", "Role")
-                        .WithMany("OrganeDecisions")
-                        .HasForeignKey("RoleOrganeId")
+                    b.HasOne("LoanManagement.core.Models.Loan_Management.DossierClient", "Dossier")
+                        .WithOne("PretAccord")
+                        .HasForeignKey("LoanManagement.core.Models.Loan_Management.PretAccord", "DossierClientId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Role");
-                });
+                    b.HasOne("LoanManagement.core.Models.Loan_Management.Employeur", "Employeur")
+                        .WithMany("PretAccords")
+                        .HasForeignKey("EmployeurId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
-            modelBuilder.Entity("LoanManagement.core.Models.Loan_Management.PretAccord", b =>
-                {
                     b.HasOne("LoanManagement.core.Models.Loan_Management.PeriodicitePaiement", "PeriodicitePaiement")
                         .WithMany("PretAccords")
                         .HasForeignKey("PeriodicitePaiementId")
@@ -1578,9 +1712,43 @@ namespace LoanManagement.Data.SqlServer.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.Navigation("Dossier");
+
+                    b.Navigation("Employeur");
+
                     b.Navigation("PeriodicitePaiement");
 
                     b.Navigation("TypePret");
+                });
+
+            modelBuilder.Entity("LoanManagement.core.Models.Loan_Management.RoleOrgane", b =>
+                {
+                    b.HasOne("LoanManagement.core.Models.Loan_Management.OrganeDecision", "OrganeDecision")
+                        .WithMany("Roles")
+                        .HasForeignKey("OrganeDecisionId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("OrganeDecision");
+                });
+
+            modelBuilder.Entity("LoanManagement.core.Models.Loan_Management.StatutDossierClient", b =>
+                {
+                    b.HasOne("LoanManagement.core.Models.Loan_Management.DossierClient", "Dossier")
+                        .WithMany("Status")
+                        .HasForeignKey("DossierClientId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("LoanManagement.core.Models.Loan_Management.EtapeDeroulement", "EtapeDeroulement")
+                        .WithMany("Statuts")
+                        .HasForeignKey("EtapeDeroulementId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Dossier");
+
+                    b.Navigation("EtapeDeroulement");
                 });
 
             modelBuilder.Entity("LoanManagement.core.Models.Users_Management.Departement", b =>
@@ -1692,14 +1860,23 @@ namespace LoanManagement.Data.SqlServer.Migrations
                     b.Navigation("Etapes");
                 });
 
-            modelBuilder.Entity("LoanManagement.core.Models.Loan_Management.Employeur", b =>
+            modelBuilder.Entity("LoanManagement.core.Models.Loan_Management.DossierClient", b =>
                 {
-                    b.Navigation("DossierClients");
+                    b.Navigation("InfoSanteClients");
+
+                    b.Navigation("PretAccord");
+
+                    b.Navigation("Status");
                 });
 
-            modelBuilder.Entity("LoanManagement.core.Models.Loan_Management.InfoSanteClient", b =>
+            modelBuilder.Entity("LoanManagement.core.Models.Loan_Management.Employeur", b =>
                 {
-                    b.Navigation("Dossier");
+                    b.Navigation("PretAccords");
+                });
+
+            modelBuilder.Entity("LoanManagement.core.Models.Loan_Management.EtapeDeroulement", b =>
+                {
+                    b.Navigation("Statuts");
                 });
 
             modelBuilder.Entity("LoanManagement.core.Models.Loan_Management.NatureQuestion", b =>
@@ -1710,26 +1887,13 @@ namespace LoanManagement.Data.SqlServer.Migrations
             modelBuilder.Entity("LoanManagement.core.Models.Loan_Management.OrganeDecision", b =>
                 {
                     b.Navigation("Membres");
+
+                    b.Navigation("Roles");
                 });
 
             modelBuilder.Entity("LoanManagement.core.Models.Loan_Management.PeriodicitePaiement", b =>
                 {
                     b.Navigation("PretAccords");
-                });
-
-            modelBuilder.Entity("LoanManagement.core.Models.Loan_Management.PretAccord", b =>
-                {
-                    b.Navigation("Dossier");
-                });
-
-            modelBuilder.Entity("LoanManagement.core.Models.Loan_Management.RoleOrgane", b =>
-                {
-                    b.Navigation("OrganeDecisions");
-                });
-
-            modelBuilder.Entity("LoanManagement.core.Models.Loan_Management.StatutDossierClient", b =>
-                {
-                    b.Navigation("Dossiers");
                 });
 
             modelBuilder.Entity("LoanManagement.core.Models.Loan_Management.StatutMarital", b =>

@@ -1,8 +1,8 @@
 ﻿namespace LoanManagement.Data.SqlServer.Configuration.Users_Management
 {
-	public class ParamMotDePasseConfiguration : IEntityTypeConfiguration<ParamMotDePasse>
+	public class ParamMotDePasseConfiguration : IEntityTypeConfiguration<ParamGlobal>
 	{
-		public void Configure(EntityTypeBuilder<ParamMotDePasse> builder)
+		public void Configure(EntityTypeBuilder<ParamGlobal> builder)
 		{
 			builder
 				.HasKey(x => x.Id);

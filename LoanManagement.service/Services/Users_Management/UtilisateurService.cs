@@ -129,7 +129,7 @@ namespace LoanManagement.service.Services.Users_Management
 			return yourString.Any(ch => !char.IsLetterOrDigit(ch));
 		}
 
-		public async Task<bool> DidUserInformationsMatchAllRequirements(ParamMotDePasse param, string password, string username)
+		public async Task<bool> DidUserInformationsMatchAllRequirements(ParamGlobal param, string password, string username)
 		{
 			var currentParam = await _unitOfWork.ParamMotDePasses.GetCurrentParameter();
 			if (currentParam.IncludeUpperCase)
@@ -156,7 +156,7 @@ namespace LoanManagement.service.Services.Users_Management
 			return true;
 		}
 
-		public static bool MustPasswordContainsUsername(ParamMotDePasse param, string username, string password)
+		public static bool MustPasswordContainsUsername(ParamGlobal param, string username, string password)
 		{
 			var result = false;
 			if (param.ExcludeUsername)

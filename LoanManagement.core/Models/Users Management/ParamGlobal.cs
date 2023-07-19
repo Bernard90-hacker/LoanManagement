@@ -1,6 +1,6 @@
 ﻿namespace LoanManagement.core.Models.Users_Management
 {
-	public class ParamMotDePasse
+	public class ParamGlobal
 	{
         public int Id { get; set; }
         public bool IncludeDigits { get; set; }
@@ -10,6 +10,7 @@
         public bool ExcludeUsername { get; set; }
         public int Taille { get; set; }
         public int DelaiExpiration { get; set; } //Jours
+      
 
     }
 }

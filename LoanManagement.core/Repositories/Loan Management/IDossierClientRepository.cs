@@ -8,5 +8,7 @@
 		Task<DossierClient?> GetByNumber(string numeroDossier);
 		Task<Employeur?> GetEmployeurByDossier(int id);
 		Task<StatutDossierClient?> GetStatut(int id);
+		Task<Deroulement?> GetDossierDeroulement(int typePretId, double montant);
+		Task<IEnumerable<InfoSanteClient>> GetInfoSanteByDossier(int dossierId);
 	}
 }

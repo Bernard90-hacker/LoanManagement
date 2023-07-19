@@ -12,7 +12,18 @@
 				.UseIdentityColumn();
 
 			builder
-				.Property(x => x.Libelle)
+				.Property(x => x.Date)
+				.IsRequired();
+
+			builder
+				.Property(x => x.DecisionFinale)
+				.HasDefaultValue(null);
+
+			builder
+				.Property(x => x.Motif);
+
+			builder
+				.Property(x => x.DossierClientId)
 				.IsRequired();
 		}
 	}

@@ -27,7 +27,7 @@
 			return await _unitOfWork.TypePrets.GetAllAsync();
 		}
 
-		public async Task<TypePret> GetById(int id)
+		public async Task<TypePret?> GetById(int id)
 		{
 			return await _unitOfWork.TypePrets.GetById(id);
 		}

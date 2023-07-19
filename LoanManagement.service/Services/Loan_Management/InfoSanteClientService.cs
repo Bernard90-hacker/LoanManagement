@@ -33,7 +33,7 @@
 				GetAnswerForQuestion(natureQuestionId);
 		}
 
-		public async Task<InfoSanteClient> GetById(int id)
+		public async Task<InfoSanteClient?> GetById(int id)
 		{
 			return await _unitOfWork.InfoSantes
 				.GetById(id);
@@ -45,6 +45,14 @@
 			await _unitOfWork.CommitAsync();
 
 			return info;
+		}
+
+		public async Task<IEnumerable<InfoSanteClient>> Create(List<InfoSanteClient> infos)
+		{
+			await _unitOfWork.InfoSantes
+				.AddRangeAsync(infos);
+
+			return infos;
 		}
 	}
 }

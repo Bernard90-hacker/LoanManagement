@@ -1,19 +1,30 @@
 ﻿using QuestPDF.Infrastructure;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
+using QuestPDF.Previewer;
 
 namespace LoanManagement.service.Services.Loan_Management
 {
 	public class FicheAssuranceService
 	{
-		public Task<bool> GeneratePdf()
+		private IUnitOfWork _unitOfWork;
+		public FicheAssuranceService(IUnitOfWork unitOfWork)
 		{
-			Test();
-			return Task.FromResult(true);
+			_unitOfWork = unitOfWork;
+		}
+		public async Task<bool> GeneratePdf(DossierClient dossier)
+		{
+			await Test(dossier);
+			return true;
 		}
 
-		public void Test()
+		public async Task Test(DossierClient dossier)
 		{
+			var client = await _unitOfWork.Clients.GetByIdAsync(dossier.ClientId);
+			Compte? compte = await _unitOfWork.Comptes.GetByClient(client.Id);
+			var infos = await _unitOfWork.DossierClients.GetInfoSanteByDossier(dossier.Id);
+			StatutMarital? statutMarital = await _unitOfWork.StatutMaritals
+				.GetById(dossier.StatutMaritalId);
 			QuestPDF.Settings.License = LicenseType.Community;
 			var a = Document.Create(container =>
 			{
@@ -32,12 +43,12 @@ namespace LoanManagement.service.Services.Loan_Management
 						{
 							column.Item().PaddingTop(10);
 							column.Item().AssurancePart();
-							column.Item().CustomerFirstPart();
+							column.Item().CustomerFirstPart(client, compte, statutMarital.Libelle);
 							column.Item().PaddingTop(10);
 							column.Item().BankPart();
 							column.Item().PaddingTop(10);
-							column.Item().CustomerSecondPart();
-							column.Item().CustomerLastPart();
+							column.Item().CustomerSecondPart(dossier);
+							column.Item().CustomerLastPart(infos);
 							column.Item().PageBreak();
 							column.Item().ContractTitle();
 							column.Item().ContractInformation();
@@ -50,7 +61,8 @@ namespace LoanManagement.service.Services.Loan_Management
 
 				});
 			});
-			a.GeneratePdf("Files/test.pdf");
+			a.GeneratePdf($"Files/{client.Nom} {client.Prenoms}.pdf");
+			a.GeneratePdfAndShow();
 		}
 	}
 }

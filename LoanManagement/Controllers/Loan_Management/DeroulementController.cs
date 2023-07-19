@@ -10,12 +10,14 @@ namespace LoanManagement.API.Controllers.Loan_Management
 		private readonly IMapper _mapper;
 		private readonly ILoggerManager _logger;
 		private readonly ITypeJournalService _typeJournalService;
+		private readonly ITypePretService _typePretService;
 		private readonly JournalisationService _journalisationService;
 		private readonly IConfiguration _configuration;
 
 		public DeroulementController(IDeroulementService deroulementService, IMapper mapper,
 			ILoggerManager logger, JournalisationService journalisationService, 
-			IConfiguration config, ITypeJournalService typeJournalService)
+			IConfiguration config, ITypeJournalService typeJournalService, 
+			ITypePretService typePretService)
         {
 			_deroulementService = deroulementService;
 			_mapper = mapper;
@@ -23,6 +25,7 @@ namespace LoanManagement.API.Controllers.Loan_Management
 			_journalisationService = journalisationService;
 			_configuration = config;
 			_logger = logger;
+			_typePretService = typePretService;
         }
 
 		[HttpGet("all")]
@@ -147,8 +150,17 @@ namespace LoanManagement.API.Controllers.Loan_Management
 							_logger.LogWarning("Enregistrement d'un déroulement de prêt : Champs obligatoires");
 							return BadRequest(new ApiResponse((int)CustomHttpCode.WARNING, description : "Champs obligaotoires"));
 						}
+						var typePret = await _typePretService.GetById(ressource.TypePretId);
+						if(typePret is null)
+						{
+							Journal.Niveau = 1;
+							await _journalisationService.Journalize(Journal);
+							_logger.LogInformation("Enregistrement d'un déroulement d'un type de prêt : Type de prêt sélectionné introuvable");
+							return NotFound(new ApiResponse((int)CustomHttpCode.OBJECT_NOT_FOUND,
+								description: "Type de prêt sélectionné introuvable"));
+						}
 						var deroulement = _mapper.Map<Deroulement>(ressource);
-						var deroulementCreated = _deroulementService.Create(deroulement);
+						var deroulementCreated = await _deroulementService.Create(deroulement);
 						var result = _mapper.Map<DeroulementRessource>(deroulementCreated);
 						Journal.Niveau = 2;
 						await _journalisationService.Journalize(Journal);
@@ -166,6 +178,11 @@ namespace LoanManagement.API.Controllers.Loan_Management
 					}
 				}
 			}
+		
+		
+		
+		
+		
 		}
 
 		[HttpPut("update")]

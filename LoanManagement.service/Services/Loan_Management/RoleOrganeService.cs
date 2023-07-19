@@ -27,9 +27,14 @@
 			return await _unitOfWork.Roles.GetAll();
 		}
 
-		public async Task<RoleOrgane> GetById(int id)
+		public async Task<RoleOrgane?> GetById(int id)
 		{
 			return await _unitOfWork.Roles.GetById(id);
+		}
+
+		public async Task<OrganeDecision> GetOrganeByRole(int roleId)
+		{
+			return await _unitOfWork.Roles.GetOrganeByRole(roleId);
 		}
 
 		public async Task<RoleOrgane> Update(RoleOrgane roleUpdated, RoleOrgane role)

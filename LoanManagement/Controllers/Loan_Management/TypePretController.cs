@@ -69,13 +69,13 @@ namespace LoanManagement.API.Controllers.Loan_Management
 						if (typePret is null)
 						{
 							_logger.LogWarning("Détails d'un type de prêt : Ressource introuvable");
-							journal.Niveau = 2;
+							journal.Niveau = 1;
 							await _journalisationService.Journalize(journal);
 							return NotFound(new ApiResponse((int)CustomHttpCode.OBJECT_NOT_FOUND, description: "Ressource introuvable"));
 						}
 						journal.Niveau = 3;
 						await _journalisationService.Journalize(journal);
-						_logger.LogInformation("Liste des types de prêt : Opération effectuée avec succès");
+						_logger.LogInformation("Détails d'un type de prêt : Opération effectuée avec succès");
 						var result = _mapper.Map<TypePretRessource>(typePret);
 
 						return Ok(result);
@@ -92,7 +92,7 @@ namespace LoanManagement.API.Controllers.Loan_Management
 		}
 
 		[HttpPost("add")]
-		public async Task<ActionResult> Add([FromBody] string libelle)
+		public async Task<ActionResult> Add(string libelle)
 		{
 			using(var connection = new SqlConnection(_configuration.GetConnectionString("Default")))
 			{

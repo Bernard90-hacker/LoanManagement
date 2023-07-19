@@ -36,6 +36,11 @@
 				.IsRequired();
 
 			builder
+				.HasMany(x => x.PretAccords)
+				.WithOne(y => y.Employeur)
+				.HasForeignKey(x => x.EmployeurId);
+
+			builder
 				.ToTable("Employeurs");
 		}
 	}

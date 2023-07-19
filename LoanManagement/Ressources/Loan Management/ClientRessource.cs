@@ -2,7 +2,8 @@
 {
 	public class ClientRessource
 	{
-		public int Indice { get; set; } //Doit être unique
+        public int Id { get; set; }
+        public int Indice { get; set; } //Doit être unique
 		public string Nom { get; set; } = string.Empty;
 		public string Prenoms { get; set; } = string.Empty;
 		public string DateNaissance { get; set; } = string.Empty;

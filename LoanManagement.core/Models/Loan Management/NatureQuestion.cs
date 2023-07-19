@@ -4,7 +4,7 @@
 	{
         public int Id { get; set; }
         public string Libelle { get; set; } = string.Empty;
-        public InfoSanteClient? InfoSanteClient { get; set; }
+        public List<InfoSanteClient> InfoSanteClient { get; set; } = new();
 
     }
 }

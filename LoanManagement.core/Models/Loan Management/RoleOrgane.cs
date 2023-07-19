@@ -5,6 +5,7 @@
         public int Id { get; set; }
         public string Libelle { get; set; } = string.Empty;
         public int DureeTraitement { get; set; }
-        public List<OrganeDecision> OrganeDecisions { get; set; } = new();
+        public int OrganeDecisionId { get; set; }
+        public OrganeDecision? OrganeDecision { get; set; }
     }
 }

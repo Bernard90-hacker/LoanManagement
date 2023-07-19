@@ -26,7 +26,7 @@
 			if (dossier is null) throw new Exception("Dossier non trouvé");
 
 			var result = (from x in (await _context.PretAccords.ToListAsync())
-						 where x.Id == dossier.PretAccordId
+						 where dossier.Id == x.DossierClientId
 						 select x).FirstOrDefault();
 
 			return result;

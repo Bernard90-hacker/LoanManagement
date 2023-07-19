@@ -45,10 +45,10 @@ namespace LoanManagement.Data.SqlServer.Repositories.Loan_Management
 				.FirstOrDefaultAsync();
 		}
 
-		public async Task<IEnumerable<Compte>> GetComptes(int clientId)
+		public async Task<Compte> GetCompte(int clientId)
 		{
 			return await _context.Comptes.Where(x => x.ClientId == clientId)
-				.ToListAsync();
+				.FirstOrDefaultAsync();
 		}
 
 		public async Task<IEnumerable<DossierClient>> GetDossierClient(int clientId)

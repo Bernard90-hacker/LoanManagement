@@ -4,5 +4,6 @@
 	{
 		Task<IEnumerable<RoleOrgane>> GetAll();
 		Task<RoleOrgane?> GetById(int id);
+		Task<OrganeDecision> GetOrganeByRole(int roleId);
 	}
 }

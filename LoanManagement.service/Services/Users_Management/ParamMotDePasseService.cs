@@ -12,7 +12,7 @@ namespace LoanManagement.service.Services.Users_Management
             _unitOfWork = unitOfWork;
         }
 
-		public async Task<ParamMotDePasse> Create(ParamMotDePasse p)
+		public async Task<ParamGlobal> Create(ParamGlobal p)
 		{
 			await _unitOfWork.ParamMotDePasses.AddAsync(p);
 			await _unitOfWork.CommitAsync();
@@ -20,28 +20,28 @@ namespace LoanManagement.service.Services.Users_Management
 			return p;
 		}
 
-		public async Task Delete(ParamMotDePasse p)
+		public async Task Delete(ParamGlobal p)
 		{
 			_unitOfWork.ParamMotDePasses.Remove(p);
 			await _unitOfWork.CommitAsync();
 		}
 
-		public async Task<PagedList<ParamMotDePasse>> GetAll(ParamMotDePasseParameters parameters)
+		public async Task<PagedList<ParamGlobal>> GetAll(ParamMotDePasseParameters parameters)
 		{
 			return await _unitOfWork.ParamMotDePasses.GetAll(parameters);
 		}
 
-		public async Task<IEnumerable<ParamMotDePasse>> GetAll()
+		public async Task<IEnumerable<ParamGlobal>> GetAll()
 		{
 			return await _unitOfWork.ParamMotDePasses.GetAll();
 		}
 
-		public async Task<ParamMotDePasse?> GetById(int id)
+		public async Task<ParamGlobal?> GetById(int id)
 		{
 			return await _unitOfWork.ParamMotDePasses.GetById(id);
 		}
 
-		public async Task<ParamMotDePasse> Update(ParamMotDePasse p, ParamMotDePasse paramToBeUpdated)
+		public async Task<ParamGlobal> Update(ParamGlobal p, ParamGlobal paramToBeUpdated)
 		{
 			paramToBeUpdated = p;
 			await _unitOfWork.CommitAsync();
@@ -49,7 +49,7 @@ namespace LoanManagement.service.Services.Users_Management
 			return paramToBeUpdated;
 		}
 
-		public async Task<ParamMotDePasse> UpdatePasswordsExpiryFrequency(ParamMotDePasse param, int ExpiryFrequency)
+		public async Task<ParamGlobal> UpdatePasswordsExpiryFrequency(ParamGlobal param, int ExpiryFrequency)
 		{
 			param.DelaiExpiration = ExpiryFrequency;
 			await _unitOfWork.CommitAsync();
@@ -57,7 +57,7 @@ namespace LoanManagement.service.Services.Users_Management
 			return param;
 		}
 
-		public async Task<ParamMotDePasse> PasswordMustIncludeSpecialCharacters(ParamMotDePasse param, bool response)
+		public async Task<ParamGlobal> PasswordMustIncludeSpecialCharacters(ParamGlobal param, bool response)
 		{
 			param.IncludeSpecialCharacters = response;
 			await _unitOfWork.CommitAsync();
@@ -65,7 +65,7 @@ namespace LoanManagement.service.Services.Users_Management
 			return param;
 		}
 
-		public async Task<ParamMotDePasse> PasswordMustIncludeDigits(ParamMotDePasse param, bool response)
+		public async Task<ParamGlobal> PasswordMustIncludeDigits(ParamGlobal param, bool response)
 		{
 			param.IncludeDigits = response;
 			await _unitOfWork.CommitAsync();
@@ -73,7 +73,7 @@ namespace LoanManagement.service.Services.Users_Management
 			return param;
 		}
 
-		public async Task<ParamMotDePasse> PasswordMustIncludeUpperCase(ParamMotDePasse param, bool response)
+		public async Task<ParamGlobal> PasswordMustIncludeUpperCase(ParamGlobal param, bool response)
 		{
 			switch (response)
 			{
@@ -93,7 +93,7 @@ namespace LoanManagement.service.Services.Users_Management
 			return param;
 		}
 
-		public async Task<ParamMotDePasse> PasswordMustExcludeUsername(ParamMotDePasse param, bool response)
+		public async Task<ParamGlobal> PasswordMustExcludeUsername(ParamGlobal param, bool response)
 		{
 			param.ExcludeUsername = response;
 			await _unitOfWork.CommitAsync();
@@ -101,7 +101,7 @@ namespace LoanManagement.service.Services.Users_Management
 			return param;
 		}
 
-		public async Task<ParamMotDePasse> PasswordLength(ParamMotDePasse param, int taille)
+		public async Task<ParamGlobal> PasswordLength(ParamGlobal param, int taille)
 		{
 			param.Taille = taille;
 			await _unitOfWork.CommitAsync();
@@ -109,7 +109,7 @@ namespace LoanManagement.service.Services.Users_Management
 			return param;
 		}
 
-		public async Task<ParamMotDePasse?> GetCurrentParameter()
+		public async Task<ParamGlobal?> GetCurrentParameter()
 		{
 			var param = await _unitOfWork.ParamMotDePasses.GetAll();
 			if (param is null) return null;

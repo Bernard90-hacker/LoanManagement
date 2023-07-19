@@ -2,17 +2,17 @@
 {
 	public interface IParamMotDePasseService
 	{
-		Task<PagedList<ParamMotDePasse>> GetAll(ParamMotDePasseParameters parameters);
-		Task<IEnumerable<ParamMotDePasse>> GetAll();
-		Task<ParamMotDePasse?> GetById(int id);
-		Task<ParamMotDePasse> Create(ParamMotDePasse p);
-		Task<ParamMotDePasse> Update(ParamMotDePasse p, ParamMotDePasse paramToBeUpdated);
-		Task Delete(ParamMotDePasse p);
-		Task<ParamMotDePasse> UpdatePasswordsExpiryFrequency(ParamMotDePasse param, int ExpiryDate);
-		Task<ParamMotDePasse> PasswordMustIncludeUpperCase(ParamMotDePasse param, bool response);
-		Task<ParamMotDePasse> PasswordMustIncludeDigits(ParamMotDePasse param, bool response);
-		Task<ParamMotDePasse> PasswordMustExcludeUsername(ParamMotDePasse param, bool response);
-		Task<ParamMotDePasse> PasswordLength(ParamMotDePasse param, int taille);
-		Task<ParamMotDePasse?> GetCurrentParameter();
+		Task<PagedList<ParamGlobal>> GetAll(ParamMotDePasseParameters parameters);
+		Task<IEnumerable<ParamGlobal>> GetAll();
+		Task<ParamGlobal?> GetById(int id);
+		Task<ParamGlobal> Create(ParamGlobal p);
+		Task<ParamGlobal> Update(ParamGlobal p, ParamGlobal paramToBeUpdated);
+		Task Delete(ParamGlobal p);
+		Task<ParamGlobal> UpdatePasswordsExpiryFrequency(ParamGlobal param, int ExpiryDate);
+		Task<ParamGlobal> PasswordMustIncludeUpperCase(ParamGlobal param, bool response);
+		Task<ParamGlobal> PasswordMustIncludeDigits(ParamGlobal param, bool response);
+		Task<ParamGlobal> PasswordMustExcludeUsername(ParamGlobal param, bool response);
+		Task<ParamGlobal> PasswordLength(ParamGlobal param, int taille);
+		Task<ParamGlobal?> GetCurrentParameter();
 	}
 }

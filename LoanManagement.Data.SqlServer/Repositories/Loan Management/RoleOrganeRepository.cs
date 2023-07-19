@@ -18,5 +18,18 @@
 			return await _context.RoleOrganes.Where(x => x.Id == id)
 				.FirstOrDefaultAsync();
 		}
+
+		public async Task<OrganeDecision> GetOrganeByRole(int roleId)
+		{
+			var role = await _context.RoleOrganes.Where(x => x.Id == roleId)
+				.FirstOrDefaultAsync();
+			if (role is null) throw new ArgumentException($"Aucun role n'ayant l'id " +
+				$"{roleId} n'a été trouvé");
+			var result = (from x in (await _context.OrganeDecisions.ToListAsync())
+						 where role.OrganeDecisionId == x.Id
+						 select x).FirstOrDefault();
+
+			return result;
+		}
 	}
 }

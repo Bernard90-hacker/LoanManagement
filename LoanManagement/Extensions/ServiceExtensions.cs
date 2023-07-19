@@ -91,6 +91,8 @@ namespace LoanManagement.API.Extensions
 			services.AddTransient<IStatutMaritalService, StatutMaritalService>();
 			services.AddTransient<StatutMaritalService>();
 			services.AddTransient<ITypePretService, TypePretService>();
+			services.AddTransient<IEmployeurService, EmployeurService>();
+			services.AddTransient<EmployeurService>();
 			services.AddTransient<TypePretService>();	
 		}
 

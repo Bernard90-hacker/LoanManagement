@@ -5,8 +5,6 @@ namespace LoanManagement.core.Models.Loan_Management
 	{
         public int Id { get; set; }
         public string NumeroDossier { get; set; } = string.Empty;
-        public int EmployeurId { get; set; }
-        public Employeur? Employeur { get; set; }
         public double Taille { get; set; }
         public double Poids { get; set; }
         public double TensionArterielle { get; set; }
@@ -20,16 +18,13 @@ namespace LoanManagement.core.Models.Loan_Management
         public bool EstInfirme { get; set; }
         public string NatureInfirmite { get; set; } = string.Empty;
         public string DateSurvenance { get; set; } = string.Empty;
-        public int StatutDossierClientId { get; set; }
-        public StatutDossierClient? StatutDossierClient { get; set; }
-        public int InfoSanteClientId { get; set; }
-        public virtual InfoSanteClient? InfoSanteClient { get; set; }
 		public int StatutMaritalId { get; set; }
         public int ClientId { get; set; }
-		public int PretAccordId { get; set; }
+		public Client? Client { get; set; }
 		public PretAccord? PretAccord { get; set; }
-		public virtual Client Client { get; set; } = new();
         public virtual StatutMarital? StatutMarital { get; set; }
+        public List<InfoSanteClient> InfoSanteClients { get; set; } = new();
+        public List<StatutDossierClient> Status { get; set; } = new();
 
 
 

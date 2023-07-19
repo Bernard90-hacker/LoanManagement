@@ -19,6 +19,10 @@
 				.Property(x => x.DureeTraitement);
 
 			builder
+				.Property(x => x.OrganeDecisionId)
+				.IsRequired();
+
+			builder
 				.ToTable("RoleOrganes");
 
 		}

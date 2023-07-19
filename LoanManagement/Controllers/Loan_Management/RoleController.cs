@@ -5,6 +5,7 @@
 	public class RoleController : Controller
 	{
 		private readonly IRoleOrganeService _roleService;
+		private readonly IOrganeDecisionService _organeService;
 		private readonly IMapper _mapper;
 		private readonly ILoggerManager _logger;
 		private readonly ITypeJournalService _typeJournalService;
@@ -13,9 +14,11 @@
 
 		public RoleController(IRoleOrganeService roleService, IMapper mapper,
 			ILoggerManager logger, JournalisationService journalisationService,
-			IConfiguration config, ITypeJournalService typeJournalService)
+			IConfiguration config, ITypeJournalService typeJournalService, 
+			IOrganeDecisionService organeDecisionService)
 		{
 			_roleService = roleService;
+			_organeService = organeDecisionService;
 			_mapper = mapper;
 			_typeJournalService = typeJournalService;
 			_journalisationService = journalisationService;
@@ -73,7 +76,14 @@
 							_logger.LogWarning("Enregistrement d'un role : Champs obligatoires");
 							return BadRequest(new ApiResponse((int)CustomHttpCode.WARNING, description : "Champs obligatoires"));
 						}
-
+						var organe = await _organeService.GetById(ressource.OrganeDecisionId);
+						if(organe is null)
+						{
+							Journal.Niveau = 1;
+							await _journalisationService.Journalize(Journal);
+							_logger.LogWarning("Enregistrement d'un role : Organe sélectionné invalide");
+							return NotFound(new ApiResponse((int)CustomHttpCode.WARNING, description: "Organe sélectionné invalide"));
+						}
 						var roleDb = _mapper.Map<RoleOrgane>(ressource);
 						var roleCreated = await _roleService.Create(roleDb);
 						var result = _mapper.Map<RoleOrganeRessource>(roleCreated);
@@ -216,6 +226,49 @@
 				}
 				
 			}
+		}
+
+		[HttpGet("{id}/organe")]
+		public async Task<ActionResult> GetOrganeByRole(int id)
+		{
+			using (var connection = new SqlConnection(_configuration.GetConnectionString("Default")))
+			{
+				connection.Open();
+				using (var transaction = connection.BeginTransaction())
+				{
+					var Journal = new Journal() { Libelle = "Enregistrement d'un déroulement", TypeJournalId = 8, Entite = "User" };
+					try
+					{
+						var role = await _roleService.GetById(id);
+						if(role is null)
+						{
+							Journal.Niveau = 1;
+							await _journalisationService.Journalize(Journal);
+							await transaction.CommitAsync();
+							_logger.LogWarning("Identification d'un organe par son rôle : Rôle introuvable");
+							return NotFound(new ApiResponse((int)CustomHttpCode.OBJECT_NOT_FOUND,
+								description: "Rôle introuvable"));
+						}
+						var organe = await _roleService.GetOrganeByRole(id);
+						Journal.Niveau = 3;
+						await _journalisationService.Journalize(Journal);
+						_logger.LogInformation("Identification d'un organe par son rôle : Opération effectuée avec succès");
+						var result = _mapper.Map<OrganeDecisionRessource>(organe);
+						await transaction.CommitAsync();
+
+						return Ok(result);
+					}
+					catch (Exception ex)
+					{
+
+						Journal.Niveau = 1;
+						await _journalisationService.Journalize(Journal);
+						_logger.LogError("Une erreur est survenue pendant le traitement de la requête");
+						return ValidationProblem(statusCode: (int)HttpCode.INTERNAL_SERVER_ERROR, title: "Erreur interne du serveur", detail: ex.Message);
+					}
+				}
+			}
+
 		}
 
 

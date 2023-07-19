@@ -1,6 +1,6 @@
 ﻿namespace LoanManagement.Data.SqlServer.Repositories.Users_Management
 {
-	public class ParamMotDePasseRepository : Repository<ParamMotDePasse>, IParamMotDePasseRepository
+	public class ParamMotDePasseRepository : Repository<ParamGlobal>, IParamMotDePasseRepository
 	{
         private LoanManagementDbContext _context;
         public ParamMotDePasseRepository(LoanManagementDbContext context) : base(context)
@@ -8,29 +8,29 @@
             _context = context;
         }
 
-		public async Task<PagedList<ParamMotDePasse>> GetAll(ParamMotDePasseParameters parameters)
+		public async Task<PagedList<ParamGlobal>> GetAll(ParamMotDePasseParameters parameters)
 		{
 			var passwordsParam = (await _context
-				.ParamMotDePasses.ToListAsync()).AsQueryable();
+				.ParamGlobals.ToListAsync()).AsQueryable();
 
-			return PagedList<ParamMotDePasse>.ToPagedList (
+			return PagedList<ParamGlobal>.ToPagedList (
 				passwordsParam, parameters.PageNumber, parameters.PageSize);
 		}
 
-		public async Task<IEnumerable<ParamMotDePasse>> GetAll()
+		public async Task<IEnumerable<ParamGlobal>> GetAll()
 		{
-			return await _context.ParamMotDePasses.ToListAsync();
+			return await _context.ParamGlobals.ToListAsync();
 		}
 
-		public async Task<ParamMotDePasse?> GetById(int id)
+		public async Task<ParamGlobal?> GetById(int id)
 		{
 			return await _context
-				.ParamMotDePasses.Where(x => x.Id == id).FirstOrDefaultAsync();
+				.ParamGlobals.Where(x => x.Id == id).FirstOrDefaultAsync();
 		}
 
-		public async Task<ParamMotDePasse?> GetCurrentParameter()
+		public async Task<ParamGlobal?> GetCurrentParameter()
 		{
-			var param = await _context.ParamMotDePasses.ToListAsync();
+			var param = await _context.ParamGlobals.ToListAsync();
 			var result = param.FirstOrDefault();
 			if (result is null) return null;
 

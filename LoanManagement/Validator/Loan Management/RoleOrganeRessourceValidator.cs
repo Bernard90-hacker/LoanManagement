@@ -7,6 +7,9 @@
             RuleFor(x => x.Libelle)
                 .NotNull();
 
+			RuleFor(x => x.OrganeDecisionId)
+				.NotNull();
+
 			RuleFor(x => x.DureeTraitement)
 				.NotNull();
 		}

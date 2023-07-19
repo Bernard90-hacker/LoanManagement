@@ -18,5 +18,11 @@
 			return await _context.OrganeDecisions.Where(x => x.Id == id)
 				.FirstOrDefaultAsync();
 		}
+
+		public async Task<IEnumerable<RoleOrgane>> GetRoles(int organeDecisionId)
+		{
+			return await _context.RoleOrganes.Where(x => x.OrganeDecisionId == organeDecisionId)
+				.ToListAsync();
+		}
 	}
 }

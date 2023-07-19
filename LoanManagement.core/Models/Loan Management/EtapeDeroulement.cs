@@ -8,5 +8,6 @@
         public int MembreOrganeId { get; set; }
         public virtual MembreOrgane? MembreOrgane { get; set; }
         public virtual Deroulement? Deroulement { get; set; }
+        public virtual List<StatutDossierClient>? Statuts { get; set; }
     }
 }

@@ -59,27 +59,12 @@
 			.Property(x => x.DateSurvenance);
 
 			builder
-			.Property(x => x.StatutDossierClientId)
-			.IsRequired();
-
-			builder
 			.Property(x => x.StatutMaritalId)
 			.IsRequired();
 
-			builder
-			.Property(x => x.InfoSanteClientId)
-			.IsRequired();
-
-			builder
-			.Property(x => x.PretAccordId)
-			.IsRequired();
 
 			builder
 			.Property(x => x.ClientId)
-			.IsRequired();
-
-			builder
-			.Property(x => x.EmployeurId)
 			.IsRequired();
 
 			builder
@@ -88,19 +73,19 @@
 				.HasForeignKey(x => x.StatutMaritalId);
 
 			builder
-				.HasOne(x => x.InfoSanteClient)
+				.HasMany(x => x.InfoSanteClients)
 				.WithOne(y => y.Dossier)
-				.HasForeignKey<DossierClient>(x => x.InfoSanteClientId);
+				.HasForeignKey(y => y.DossierClientId);
 
 			builder
 				.HasOne(x => x.PretAccord)
 				.WithOne(y => y.Dossier)
-				.HasForeignKey<DossierClient>(x => x.PretAccordId);
+				.HasForeignKey<PretAccord>(x => x.DossierClientId);
 
 			builder
-				.HasOne(x => x.StatutDossierClient)
-				.WithMany(y => y.Dossiers)
-				.HasForeignKey(x => x.StatutDossierClientId);
+				.HasMany(x => x.Status)
+				.WithOne(y => y.Dossier)
+				.HasForeignKey(y => y.DossierClientId);
 
 			builder
 				.ToTable("DossierClients");

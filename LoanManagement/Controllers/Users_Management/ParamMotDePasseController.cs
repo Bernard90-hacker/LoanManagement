@@ -63,7 +63,7 @@
 					return BadRequest();
 				}
 
-				var paramDb = _mapper.Map<ParamMotDePasse>(ressource);
+				var paramDb = _mapper.Map<ParamGlobal>(ressource);
 				var paramAdded = await _paramMotDePasseService.Create(paramDb);
 				
 				var result = _mapper.Map<ParamMotDePasseRessource>(paramAdded);

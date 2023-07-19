@@ -38,17 +38,28 @@
 			return await _unitOfWork.DossierClients.GetById(Id);
 		}
 
-		public async Task<DossierClient> GetByNumber(string numeroDossier)
+		public async Task<DossierClient?> GetByNumber(string numeroDossier)
 		{
 			return await _unitOfWork.DossierClients.GetByNumber(numeroDossier);
 		}
 
-		public async Task<Employeur> GetEmployeurByDossier(int id)
+		public async Task<Deroulement?> GetDossierDeroulement(int typePretId, double montant)
+		{
+			return await _unitOfWork.DossierClients.GetDossierDeroulement(typePretId, montant);
+		}
+
+		public async Task<Employeur?> GetEmployeurByDossier(int id)
 		{
 			return await _unitOfWork.DossierClients.GetEmployeurByDossier(id);
 		}
 
-		public async Task<StatutDossierClient> GetStatut(int id)
+		public async Task<IEnumerable<InfoSanteClient>> GetInfoSanteByDossier(int dossierId)
+		{
+			return await _unitOfWork.DossierClients.
+				GetInfoSanteByDossier(dossierId);
+		}
+
+		public async Task<StatutDossierClient?> GetStatut(int id)
 		{
 			return await _unitOfWork.DossierClients.GetStatut(id);
 		}
@@ -60,5 +71,6 @@
 
 			return dossierClient;
 		}
+		
 	}
 }

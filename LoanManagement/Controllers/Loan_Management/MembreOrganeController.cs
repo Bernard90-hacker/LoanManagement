@@ -1,6 +1,4 @@
-﻿using CustomApiRessource.Enums;
-
-namespace LoanManagement.API.Controllers.Loan_Management
+﻿namespace LoanManagement.API.Controllers.Loan_Management
 {
 	[ApiController]
 	[Route("api/Loan/[controller]")]
@@ -31,7 +29,7 @@ namespace LoanManagement.API.Controllers.Loan_Management
 		}
 
 		[HttpGet("all")]
-		public async Task<ActionResult> GetAll(MembreOrganeParameters parameters)
+		public async Task<ActionResult> GetAll([FromQuery] MembreOrganeParameters parameters)
 		{
 			using (var connection = new SqlConnection(_configuration.GetConnectionString("Default")))
 			{
@@ -46,7 +44,7 @@ namespace LoanManagement.API.Controllers.Loan_Management
 						Journal.Niveau = 3;
 						await _journalisationService.Journalize(Journal);
 						_logger.LogInformation("Liste des membres intervenant dans le processus de traitement d'un crédit");
-						var result = _mapper.Map<MembreOrganeRessource>(all);
+						var result = _mapper.Map<IEnumerable<MembreOrganeRessource>>(all);
 						var metadata = new
 						{
 							all.PageSize,
@@ -89,7 +87,7 @@ namespace LoanManagement.API.Controllers.Loan_Management
 							_logger.LogWarning("Détails d'un membre : Ressource inexistante");
 							return NotFound(new ApiResponse((int)CustomHttpCode.OBJECT_NOT_FOUND, description: "Ressource inexistante"));
 						}
-						var result = _membreService.GetMembreUsername(membre.Id);
+						var result = await _membreService.GetMembreUsername(membre.Id);
 						Journal.Niveau = 3;
 						await _journalisationService.Journalize(Journal);
 						_logger.LogInformation($"Nom d'utilisateur du membre n° {id} : Opération effectuée avec succès");
