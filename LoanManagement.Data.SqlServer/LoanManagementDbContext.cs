@@ -37,7 +37,7 @@ namespace LoanManagement.Data.SqlServer
 				.ApplyConfiguration(new MotDePasseConfiguration());
 
 			builder
-				.ApplyConfiguration(new ParamMotDePasseConfiguration());
+				.ApplyConfiguration(new ParamGlobalConfiguration());
 
 			builder
 				.ApplyConfiguration(new ApplicationConfiguration());
@@ -176,21 +176,21 @@ namespace LoanManagement.Data.SqlServer
 					}
 				);
 
-			builder
-				.Entity<ParamGlobal>().HasData(
+			//builder
+			//	.Entity<ParamGlobal>().HasData(
 
-					new ParamGlobal()
-					{
-						Id = 1,
-						IncludeDigits = true,
-						IncludeLowerCase = true,
-						IncludeSpecialCharacters = true,
-						ExcludeUsername = true,
-						IncludeUpperCase = true,
-						DelaiExpiration = 6,
-						Taille = 8,
-					}
-				);
+			//		new ParamGlobal()
+			//		{
+			//			Id = 1,
+			//			IncludeDigits = true,
+			//			IncludeLowerCase = true,
+			//			IncludeSpecialCharacters = true,
+			//			ExcludeUsername = true,
+			//			IncludeUpperCase = true,
+			//			DelaiExpiration = 6,
+			//			Taille = 8,
+			//		}
+			//	);
 
 			builder
 				.Entity<Direction>().HasData(
@@ -212,6 +212,12 @@ namespace LoanManagement.Data.SqlServer
 						Id = 3,
 						Code = "GGE",
 						Libelle = "Direction gestion des engagements"
+					},
+					new Direction()
+					{
+						Id = 4,
+						Code = "GAR",
+						Libelle = "Direction rédaction des garanties"
 					}
 				);
 
@@ -254,6 +260,8 @@ namespace LoanManagement.Data.SqlServer
 						DirectionId = 2
 					}
 				);
+			var x = DateTime.Now.Year + 1;
+			var y = DateTime.Now.ToString("dd/MM/");
 			builder
 				.Entity<Profil>().HasData(
 
@@ -261,33 +269,53 @@ namespace LoanManagement.Data.SqlServer
 					{
 						Id = 1,
 						Code = "PROFIL-001",
-						Libelle = "Commercial",
-						Description = "Profil destiné aux commerciaux",
+						Libelle = "Administrateur",
+						Description = "Profil destiné à l'administrateur",
 						DateAjout = DateTime.Now.ToString("dd/MM/yyyy"),
 						Statut = 1,
-						DateExpiration = "03/09/2024"
+						DateExpiration = y + x.ToString()
 					},
 					new Profil()
 					{
 						Id = 2,
 						Code = "PROFIL-002",
-						Libelle = "Informatique",
-						Description = "Profil destiné aux informaticiens",
+						Libelle = "Gestionnaire",
+						Description = "Profil destiné aux au gestionnaire",
 						DateAjout = DateTime.Now.ToString("dd/MM/yyyy"),
 						Statut = 1,
-						DateExpiration = "03/09/2024"
+						DateExpiration = y + x.ToString()
 					},
 					new Profil()
 					{
 						Id = 3,
 						Code = "PROFIL-003",
 						Libelle = "Analyste",
-						Description = "Profil destiné aux analystes",
+						Description = "Profil destiné à l'analyste",
 						DateAjout = DateTime.Now.ToString("dd/MM/yyyy"),
 						Statut = 1,
-						DateExpiration = "03/09/2024"
-					}
-				);
+						DateExpiration = y + x.ToString()
+					},
+					new Profil()
+					{
+						Id = 4,
+						Code = "PROFIL-004",
+						Libelle = "Directeur GGR",
+						Description = "Profil destiné au directeur de la GGR",
+						DateAjout = DateTime.Now.ToString("dd/MM/yyyy"),
+						Statut = 1,
+						DateExpiration = y + x.ToString()
+					},
+                    new Profil()
+                    {
+                        Id = 5,
+                        Code = "PROFIL-005",
+                        Libelle = "Chef Département Back-Office Engagement",
+                        Description = "Profil destiné aux utilisateurs",
+                        DateAjout = DateTime.Now.ToString("dd/MM/yyyy"),
+                        Statut = 1,
+                        DateExpiration = y + x.ToString()
+                    }
+                ) ; 
 			builder.Entity<HabilitationProfil>().HasData(
 				new HabilitationProfil()
 				{
@@ -297,7 +325,7 @@ namespace LoanManagement.Data.SqlServer
 					Modification = true,
 					Generation = true,
 					Suppression = true,
-					ProfilId = 2,
+					ProfilId = 1,
 					DateAjout = DateTime.Now.ToString("dd/MM/yyyy")
 				},
 				new HabilitationProfil()
@@ -308,42 +336,45 @@ namespace LoanManagement.Data.SqlServer
 					Modification = true,
 					Generation = false,
 					Suppression = false,
-					ProfilId = 1,
+					ProfilId = 2,
 					DateAjout = DateTime.Now.ToString("dd/MM/yyyy")
 				},
-				new HabilitationProfil()
-				{
-					Id = 3,
-					Edition = true,
-					Insertion = true,
-					Modification = true,
-					Generation = false,
-					Suppression = false,
-					ProfilId = 3,
-					DateAjout = DateTime.Now.ToString("dd/MM/yyyy")
-				}
-			);
+                new HabilitationProfil()
+                {
+                    Id = 3,
+                    Edition = true,
+                    Insertion = true,
+                    Modification = true,
+                    Generation = false,
+                    Suppression = false,
+                    ProfilId = 3,
+                    DateAjout = DateTime.Now.ToString("dd/MM/yyyy")
+                },
+                new HabilitationProfil()
+                {
+                    Id = 4,
+                    Edition = true,
+                    Insertion = true,
+                    Modification = true,
+                    Generation = false,
+                    Suppression = false,
+                    ProfilId = 4,
+                    DateAjout = DateTime.Now.ToString("dd/MM/yyyy")
+                }
+				,
+                new HabilitationProfil()
+                {
+                    Id = 5,
+                    Edition = true,
+                    Insertion = true,
+                    Modification = true,
+                    Generation = false,
+                    Suppression = false,
+                    ProfilId = 5,
+                    DateAjout = DateTime.Now.ToString("dd/MM/yyyy")
+                }
+            );
 
-			builder
-				.Entity<PeriodicitePaiement>()
-				.HasData
-				(
-					new PeriodicitePaiement()
-					{
-						Id = 1,
-						Libelle = "Unique"
-					},
-					new PeriodicitePaiement()
-					{
-						Id = 2,
-						Libelle = "Mensuelle"
-					},
-					new PeriodicitePaiement()
-					{
-						Id = 3,
-						Libelle = "Annuelle"
-					}
-				);
 			builder
 				.Entity<NatureQuestion>()
 				.HasData
@@ -549,8 +580,29 @@ namespace LoanManagement.Data.SqlServer
 					}
 				);
 
+            builder
+                .Entity<PeriodicitePaiement>()
+                .HasData
+                (
+                    new PeriodicitePaiement()
+                    {
+                        Id = 1,
+                        Libelle = "Unique"
+                    },
+                    new PeriodicitePaiement()
+                    {
+                        Id = 2,
+                        Libelle = "Mensuelle"
+                    },
+                    new PeriodicitePaiement()
+                    {
+                        Id = 3,
+                        Libelle = "Annuelle"
+                    }
+                );
 
-		}
+
+        }
 
 
 

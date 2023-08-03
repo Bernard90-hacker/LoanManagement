@@ -48,6 +48,7 @@
 			if (etapeDeroulement is null)
 				throw new Exception("Mauvaise configuration des étapes correspondant à un type de prêt");
 			statut.EtapeDeroulementId = x;
+			statut.Date = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
 			await _unitOfWork.CommitAsync();
 
 			return statut;
@@ -57,6 +58,7 @@
 																				   //le traitement d'un dossier crédit
 		{
 			statut.Motif = motif;
+			statut.Date = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
 			await _unitOfWork.CommitAsync();
 
 			return statut;
@@ -66,6 +68,7 @@
 		public async Task<StatutDossierClient> Assign(StatutDossierClient statut)
 		{
 			statut.DecisionFinale = true;
+			statut.Date = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
 			await _unitOfWork.CommitAsync();
 
 			return statut;
@@ -74,6 +77,7 @@
 		public async Task<StatutDossierClient> Reject(StatutDossierClient statut, string motif)
 		{
 			statut.DecisionFinale = false;
+			statut.Date = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
 			statut.Motif = motif;
 			await _unitOfWork.CommitAsync();
 

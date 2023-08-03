@@ -96,30 +96,31 @@ namespace LoanManagement.API.Controllers.Loan_Management
 								description: "Dossier crédit sélectionné invalide"));
 						}
 						var deroulement = await _dossierClientService.GetDossierDeroulement(typePret.Id, ressource.MontantPret);
-						var dossierCredit = _mapper.Map<PretAccord>(ressource);
+                        var employeurId = await _employeurService.GetById(ressource.EmployeurId);
+                        if (employeurId is null)
+                        {
+                            Journal.Niveau = 1;
+                            await _journalisationService.Journalize(Journal);
+                            await transaction.CommitAsync();
+                            _logger.LogWarning("Montage d'un dossier crédit : Employeur sélectionné invalide");
+
+                            return NotFound(new ApiResponse((int)CustomHttpCode.OBJECT_NOT_FOUND,
+                                description: "Employeur sélectionné invalide"));
+                        }
+                        if (deroulement is null)
+                        {
+                            Journal.Niveau = 1;
+                            await _journalisationService.Journalize(Journal);
+                            await transaction.CommitAsync();
+                            _logger.LogWarning("Montage d'un dossier crédit : Aucune configuration initiale existante ne correspond au prêt en cours");
+                            return NotFound(new ApiResponse((int)CustomHttpCode.OBJECT_NOT_FOUND, description: "Aucue configuration ne correspond au prêt en cours"));
+                        }
+                        var dossierCredit = _mapper.Map<PretAccord>(ressource);
 						dossierCredit.QuotiteCessible = dossierCredit.Mensualite / 3;
 						dossierCredit.PrimeTotale = dossierCredit.Surprime + dossierCredit.MontantPrime;
-						dossierCredit.TauxEngagement = (int)((dossierCredit.SalaireNetMensuel * 100) / dossierCredit.Mensualite);
+						dossierCredit.TauxEngagement = (int)((dossierCredit.SalaireNetMensuel) / dossierCredit.Mensualite);
 						var dossierCreditCreated = await _pretAccordService.Create(dossierCredit);
-						var employeurId = await _employeurService.GetById(ressource.EmployeurId);
-						if(employeurId is null)
-						{
-							Journal.Niveau = 1;
-							await _journalisationService.Journalize(Journal);
-							await transaction.CommitAsync();
-							_logger.LogWarning("Montage d'un dossier crédit : Employeur sélectionné invalide");
-
-							return NotFound(new ApiResponse((int)CustomHttpCode.OBJECT_NOT_FOUND,
-								description: "Employeur sélectionné invalide"));
-						}
-						if(deroulement is null)
-						{
-							Journal.Niveau = 1;
-							await _journalisationService.Journalize(Journal);
-							await transaction.CommitAsync();
-							_logger.LogWarning("Montage d'un dossier crédit : Aucune configuration initiale existante ne correspond au prêt en cours");
-							return NotFound(new ApiResponse((int)CustomHttpCode.OBJECT_NOT_FOUND, description: "Aucue configuration ne correspond au prêt en cours"));
-						}
+						
 						var etapeDeroulements = await _deroulementService.GetSteps(deroulement.Id);
 
 						var status = new StatutDossierClient()
@@ -269,7 +270,7 @@ namespace LoanManagement.API.Controllers.Loan_Management
 				connection.Open();
 				using (var transaction = connection.BeginTransaction())
 				{
-					var Journal = new Journal() { Libelle = "Traitement d'un dossier client", TypeJournalId = 5, Entite = "User" };
+					var Journal = new Journal() { Libelle = "Traitement d'un dossier crédit", TypeJournalId = 5, Entite = "User" };
 					try
 					{
 						var dossierClient = await _dossierClientService.GetById(ressource.Id);
@@ -291,7 +292,7 @@ namespace LoanManagement.API.Controllers.Loan_Management
 							Journal.Niveau = 1;
 							await _journalisationService.Journalize(Journal);
 							await transaction.CommitAsync();
-							_logger.LogWarning("Traitement d'un dossier client: Canevas sélectionné invalide");
+							_logger.LogWarning("Traitement d'un dossier crédit: Canevas sélectionné invalide");
 							return NotFound(new ApiResponse((int)CustomHttpCode.OBJECT_NOT_FOUND,
 								description: "Canevas sélectionné invalide"));
 						}
@@ -300,7 +301,7 @@ namespace LoanManagement.API.Controllers.Loan_Management
 							Journal.Niveau = 1;
 							await _journalisationService.Journalize(Journal);
 							await transaction.CommitAsync();
-							_logger.LogWarning("Traitement d'un dossier client: Déroulement introuvable pour le montant sélectionné");
+							_logger.LogWarning("Traitement d'un dossier crédit: Déroulement introuvable pour le montant sélectionné");
 							return NotFound(new ApiResponse((int)CustomHttpCode.OBJECT_NOT_FOUND,
 								description : "Déroulement introuvable pour le montant sélectionné"));
 						}
@@ -309,9 +310,19 @@ namespace LoanManagement.API.Controllers.Loan_Management
 							Journal.Niveau = 1;
 							await _journalisationService.Journalize(Journal);
 							await transaction.CommitAsync();
-							_logger.LogWarning("Traitement d'un dossier client: Aucun statut n'a été configuré pour ce dossier");
+							_logger.LogWarning("Traitement d'un dossier crédit: Aucun statut n'a été configuré pour ce dossier");
 							return NotFound(new ApiResponse((int)CustomHttpCode.OBJECT_NOT_FOUND,
 								description : " Aucun statut n'a été configuré pour ce dossier"));
+						}
+						if (dossierClient.Cloturer)
+						{
+							Journal.Niveau = 3; //INFORMATION : Le dossier	a été clôturé;
+							await _journalisationService.Journalize(Journal);
+							await transaction.CommitAsync();
+							_logger.LogWarning("Traitement d'un dossier crédit : Le dossier a été clôturé");
+
+							return BadRequest(new ApiResponse((int)CustomHttpCode.OBJECT_NOT_FOUND,
+								description : "Le dossier a été clôturé"));
 						}
 						if(deroulement.NiveauInstance  > statut.EtapeDeroulementId + 1)
 						{
@@ -370,8 +381,9 @@ namespace LoanManagement.API.Controllers.Loan_Management
 			}
 		}
 
+
 		[HttpPost("{id}/establish")]
-		public async Task<ActionResult> Establishment(int id)
+		public async Task<ActionResult> Establish(int id)
 		{
 			using (var connection = new SqlConnection(_configuration.GetConnectionString("Default")))
 			{
@@ -393,19 +405,31 @@ namespace LoanManagement.API.Controllers.Loan_Management
 						}
 						var dossierCredit = await _pretAccordService.GetPretAccordForDossier(dossier.Id);
 						var statutDossier = await _dossierClientService.GetStatut(dossier.Id);
-						if(statutDossier.DecisionFinale is null)
+						if(statutDossier.DecisionFinale is null || statutDossier.DecisionFinale == false)
 						{
 							Journal.Niveau = 1;
 							await _journalisationService.Journalize(Journal);
 							await transaction.CommitAsync();
-							_logger.LogWarning("Mise en place des fonds sur le compte du client : Prêt non approuvé pour le moment");
+							_logger.LogWarning("Mise en place des fonds sur le compte du client : Prêt non approuvé");
 							return Unauthorized(new ApiResponse((int)CustomHttpCode.WARNING,
-								description: "Prêt non approuvé pour le moment"));
+								description: "Prêt non approuvé"));
 						}
+						if (dossier.Cloturer)
+						{
+							Journal.Niveau = 3;
+							await _journalisationService.Journalize(Journal);
+							await transaction.CommitAsync();
+							_logger.LogWarning("Mise en place des fonds sur le compte du client : Le dossier a déja été clôturé");
+							
+							return BadRequest(new ApiResponse((int)CustomHttpCode.WARNING,
+								description: "Le dossier a déja été clôturé"));
+						}
+					
 						var client = await _clientService.GetById(dossier.ClientId);
 						var compte = await _clientService.GetCompte(client.Id);
 						var compteUpdated = await _compteService.IncreaseAmount(compte, 
-							dossierCredit.MontantPret);
+							dossierCredit.MontantPret); //On effectue la mise en place sur le compte du client.
+						await _dossierClientService.Cloturer(dossier); // On cloture le dossier;
 						Journal.Niveau = 2; //SUCCES
 						await transaction.CommitAsync();
 						_logger.LogInformation("Mise en place des fonds sur le compte du client : Opération effectuée avec succès");

@@ -3,6 +3,6 @@
 	public class UpdateEmployePhotoRessource
 	{
         public int Id { get; set; }
-        public string Photo { get; set; } = string.Empty;
+        public IFormFile Photo { get; set; }
     }
 }

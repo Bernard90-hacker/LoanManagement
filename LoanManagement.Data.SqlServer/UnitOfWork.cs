@@ -21,7 +21,7 @@ namespace LoanManagement.Data.SqlServer
 		private JournalRepository _journalRepository;
 		private MenuRepository _menuRepository;
 		private MotDePasseRepository _motDePasseRepository;
-		private ParamMotDePasseRepository _paramMotDePasseRepository;
+		private ParamGlobalRepository _paramMotDePasseRepository;
 		private ProfilRepository _profilRepository;
 		private TypeJournalRepository _typeJournalRepository;
 		private ClientRepository _clientRepository;
@@ -59,7 +59,7 @@ namespace LoanManagement.Data.SqlServer
 
 		public IMotDePasseRepository MotDePasses => _motDePasseRepository = _motDePasseRepository ?? new MotDePasseRepository(_context);
 
-		public IParamMotDePasseRepository ParamMotDePasses => _paramMotDePasseRepository = _paramMotDePasseRepository ?? new ParamMotDePasseRepository(_context);
+		public IParamGlobalRepository ParamMotDePasses => _paramMotDePasseRepository = _paramMotDePasseRepository ?? new ParamGlobalRepository(_context);
 
 		public IProfilRepository Profils => _profilRepository = _profilRepository ?? new ProfilRepository(_context);
 

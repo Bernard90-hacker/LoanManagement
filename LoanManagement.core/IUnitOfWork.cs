@@ -15,7 +15,7 @@ namespace LoanManagement.core
 		IJournalRepository Journaux { get; }
 		IMenuRepository Menus { get; }
 		IMotDePasseRepository MotDePasses { get;  }
-		IParamMotDePasseRepository ParamMotDePasses { get; }
+		IParamGlobalRepository ParamMotDePasses { get; }
 		IProfilRepository Profils { get; }
 		ITypeJournalRepository TypeJournaux { get; }
 		IClientRepository Clients { get; }

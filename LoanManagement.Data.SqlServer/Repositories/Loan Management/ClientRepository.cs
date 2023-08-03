@@ -21,8 +21,7 @@ namespace LoanManagement.Data.SqlServer.Repositories.Loan_Management
 			return PagedList<Client>.ToPagedList(
 			customers, parameters.PageNumber, parameters.PageSize);
 		}
-
-		public async Task<IEnumerable<Client>> GetAll()
+        public async Task<IEnumerable<Client>> GetAll()
 		{
 			return await _context.Clients.ToListAsync();
 		}

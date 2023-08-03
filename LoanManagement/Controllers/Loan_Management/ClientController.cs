@@ -125,7 +125,9 @@ namespace LoanManagement.API.Controllers.Loan_Management
 				connection.Open();
 				using (SqlTransaction transaction = connection.BeginTransaction())
 				{
-					var journal = new Journal() { Libelle = $"Liste des clients", TypeJournalId = 8, Entite = "Utilisateur" };
+					var journal = new Journal() { Libelle = $"Connexion d'un client", 
+						TypeJournalId = 1, 
+						Entite = "Client" };
 					try
 					{
 						var validation = new ClientLoginValidator();
@@ -150,24 +152,17 @@ namespace LoanManagement.API.Controllers.Loan_Management
 						}
 						if (client.Tel != ressource.Telephone)
 						{
-							journal.Niveau = 1;
-							await _journalisationService.Journalize(journal);
-							transaction.Commit();
+							//journal.Niveau = 1;
+							//await _journalisationService.Journalize(journal);
+							//transaction.Commit();
 							_logger.LogWarning("Connexion d'un client : Numéro de téléphone incorrect");
 							return NotFound(new ApiResponse((int)CustomHttpCode.OBJECT_NOT_FOUND, "Numéro de téléphone incorrect"));
 						}
 						var result = _mapper.Map<ClientRessource>(client);
-						journal.Niveau = 2;
-						await _journalisationService.Journalize(journal);
+						//journal.Niveau = 2;
+						//await _journalisationService.Journalize(journal);
 						_logger.LogInformation("Connexion d'un client : Opération effectuée avec succès");
-						return Ok(new
-						{
-							result.Nom,
-							result.Prenoms,
-							result.Indice,
-							result.Tel,
-							client.Id
-						});
+						return Ok(result);
 						
 					}
 					catch (Exception ex)

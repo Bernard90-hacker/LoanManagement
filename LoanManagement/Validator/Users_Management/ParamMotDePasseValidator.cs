@@ -1,6 +1,6 @@
 ﻿namespace LoanManagement.API.Validator.Users_Management
 {
-	public class ParamMotDePasseValidator : AbstractValidator<ParamMotDePasseRessource>
+	public class ParamMotDePasseValidator : AbstractValidator<ParamGlobalRessource>
 	{
         public ParamMotDePasseValidator()
         {

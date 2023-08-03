@@ -1,0 +1,24 @@
+@{
+	TempData.Keep();
+	ViewData["containerNav"] = (ViewData["containerNav"] ??= "container-fluid");
+}
+
+<footer class="content-footer footer bg-footer-theme">
+	<div class='@ViewData["containerNav"]'>
+		<div class="footer-container d-flex align-items-center justify-content-between py-2 flex-md-row flex-column">
+			<div>
+				©
+				<script>
+					document.write(new Date().getFullYear())
+				</script>
+				, @Html.Raw(sharedResource["EditéPar"]) <a href='@TempData.Peek("authorUrl")' target="_blank" class="fw-semibold">BIA Togo</a>
+			</div>
+			<div>
+				<a href='@TempData.Peek("licenseUrl")' class="footer-link me-4" target="_blank">@Html.Raw(sharedResource["Licence"])</a>
+				<a href='@TempData.Peek("authorUrl")' target="_blank" class="footer-link me-4">@Html.Raw(sharedResource["APropos"])</a>
+				<a href='@TempData.Peek("documentation")' target="_blank" class="footer-link me-4">@Html.Raw(sharedResource["Documentation"])</a>
+				<a href='@TempData.Peek("support")' target="_blank" class="footer-link d-none d-sm-inline-block">@Html.Raw(sharedResource["Supports"])</a>
+			</div>
+		</div>
+	</div>
+</footer>

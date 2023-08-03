@@ -1,4 +1,6 @@
-﻿using LoanManagement.service.Services.Loan_Management;
+﻿using Constants.Config;
+using LoanManagement.service.Services.Loan_Management;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LoanManagement.API.Controllers.Loan_Management
@@ -43,10 +45,9 @@ namespace LoanManagement.API.Controllers.Loan_Management
 
 							return NotFound(new ApiResponse((int)CustomHttpCode.OBJECT_NOT_FOUND, description:
 								"Dossier crédit sélectionné inexistant"));
-						}
-						await _ficheService.GeneratePdf(dossier);
-						Journal.Niveau = 2; //SUCCES
-						await _journalisationService.Journalize(Journal);
+                        }
+						var result = await _ficheService.GeneratePdf(dossier);
+                        await _journalisationService.Journalize(Journal);
 						await transaction.CommitAsync();
 						_logger.LogInformation("Génération de la fiche d'assurance : Opération effectuée avec succès");
 

@@ -10,5 +10,6 @@
 		Task<StatutDossierClient?> GetStatut(int id);
 		Task<Deroulement?> GetDossierDeroulement(int typePretId, double montant);
 		Task<IEnumerable<InfoSanteClient>> GetInfoSanteByDossier(int dossierId);
+		Task<IEnumerable<DossierClient>> GetClosed();
 	}
 }

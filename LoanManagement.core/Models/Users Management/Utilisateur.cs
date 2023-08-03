@@ -1,4 +1,4 @@
-﻿namespace LoanManagement.core.Models.Users_Management
+﻿    namespace LoanManagement.core.Models.Users_Management
 {
     public class Utilisateur
     {

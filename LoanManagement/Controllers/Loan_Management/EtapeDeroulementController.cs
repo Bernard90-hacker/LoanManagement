@@ -179,6 +179,44 @@ namespace LoanManagement.API.Controllers.Loan_Management
 
 		}
 
+		[HttpGet("{id}/membre")]
+		public async Task<ActionResult> GetMemberByStep(int id)
+		{
+			using(var connection = new SqlConnection(_configuration.GetConnectionString("Default")))
+			{
+				connection.Open();
+				using(var transaction = connection.BeginTransaction())
+				{
+					var Journal = new Journal() { Libelle = "Identification du membre intervenant à une étape dans le processus de décision.", TypeJournalId = 8 };
+                    try
+					{
+                        var etape = await _etapeDeroulementService.GetById(id);
+                        if (etape is null)
+                        {
+							Journal.Niveau = 1;
+							await _journalisationService.Journalize(Journal);
+							_logger.LogWarning("Identification du membre intervenant à une étape dans le processus de décision : Etape inexistant");
+							return NotFound(new ApiResponse((int)CustomHttpCode.OBJECT_NOT_FOUND,
+								description: "Etape inexistant."));
+						}
+
+						var membre = await _membreOrganeService.GetMembreByStep(id);
+						Journal.Niveau = 3;
+						await _journalisationService.Journalize(Journal);
+						_logger.LogWarning("Identification du membre intervenant à une étape dans le processus de décision : Opération effectuée avec succès");
+						return Ok(membre);
+					}
+					catch (Exception ex)
+					{
+                        Journal.Niveau = 1;
+                        await _journalisationService.Journalize(Journal);
+                        _logger.LogError("Une erreur est survenue pendant le traitement de la requête");
+                        return ValidationProblem(statusCode: (int)HttpCode.INTERNAL_SERVER_ERROR, title: "Erreur interne du serveur", detail: ex.Message);
+                    }
+				}
+			}
+		}
+
 		[HttpPut("update")]
 		public async Task<ActionResult> Update(UpdateEtapeDeroulementRessource ressource)
 		{

@@ -33,6 +33,9 @@ global using LoanManagement.API.Ressources.Loan_Management;
 global	using LoanManagement.API.Validator.Loan_Management;
 global	using Microsoft.AspNetCore.Http.Extensions;
 global	using Microsoft.Data.SqlClient;
+global using Constants.Utils;
+global using LoanManagement.core.Repositories.Users_Management;
+global using Microsoft.AspNetCore.Hosting;
 
 
 

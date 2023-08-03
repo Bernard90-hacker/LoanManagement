@@ -1,0 +1,61 @@
+@* ! Démonstration de la marque (affichage uniquement pour navbar-full et hide on below xl) *@
+@if (ViewData["navbarFull"] != null)
+{
+	<div class="navbar-brand app-brand demo d-none d-xl-flex py-0 me-4">
+		<a asp-area="" asp-controller="Home" asp-action="Index" class="app-brand-link gap-2">
+			<span class="app-brand-logo demo">
+				<img src="~/logos/bia.png" alt="bia-logo" class="h-auto rounded-circle" width="40" height="40">
+			</span>
+		</a>
+
+		@* ! Affichage de l'icône de fermeture du menu uniquement pour les menus horizontaux avec une barre de navigation complète. *@
+		@if (Convert.ToBoolean(@TempData.Peek("menuHorizontal")).ToString() == "True")
+		{
+			<a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-xl-none">
+				<i class="ti ti-x ti-sm align-middle"></i>
+			</a>
+		}
+	</div>
+}
+
+@* ! Non requis pour la disposition sans menu *@
+@if (ViewData["navbarHideToggle"] == null)
+{
+	<div class='layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0  @((Convert.ToBoolean(@TempData.Peek("menuHorizontal")).ToString() == "True") ? "" : "d-xl-none") @((@ViewData["contentNavbar"] != null && Convert.ToBoolean(@ViewData["contentNavbar"])) ? "" : "d-xl-none")'>
+		<a class="nav-item nav-link px-0 me-xl-4" href="javascript:void(0)">
+			<i class="ti ti-menu-2 ti-sm"></i>
+		</a>
+	</div>
+}
+
+<div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
+	<!-- Recherche -->
+	@*@await Html.PartialAsync("Sections/Navbar/_SearchPartial")*@
+	<!-- / Recherche -->
+	<ul class="navbar-nav flex-row align-items-center ms-auto">
+		<!-- Langue -->
+		@await Html.PartialAsync("Sections/Navbar/_SelectLanguagePartial")
+		<!-- / Langue -->
+		<!-- Changeur de style -->
+		<li class="nav-item me-2 me-xl-0">
+			<a class="nav-link style-switcher-toggle hide-arrow" href="javascript:void(0);">
+				<i class='ti ti-md'></i>
+			</a>
+		</li>
+		<!-- / Changeur de style -->
+		<!-- Quick links  -->
+		@*@await Html.PartialAsync("Sections/Navbar/_QuickLinksPartial")*@
+		<!-- / Quick links  -->
+		<!-- Notification -->
+		@*@await Html.PartialAsync("Sections/Navbar/_NotificationPartial")*@
+		<!-- / Notification -->
+		<!-- Utilisateur -->
+		@*@await Html.PartialAsync("Sections/Navbar/_LoginPartial")*@
+		<!-- / Utilisateur -->
+	</ul>
+</div>
+<!-- Recherche de petits écrans -->
+<div class='navbar-search-wrapper search-input-wrapper @((Convert.ToBoolean(@TempData.Peek("menuHorizontal")).ToString() == "True") ? @ViewData["containerNav"] : "") d-none'>
+	<input type="text" class='form-control search-input @((Convert.ToBoolean(@TempData.Peek("menuHorizontal")).ToString() == "True") ? "" : @ViewData["containerNav"]) border-0' placeholder="@Html.Raw(sharedResource["Rechercher"])..." aria-label="@Html.Raw(sharedResource["Rechercher"])...">
+	<i class="ti ti-x ti-sm search-toggler cursor-pointer"></i>
+</div>

@@ -62,8 +62,27 @@
 			.Property(x => x.StatutMaritalId)
 			.IsRequired();
 
+			builder
+			.Property(x => x.ContratTravail);
 
 			builder
+			.Property(x => x.AttestationTravail);
+
+			builder
+			.Property(x => x.PremierBulletinSalaire);
+
+			builder
+			.Property(x => x.DeuxiemeBulletinSalaire);
+
+			builder
+			.Property(x => x.TroisiemeBulletinSalaire);
+
+			builder
+			.Property(x => x.FactureProFormat)
+            .HasDefaultValue(null);
+
+
+            builder
 			.Property(x => x.ClientId)
 			.IsRequired();
 

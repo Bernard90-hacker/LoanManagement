@@ -105,6 +105,41 @@
 			}
 		}
 
+		[HttpGet("{id}/etape")]
+		public async Task<ActionResult> GetEtape(int id)// L'utilisateur connecté est à quelle étape du processus de décision
+		{
+			using(var connection = new SqlConnection(_configuration.GetConnectionString("Default")))
+			{
+				connection.Open();
+				using(var transaction = connection.BeginTransaction())
+				{
+					var Journal = new Journal() { Libelle = "Identification de l'étape à laquelle intervient un utilisateur dans le processus de décision", TypeJournalId = 8, Entite = "User" };
+					try
+					{
+						var user = await _utilisateurService.GetUserById(id);
+						if(user is null)
+						{
+							Journal.Niveau = 1;
+							await _journalisationService.Journalize(Journal);
+							_logger.LogWarning("Identification de l'étape à laquelle intervient un utilisateur dans le processus de décision : Utilisateur inexistant");
+							return NotFound(new ApiResponse((int)CustomHttpCode.OBJECT_NOT_FOUND, description: "Utilisateur inexistant"));
+						}
+						var result = await _membreService.GetEtapeByUser(user.Id);
+						Journal.Niveau = 3;
+						await _journalisationService.Journalize(Journal);
+						_logger.LogInformation("Identification de l'étape à laquelle intervient un utilisateur dans le processus de décision : Opération effectuée avec succès");
+
+						return Ok(result);
+					}
+					catch (Exception ex)
+					{
+                        _logger.LogError("Une erreur est survenue pendant le traitement de la requête");
+                        return ValidationProblem(statusCode: (int)HttpCode.INTERNAL_SERVER_ERROR, title: "Erreur interne du serveur", detail: ex.Message);
+                    }	
+				}
+			}
+		}
+
 		[HttpPost("add")]
 		public async Task<ActionResult> Add(MembreOrganeRessource ressource)
 		{

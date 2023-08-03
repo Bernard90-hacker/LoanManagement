@@ -1,4 +1,7 @@
-﻿namespace Constants.Config
+﻿using Constants.Utils;
+using Microsoft.Extensions.Hosting;
+
+namespace Constants.Config
 {
 	public static class ConfigConstants
 	{
@@ -184,5 +187,54 @@
 			return NetworkInterface.GetIsNetworkAvailable();
 		}
 
-	}
+        public static async Task<string?> UploadApiFile(IHostEnvironment env, IFormFile file, string path)
+        {
+            if (file is not { Length: > 0 }) return null;
+
+            string nomFichier;
+            try
+            {
+                var extension = Path.GetExtension(file.FileName);
+                if (!extension.ToLower().In(".png", ".jpg", ".jpeg"))
+                    return "NotAccepted";
+                nomFichier = UtilsConstant.RandomString(6) + DateTime.Now.ToString("yyyymmddssfff") + extension;
+                var repertoireServeur = Path.Combine(env.ContentRootPath, path);
+                if (!Directory.Exists(repertoireServeur)) Directory.CreateDirectory(repertoireServeur);
+                using FileStream fileStream = new(Path.Combine(repertoireServeur, nomFichier), FileMode.OpenOrCreate);
+                await file.CopyToAsync(fileStream);
+                await fileStream.FlushAsync();
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
+
+            return nomFichier;
+        }
+
+        public static async Task<string?> UploadPdfFile(IHostEnvironment env, IFormFile file, string path)
+        {
+            if (file is not { Length: > 0 }) return null;
+
+            string nomFichier;
+            try
+            {
+                var extension = Path.GetExtension(file.FileName);
+                if (!extension.ToLower().In(".pdf"))
+                    return "NotAccepted";
+                nomFichier = UtilsConstant.RandomString(6) + DateTime.Now.ToString("yyyymmddssfff") + extension;
+                var repertoireServeur = Path.Combine(env.ContentRootPath, path);
+                if (!Directory.Exists(repertoireServeur)) Directory.CreateDirectory(repertoireServeur);
+                using FileStream fileStream = new(Path.Combine(repertoireServeur, nomFichier), FileMode.OpenOrCreate);
+                await file.CopyToAsync(fileStream);
+                await fileStream.FlushAsync();
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
+
+            return nomFichier;
+        }
+    }
 }

@@ -1,0 +1,14 @@
+<environment include="Development">
+	@* Aide pour les modèles js *@
+	<script src="~/vendor/js/helpers.dist.js"></script>
+	@* Personnalisateur de modèle js *@
+	<script src="~/vendor/js/template-customizer.dist.js"></script>
+	@* Le fichier de configuration contient les variables globales et les options du thème par défaut, définissez votre option de thème préférée dans ce fichier. *@
+	<script src="~/js/config.js"></script>
+</environment>
+
+<environment exclude="Development">
+	<script src="~/vendor/js/helpers.dist.js" asp-append-version="true"></script>
+	<script src="~/vendor/js/template-customizer.dist.js" asp-append-version="true"></script>
+	<script src="~/js/config.js" asp-append-version="true"></script>
+</environment>

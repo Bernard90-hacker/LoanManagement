@@ -1,44 +1,54 @@
-﻿using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-
-namespace LoanManagement.service.Services.Users_Management
+﻿namespace LoanManagement.service.Services.Users_Management
 {
-	public class TokenService
+	public class TokenService : ITokenService
 	{
 		public TokenService() { }
 
-		public string CreateAccessToken(string username, string role, string accessToken)
-		{
-			List<Claim> claims = new()
-			{
-				new Claim(ClaimTypes.NameIdentifier, username),
-				new Claim(ClaimTypes.Role, role)
-			};
+        public string GenerateAccessToken(string secret, IEnumerable<Claim> claims, string issuer = null, string audience = null)
+        {
+            var jwtTokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(secret);
+            var signingCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature);
+            var tokenOptions = new JwtSecurityToken(
+                claims: claims,
+                expires: DateTime.Now.AddHours(2),  
+                signingCredentials: signingCredentials,
+                issuer: issuer,
+                audience: audience);
+            var jwtToken = jwtTokenHandler.WriteToken(tokenOptions);
 
-			SymmetricSecurityKey? key = new(Encoding.UTF8.GetBytes(accessToken));
-			SigningCredentials? creds = new(key, SecurityAlgorithms.HmacSha256);
-			JwtSecurityToken? token = new(
-				claims: claims,
-				notBefore: DateTime.Now,
-				expires: DateTime.Now.AddSeconds(30),
-				signingCredentials: creds);
+            return jwtToken;
+        }
 
-			string? jwt = new JwtSecurityTokenHandler().WriteToken(token);
+        public string GenerateRefreshToken()
+        {
+            var randomNumber = new byte[32];
+            using var rng = RandomNumberGenerator.Create();
+            rng.GetBytes(randomNumber);
 
-			return jwt;
-		}
+            return Convert.ToBase64String(randomNumber);
+        }
 
-		public static string DecodeToken(string? token, out bool hasTokenExpired)
-		{
-			token = token.ToString();
-			JwtSecurityToken? jwtToken = new(token);
-			string username = jwtToken.Claims.Where
-				(claim => ClaimTypes.NameIdentifier == claim.Type).First().ToString();
-			hasTokenExpired = jwtToken.ValidTo < DateTime.UtcNow;
+        public ClaimsPrincipal GetPrincipalFromExpiredToken(string secret, string token)
+        {
+            var key = Encoding.UTF8.GetBytes(secret);
+            var tokenValidationParameters = new TokenValidationParameters()
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(key),
+                ValidateAudience = false, //Vous pouver vouloir valider le public et l'émetteur en fonction de votre cas d'utilisation
+                ValidateIssuer = false,
+                ValidateActor = false,
+                ValidateLifetime = false //Ici, nous disons que nous ne soucions pas de la date d'expiration du jeton
+            };
 
-			return username;
-		}
-	}
+            var jwtTokenHandler = new JwtSecurityTokenHandler();
+            var principal = jwtTokenHandler.ValidateToken(token, tokenValidationParameters, out SecurityToken securityToken);
+            var jwtSecurityToken = securityToken as JwtSecurityToken;
+            if (jwtSecurityToken.IsNull() || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
+                throw new SecurityTokenException("Token invalide");
+
+            return principal;
+        }
+    }
 }

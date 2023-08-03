@@ -2,6 +2,7 @@
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Previewer;
+using Microsoft.AspNetCore.Hosting;
 
 namespace LoanManagement.service.Services.Loan_Management
 {
@@ -63,6 +64,7 @@ namespace LoanManagement.service.Services.Loan_Management
 			});
 			a.GeneratePdf($"Files/{client.Nom} {client.Prenoms}.pdf");
 			a.GeneratePdfAndShow();
-		}
+
+        }
 	}
 }

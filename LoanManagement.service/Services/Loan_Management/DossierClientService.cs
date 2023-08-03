@@ -71,6 +71,27 @@
 
 			return dossierClient;
 		}
+
+		public async Task Cloturer(DossierClient dossierClient)
+		{
+			dossierClient.Cloturer = true;
+			dossierClient.DateCloture = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
+		
+			await _unitOfWork.CommitAsync();
+
+		}
+
+		public async Task AddCouverture(DossierClient dossierClient, string couverture)
+		{
+			dossierClient.CouvertureEmprunteur = couverture;
+			await _unitOfWork.CommitAsync();
+		}
+
+		public async Task<IEnumerable<DossierClient>> GetClosed()
+		{
+			return await _unitOfWork.DossierClients
+				.GetClosed();
+		}
 		
 	}
 }

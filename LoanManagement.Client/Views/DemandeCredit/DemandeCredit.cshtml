@@ -1,0 +1,773 @@
+﻿@page
+@section PageStyles {
+    <link rel="stylesheet" href="~/vendor/css/pages/page-auth.dist.css">
+}
+
+@section VendorStyles{
+    <link rel="stylesheet" href="~/vendor/libs/bs-stepper/bs-stepper.dist.css" />
+    <link rel="stylesheet" href="~/vendor/libs/bootstrap-select/bootstrap-select.dist.css" />
+    <link rel="stylesheet" href="~/vendor/libs/select2/select2.dist.css" />
+    <link rel="stylesheet" href="~/vendor/libs/formvalidation/dist/css/formValidation.min.css" />
+}
+
+
+<section class="bernard">
+    <div class="col-md-12">
+        @await Html.PartialAsync("Sections/Menu/_GenerationPartial")
+    </div>
+    <h4 class="fw-bold py-3 mb-4">
+        <span class="text-muted fw-light">Demande de crédit.</span>
+    </h4>
+
+    <div>
+        <div class="col-12">
+            <h5></h5>
+        </div>
+
+        <!-- Default Wizard -->
+        <div class="col-12 mb-4">
+            <small class="text-light fw-semibold"></small>
+            <div class="bs-stepper wizard-numbered mt-2">
+                <div class="bs-stepper-header">
+                    <div class="step" data-target="#account-details">
+                        <button type="button" class="step-trigger">
+                            <span class="bs-stepper-circle">1</span>
+                            <span class="bs-stepper-label">
+                                <span class="bs-stepper-title">Informations physiques</span>
+                                <span class="bs-stepper-subtitle">Physique</span>
+                            </span>
+                        </button>
+                    </div>
+                    <div class="line">
+                        <i class="ti ti-chevron-right"></i>
+                    </div>
+                    <div class="step" data-target="#personal-info">
+                        <button type="button" class="step-trigger">
+                            <span class="bs-stepper-circle">2</span>
+                            <span class="bs-stepper-label">
+                                <span class="bs-stepper-title">Informations personnelles</span>
+                                <span class="bs-stepper-subtitle">Entrez vos informations personnelles.</span>
+                            </span>
+
+                        </button>
+                    </div>
+                    <div class="line">
+                        <i class="ti ti-chevron-right"></i>
+                    </div>
+                    <div class="step" data-target="#social-links">
+                        <button type="button" class="step-trigger">
+                            <span class="bs-stepper-circle">3</span>
+                            <span class="bs-stepper-label">
+                                <span class="bs-stepper-title">Autres informations</span>
+                                <span class="bs-stepper-subtitle">Autres informations</span>
+                            </span>
+                        </button>
+                    </div>
+                    <div class="step" data-target="#files">
+                        <button type="button" class="step-trigger">
+                            <span class="bs-stepper-circle">4</span>
+                            <span class="bs-stepper-label">
+                                <span class="bs-stepper-title">Fichiers</span>
+                                <span class="bs-stepper-subtitle">Fichiers</span>
+                            </span>
+                        </button>
+                    </div>
+                </div>
+                <div class="bs-stepper-content">
+                    <form onsubmit="return valider()" asp-action="DemandeCreditAction" asp-controller="DemandeCredit" enctype='multipart/form-data' method="post">
+                        <!-- Account Details -->
+                        <div id="account-details" class="content">
+                            <div class="content-header mb-3">
+                                <h6 class="mb-0">Informations physiques</h6>
+                                <small>Entrez vos informations physiques.</small>
+                            </div>
+                            <div class="row g-3">
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="taille">Taille en centimètres</label>
+                                    <input type="number" id="taille" name="taille" class="form-control" min="100" required ="required"/>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="poids">Poids (Kg)</label>
+                                    <input type="number" id="poids" name="poids" class="form-control" required="required" min="20" max="250"/>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="tension">Tension Artérielle</label>
+                                    <div class="input-group input-group-merge">
+                                        <input type="number" id="tension" name="tension" class="form-control" required="required" min="0" max="20"/>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="col-12 d-flex justify-content-between">
+                                        <button class="btn btn-label-secondary btn-prev" disabled>
+                                            <i class="ti ti-arrow-left me-sm-1 me-0"></i>
+                                            <span class="align-middle d-sm-inline-block d-none">Previous</span>
+                                        </button>
+                                        <button class="btn btn-primary btn-next"> <span class="align-middle d-sm-inline-block d-none me-sm-1">Next</span> <i class="ti ti-arrow-right"></i></button>
+                                    </div>  
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Personal Info -->
+                        <div id="personal-info" class="content">
+                            <div class="content-header mb-3">
+                                <h6 class="mb-0">Informations personnelles</h6>
+                                <small>Entrez vos informations personnelles.</small>
+                            </div>
+                            <div class="row g-3">
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="fumer">Fumez-vous</label>
+                                    <select class="select2" id="fumer" name="fumer" required="required">
+                                        <option label=" "></option>
+                                        <option value="1">Oui</option>
+                                        <option value="0">Non</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="oui">Si oui, combien de cigarettes par jour?</label>
+                                    <input type="number" id="oui" name="oui" class="form-control" min="0"/>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="buveur">Buvez-vous de l'alcool ?</label>
+                                    <select class="select2" id="buveur" required="required" name="buveur">
+                                        <option label=" "></option>
+                                        <option value="1">Pas du tout</option>
+                                        <option value="2">A l'occasion</option>
+                                        <option value="3">Régulièrement</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="distraction">Vos distractions</label>
+                                    <select class="selectpicker w-auto" id="distraction" name="distraction" data-style="btn-transparent" data-icon-base="ti" data-tick-icon="ti-check text-white" required="required" multiple>
+                                        <option>Télévision</option>
+                                        <option>Cinéma</option>
+                                        <option>Arts</option>
+                                        <option>Lecture</option>
+                                        <option>Voyage</option>
+                                        <option>Sport</option>
+                                        <option>Mangas</option>
+                                        <option>Jeux vidéo</option>
+                                        <option>Musique</option>
+                                        <option>Culture Générale</option>
+                                    </select>
+                                </div>
+                                <div class="col-12 d-flex justify-content-between">
+                                    <button class="btn btn-label-secondary btn-prev">
+                                        <i class="ti ti-arrow-left me-sm-1 me-0"></i>
+                                        <span class="align-middle d-sm-inline-block d-none">Previous</span>
+                                    </button>
+                                    <button class="btn btn-primary btn-next"> <span class="align-middle d-sm-inline-block d-none me-sm-1">Next</span> <i class="ti ti-arrow-right"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Social Links -->
+                        <div id="social-links" class="content">
+                            <div class="content-header mb-3">
+                                <h6 class="mb-0">Autres informations</h6>
+                                <small>Autres informations</small>
+                            </div>
+                            <div class="row g-3">
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="sport">Pratiquez-vous un sport ?</label>
+                                    <select class="selectpicker w-auto" id="sport" name="sport" data-style="btn-transparent" data-icon-base="ti" data-tick-icon="ti-check text-white" required="required">
+                                        <option value="1">Oui</option>
+                                        <option value="0">Non</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="sportOui">Si oui, à quel titre ?</label>
+                                    <select class="select2" id="sportOui" name="sportOui" data-style="btn-transparent" data-icon-base="ti" data-tick-icon="ti-check text-white">
+                                        <option value="1">Amateur</option>
+                                        <option value="2">Professionnel</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="infirmite">Etes vous atteint d'une infirmité ?</label>
+                                    <select class="selectpicker w-auto" id="infirmite" name="infirmite" data-style="btn-transparent" data-icon-base="ti" data-tick-icon="ti-check text-white" required="required">
+                                        <option value="1">Oui</option>
+                                        <option value="0">Non</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="form-label" for="infirmiteOui">Si oui, de quelle nature ?</label>
+                                    <input type="text" id="infirmiteOui" name="infirmiteOui" class="form-control" />
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="form-label" for="infirmiteOuiDate">Date de survenance</label>
+                                    <input type="date" id="infirmiteOuiDate" name="infirmiteOuiDate" class="form-control" />
+                                </div>
+                                <div class="col-12 d-flex justify-content-between">
+                                    <button class="btn btn-label-secondary btn-prev">
+                                        <i class="ti ti-arrow-left me-sm-1 me-0"></i>
+                                        <span class="align-middle d-sm-inline-block d-none">Previous</span>
+                                    </button>
+                                    <button class="btn btn-primary btn-next"> <span class="align-middle d-sm-inline-block d-none me-sm-1">Next</span> <i class="ti ti-arrow-right"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="files" class="content">
+                            <div class="content-header mb-3">
+                                <h6 class="mb-0">Fichiers</h6>
+                                <small>Fichiers</small>
+                            </div>
+                            <div class="row g-3">
+                                <div class="col-sm-3">
+                                    <label class="form-label" for="attestationTravail">Attestation de travail.</label>
+                                    <input type="file" id="attestationTravail" name="attestationTravail" class="form-control" accept=".pdf"/>
+                                    
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="form-label" for="contratTravail">Contrat de travail.</label>
+                                    <input type="file" id="contratTravail" name="contratTravail" class="form-control" accept=".pdf"/>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="form-label" for="premierBulletinSalaire">Premier Bulletin de salaire.</label>
+                                    <input type="file" id="premierBulletinSalaire" name="premierBulletinSalaire" class="form-control" accept=".pdf" />
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="form-label" for="deuxiemeBulletinSalaire">Deuxième Bulletin de salaire.</label>
+                                    <input type="file" id="deuxiemeBulletinSalaire" name="deuxiemeBulletinSalaire" class="form-control" accept=".pdf" />
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="form-label" for="troisiemeBulletinSalaire">Troisième Bulletin de salaire.</label>
+                                    <input type="file" id="troisiemeBulletinSalaire" name="troisiemeBulletinSalaire" class="form-control" accept=".pdf" />
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="form-label" for="facture">Facture proforma</label>
+                                    <input type="file" id="facture" name="facture" class="form-control" accept=".pdf" />
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="form-label" for="piece">Pièce d'identité</label>
+                                    <input type="file" id="piece" name="piece" class="form-control" accept=".pdf"/>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="form-label" for="echeance">Echeance de la pièce</label>
+                                    <input type="date" id="echeance" name="echeance" class="form-control"/>
+                                </div>
+                                <div class="col-12 d-flex justify-content-between">
+                                    <button class="btn btn-label-secondary btn-prev">
+                                        <i class="ti ti-arrow-left me-sm-1 me-0"></i>
+                                        <span class="align-middle d-sm-inline-block d-none">Previous</span>
+                                    </button>
+                                    <input type="submit" class="btn btn-success btn-submit" />
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- /Default Wizard -->
+
+        <div class="col-12 mb-4">
+            <small class="text-light fw-semibold">Questions liées à la santé.</small>
+            <div class="bs-stepper wizard-vertical vertical mt-2">
+                <div class="bs-stepper-header">
+                    <div class="step" data-target="#account-details-1">
+                        <button type="button" class="step-trigger">
+                            <span class="bs-stepper-circle">1</span>
+                            <span class="bs-stepper-label">
+                                <span class="bs-stepper-title">Question 1</span>
+                                <span class="bs-stepper-subtitle">Répondez à la question 1</span>
+                            </span>
+                        </button>
+                    </div>
+                    <div class="line"></div>
+                    <div class="step" data-target="#personal-info-1">
+                        <button type="button" class="step-trigger">
+                            <span class="bs-stepper-circle">2</span>
+                            <span class="bs-stepper-label">
+                                <span class="bs-stepper-title">Question 2</span>
+                                <span class="bs-stepper-subtitle">Répondez à la question 2</span>
+                            </span>
+                        </button>
+                    </div>
+                    <div class="line"></div>
+                    <div class="step" data-target="#social-links-1">
+                        <button type="button" class="step-trigger">
+                            <span class="bs-stepper-circle">3</span>
+                            <span class="bs-stepper-label">
+                                <span class="bs-stepper-title">Question 3</span>
+                                <span class="bs-stepper-subtitle">Répondez à la question 3</span>
+                            </span>
+                        </button>
+                    </div>
+                    <div class="line"></div>
+                    <div class="step" data-target="#social-links-2">
+                        <button type="button" class="step-trigger">
+                            <span class="bs-stepper-circle">4</span>
+                            <span class="bs-stepper-label">
+                                <span class="bs-stepper-title">Question 4</span>
+                                <span class="bs-stepper-subtitle">Répondez à la question 4</span>
+                            </span>
+                        </button>
+                    </div>
+                    <div class="line"></div>
+                    <div class="step" data-target="#social-links-3">
+                        <button type="button" class="step-trigger">
+                            <span class="bs-stepper-circle">5</span>
+                            <span class="bs-stepper-label">
+                                <span class="bs-stepper-title">Question 5</span>
+                                <span class="bs-stepper-subtitle">Répondez à la question 5</span>
+                            </span>
+                        </button>
+                    </div>
+                    <div class="line"></div>
+                    <div class="step" data-target="#social-links-4">
+                        <button type="button" class="step-trigger">
+                            <span class="bs-stepper-circle">6</span>
+                            <span class="bs-stepper-label">
+                                <span class="bs-stepper-title">Question 6</span>
+                                <span class="bs-stepper-subtitle">Répondez à la question 6</span>
+                            </span>
+                        </button>
+                    </div>
+                    <div class="line"></div>
+                    <div class="step" data-target="#social-links-5">
+                        <button type="button" class="step-trigger">
+                            <span class="bs-stepper-circle">7</span>
+                            <span class="bs-stepper-label">
+                                <span class="bs-stepper-title">Question 7</span>
+                                <span class="bs-stepper-subtitle">Répondez à la question 7</span>
+                            </span>
+                        </button>
+                    </div>
+                </div>
+                <div class="bs-stepper-content">
+                    <form onSubmit="return false">
+                        <!-- Account Details -->
+                        <div id="account-details-1" class="content">
+                            <div class="content-header mb-3">
+                                <h6 class="mb-0">Questions liées à la santé.</h6>
+                                <small></small>
+                            </div>
+                            <div class="row g-3">
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="malade">Avez-vous été malade lors des 6 derniers mois ?</label>
+                                    <select class="select2" id="malade" name="malade" required="required">
+                                        <option label=" "></option>
+                                        <option>Oui</option>
+                                        <option>Non</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="ouiPrecision">Si oui, précisez</label>
+                                    <input type="text" id="ouiPrecision" name="ouiPrecision" class="form-control"/>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="periodeTraitement1">Période de traitement.</label>
+                                    <div class="input-group input-group-merge">
+                                        <input type="text" id="periodeTraitement1" name="periodeTraitement1" class="form-control"/>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="lieuTraitement1">Lieu de traitement.</label>
+                                    <div class="input-group input-group-merge">
+                                        <input type="text" id="lieuTraitement1" name="lieuTraitement1" class="form-control"/>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="fatigue">Etes vous souvent fatigué ?</label>
+                                    <select class="select2" id="fatigue" name="fatigue" required="required">
+                                        <option label=" "></option>
+                                        <option>Oui</option>
+                                        <option>Non</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="ouiPrecision1">Si oui, précisez</label>
+                                    <input type="text" id="ouiPrecision1" name="ouiPrecision1" class="form-control" />
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="periodeTraitement2">Période de traitement.</label>
+                                    <div class="input-group input-group-merge">
+                                        <input type="text" id="periodeTraitement2" name="periodeTraitement2" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="lieuTraitement2">Lieu de traitement.</label>
+                                    <div class="input-group input-group-merge">
+                                        <input type="text" id="lieuTraitement2" name="lieuTraitement2" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="col-12 d-flex justify-content-between">
+                                    <button class="btn btn-label-secondary btn-prev" disabled>
+                                        <i class="ti ti-arrow-left me-sm-1 me-0"></i>
+                                        <span class="align-middle d-sm-inline-block d-none">Previous</span>
+                                    </button>
+                                    <button class="btn btn-primary btn-next"> <span class="align-middle d-sm-inline-block d-none me-sm-1">Next</span> <i class="ti ti-arrow-right"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Personal Info -->
+                        <div id="personal-info-1" class="content">
+                            <div class="content-header mb-3">
+                                <h6 class="mb-0">Personal Info</h6>
+                                <small>Enter Your Personal Info.</small>
+                            </div>
+                            <div class="row g-3">
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="maigrir">Avez-vous maigri les 6 derniers mois?</label>
+                                   <select class="select2" id="maigrir" name="maigrir" required="required">
+                                        <option label=" "></option>
+                                        <option>Oui</option>
+                                        <option>Non</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="ouiPrecision3">Si oui, précisez</label>
+                                    <input type="text" id="ouiPrecision3" name="ouiPrecision3" class="form-control" />
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="periodeTraitement3">Période de traitement</label>
+                                    <input type="text" id="periodeTraitement3" name="periodeTraitement3" class="form-control" />
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="lieuTraitement3">Lieu de traitement</label>
+                                    <input type="text" id="lieuTraitement3" name="lieuTraitement3" class="form-control" />
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="ganglions">Avez-vous des ganglions, des furoncles, des abcès ou des maladies de la peau ?</label>
+                                    <select class="select2" id="ganglions" name="ganglions" required="required">
+                                        <option label=" "></option>
+                                        <option>Oui</option>
+                                        <option>Non</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="ouiPrecision4">Si oui, précisez</label>
+                                    <input type="text" id="ouiPrecision4" name="ouiPrecision4" class="form-control" />
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="periodeTraitement4">Période de traitement</label>
+                                    <input type="text" id="periodeTraitement4" name="periodeTraitement4" class="form-control" />
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="lieuTraitement4">Lieu de traitement</label>
+                                    <input type="text" id="lieuTraitement4" name="lieuTraitement4" class="form-control" />
+                                </div>
+                                <div class="col-12 d-flex justify-content-between">
+                                    <button class="btn btn-label-secondary btn-prev">
+                                        <i class="ti ti-arrow-left me-sm-1 me-0"></i>
+                                        <span class="align-middle d-sm-inline-block d-none">Previous</span>
+                                    </button>
+                                    <button class="btn btn-primary btn-next"> <span class="align-middle d-sm-inline-block d-none me-sm-1">Next</span> <i class="ti ti-arrow-right"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Social Links -->
+                        <div id="social-links-1" class="content">
+                            <div class="content-header mb-3">
+                                <h6 class="mb-0"></h6>
+                                <small></small>
+                            </div>
+                            <div class="row g-3">
+                               <div class="col-sm-6">
+                                    <label class="form-label" for="toux">Toussez-vous depuis quelques temps avec en plus de la fièvre?</label>
+                                   <select class="select2" id="toux" name="toux" required="required">
+                                        <option label=" "></option>
+                                        <option>Oui</option>
+                                        <option>Non</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="ouiPrecision5">Si oui, précisez</label>
+                                    <input type="text" id="ouiPrecision5" name="ouiPrecision5" class="form-control" />
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="periodeTraitement5">Période de traitement</label>
+                                    <input type="text" id="periodeTraitement5" name="periodeTraitement5" class="form-control" />
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="lieuTraitement5">Lieu de traitement</label>
+                                    <input type="text" id="lieuTraitement5" name="lieuTraitement5" class="form-control" />
+                                </div>  
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="plaies">Avez-vous des plaies dans la bouche ?</label>
+                                    <select class="select2" id="plaies" name="plaies" required="required">
+                                        <option label=" "></option>
+                                        <option>Oui</option>
+                                        <option>Non</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="ouiPrecision6">Si oui, précisez</label>
+                                    <input type="text" id="ouiPrecision6" name="ouiPrecision6" class="form-control" />
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="periodeTraitement6">Période de traitement</label>
+                                    <input type="text" id="periodeTraitement6" name="periodeTraitement6" class="form-control" />
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="lieuTraitement6">Lieu de traitement</label>
+                                    <input type="text" id="lieuTraitement6" name="lieuTraitement6" class="form-control" />
+                                </div>
+                                <div class="col-12 d-flex justify-content-between">
+                                    <button class="btn btn-label-secondary btn-prev">
+                                        <i class="ti ti-arrow-left me-sm-1 me-0"></i>
+                                        <span class="align-middle d-sm-inline-block d-none">Previous</span>
+                                    </button>
+                                    <button class="btn btn-primary btn-next"> <span class="align-middle d-sm-inline-block d-none me-sm-1">Next</span> <i class="ti ti-arrow-right"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="social-links-2" class="content">
+                            <div class="content-header mb-3">
+                                <h6 class="mb-0"></h6>
+                                <small></small>
+                            </div>
+                            <div class="row g-3">
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="diarrhee">Faites vous souvent la diarrhée ?</label>
+                                    <select class="select2" id="diarrhee" name="diarrhee" required="required">
+                                        <option label=""></option>
+                                        <option>Oui</option>
+                                        <option>Non</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="ouiPrecision7">Si oui, précisez</label>
+                                    <input type="text" id="ouiPrecision7" name="ouiPrecision7" class="form-control" />
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="periodeTraitement7">Période de traitement</label>
+                                    <input type="text" id="periodeTraitement7" name="periodeTraitement7" class="form-control" />
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="lieuTraitement7">Lieu de traitement</label>
+                                    <input type="text" id="lieuTraitement7" name="periodeTraitement7" class="form-control" />
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="ballonnement">Etes vous souvent ballonné(e) ?</label>
+                                    <select class="select2" id="ballonnement" name="ballonnement" required="required">
+                                        <option label=" "></option>
+                                        <option>Oui</option>
+                                        <option>Non</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="ouiPrecision8">Si oui, précisez</label>
+                                    <input type="text" id="ouiPrecision8" name="ouiPrecision8" class="form-control" />
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="periodeTraitement8">Période de traitement</label>
+                                    <input type="text" id="periodeTraitement8" name="ouiPrecision8" class="form-control" />
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="lieuTraitement8">Lieu de traitement</label>
+                                    <input type="text" id="lieuTraitement8" name="lieuTraitement8" class="form-control" />
+                                </div>
+                                <div class="col-12 d-flex justify-content-between">
+                                    <button class="btn btn-label-secondary btn-prev">
+                                        <i class="ti ti-arrow-left me-sm-1 me-0"></i>
+                                        <span class="align-middle d-sm-inline-block d-none">Previous</span>
+                                    </button>
+                                    <button class="btn btn-primary btn-next"> <span class="align-middle d-sm-inline-block d-none me-sm-1">Next</span> <i class="ti ti-arrow-right"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="social-links-3" class="content">
+                            <div class="content-header mb-3">
+                                <h6 class="mb-0"></h6>
+                                <small></small>
+                            </div>
+                            <div class="row g-3">
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="omi">Avez-vous des OEdèmes de Membres Inférieurs (O.M.I) ?</label>
+                                    <select class="select2" id="omi" required="required">
+                                        <option label=""></option>
+                                        <option>Oui</option>
+                                        <option>Non</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="ouiPrecision9">Si oui, précisez</label>
+                                    <input type="text" id="ouiPrecision9" name="ouiPrecision9" class="form-control" />
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="periodeTraitement9">Période de traitement</label>
+                                    <input type="text" id="periodeTraitement9" name="periodeTraitement9" class="form-control" />
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="lieuTraitement9">Lieu de traitement</label>
+                                    <input type="text" id="lieuTraitement9" name="lieuTraitement9" class="form-control" />
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="essoufflement">Etes vous essoufflé(e) au moindre effort ?</label>
+                                    <select class="select2" id="essoufflement" name="essoufflement" required="required">
+                                        <option label=" "></option>
+                                        <option>Oui</option>
+                                        <option>Non</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="ouiPrecision10">Si oui, précisez</label>
+                                    <input type="text" id="ouiPrecision10" name="ouiPrecision10" class="form-control" />
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="periodeTraitement10">Période de traitement</label>
+                                    <input type="text" id="periodeTraitement10" name="periodeTraitement10" class="form-control" />
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="lieuTraitement10">Lieu de traitement</label>
+                                    <input type="text" id="lieuTraitement10" name="lieuTraitement10" class="form-control" />
+                                </div>
+                                <div class="col-12 d-flex justify-content-between">
+                                    <button class="btn btn-label-secondary btn-prev">
+                                        <i class="ti ti-arrow-left me-sm-1 me-0"></i>
+                                        <span class="align-middle d-sm-inline-block d-none">Previous</span>
+                                    </button>
+                                    <button class="btn btn-primary btn-next"> <span class="align-middle d-sm-inline-block d-none me-sm-1">Next</span> <i class="ti ti-arrow-right"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="social-links-4" class="content">
+                            <div class="content-header mb-3">
+                                <h6 class="mb-0"></h6>
+                                <small></small>
+                            </div>
+                            <div class="row g-3">
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="perf">Avez-vous déjà reçu une perfusion?</label>
+                                    <select class="select2" id="perf" name="perf" required="required">
+                                        <option label=""></option>
+                                        <option>Oui</option>
+                                        <option>Non</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="ouiPrecision11">Si oui, précisez</label>
+                                    <input type="text" id="ouiPrecision11" name="ouiPrecision11" class="form-control" />
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="periodeTraitement11">Période de traitement</label>
+                                    <input type="text" id="periodeTraitement11" name="periodeTraitement11" class="form-control" />
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="lieuTraitement11">Lieu de traitement</label>
+                                    <input type="text" id="lieuTraitement11" name="lieuTraitement11" class="form-control" />
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="transf">Avez-vous déjà reçu une transfusion de sang ?</label>
+                                    <select class="select2" id="transf" name="transf" required="required">
+                                        <option label=" "></option>
+                                        <option>Oui</option>
+                                        <option>Non</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="ouiPrecision12">Si oui, précisez</label>
+                                    <input type="text" id="ouiPrecision12" name="ouiPrecision12" class="form-control" />
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="periodeTraitement12">Période de traitement</label>
+                                    <input type="text" id="periodeTraitement12" name="periodeTraitement12" class="form-control" />
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="lieuTraitement12">Lieu de traitement</label>
+                                    <input type="text" id="lieuTraitement12" name="lieuTraitement12" class="form-control" />
+                                </div>
+                                <div class="col-12 d-flex justify-content-between">
+                                    <button class="btn btn-label-secondary btn-prev">
+                                        <i class="ti ti-arrow-left me-sm-1 me-0"></i>
+                                        <span class="align-middle d-sm-inline-block d-none">Previous</span>
+                                    </button>
+                                    <button class="btn btn-primary btn-next"> <span class="align-middle d-sm-inline-block d-none me-sm-1">Next</span> <i class="ti ti-arrow-right"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="social-links-5" class="content">
+                            <div class="content-header mb-3">
+                                <h6 class="mb-0"></h6>
+                                <small></small>
+                            </div>
+                            <div class="row g-3">
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="operation">Avez-vous déjà subi une opération?</label>
+                                    <select class="select2" id="operation" name="operation" required="required">
+                                        <option label=""></option>
+                                        <option>Oui</option>
+                                        <option>Non</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="ouiPrecision13">Si oui, précisez</label>
+                                    <input type="text" id="ouiPrecision13" name="ouiPrecision13" class="form-control" />
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="periodeTraitement13">Période de traitement</label>
+                                    <input type="text" id="periodeTraitement13" name="periodeTraitement13" class="form-control" />
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="lieuTraitement13">Lieu de traitement</label>
+                                    <input type="text" id="lieuTraitement13" name="lieuTraitement13" class="form-control" />
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="complement">Avez-vous des informations complémentaires sur votre état de santé
+                                        susceptibles de renseigner l'Assureur ?</label>
+                                    <select class="select2" id="complement" name="complement" required="required">
+                                        <option label=" "></option>
+                                        <option>Oui</option>
+                                        <option>Non</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="ouiPrecision14">Si oui, précisez</label>
+                                    <input type="text" id="ouiPrecision14" name="ouiPrecision14" class="form-control" />
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="periodeTraitement14">Période de traitement</label>
+                                    <input type="text" id="periodeTraitement14" name="periodeTraitement14" class="form-control" />
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="lieuTraitement14">Lieu de traitement</label>
+                                    <input type="text" id="lieuTraitement14" name="lieuTraitement14" class="form-control" />
+                                </div>
+                                <div class="col-12 d-flex justify-content-between">
+                                    <button class="btn btn-label-secondary btn-prev">
+                                        <i class="ti ti-arrow-left me-sm-1 me-0"></i>
+                                        <span class="align-middle d-sm-inline-block d-none">Previous</span>
+                                    </button>
+                                    <button class="btn btn-success btn-submit">Submit</button>                                
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .bernard {
+        position: absolute;
+        left: 300px;
+        top: 60px;
+    }
+</style>
+
+@section VendorScripts{
+    <script src="~/vendor/libs/bs-stepper/bs-stepper.dist.js"></script>
+    <script src="~/vendor/libs/bootstrap-select/bootstrap-select.dist.js"></script>
+    <script src="~/vendor/libs/select2/select2.dist.js"></script>
+@*    <script src="~/vendor/libs/formvalidation/dist/js/FormValidation.min.js"></script>
+*@    <script src="~/vendor/libs/formvalidation/dist/js/plugins/Bootstrap5.min.js"></script>
+    <script src="~/vendor/libs/formvalidation/dist/js/plugins/AutoFocus.min.js"></script>
+}
+
+@section PageScripts {
+    <script src="~/js/form-wizard-numbered.dist.js"></script>
+    <script src="~/js/form-wizard-validation.dist.js"></script>
+    <script>
+        function valider(){
+            var dateSaisie = new Date(document.getElementById("infirmiteOuiDate").value);
+            var today = new Date();
+            if(dateSaisie >= today){
+                alert("La date saisie ne peut pas être supérieure à aujourd'hui.");
+                return false;
+            }
+
+            return true;
+        }
+    </script>
+}

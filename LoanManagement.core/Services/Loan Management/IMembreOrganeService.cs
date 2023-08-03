@@ -11,5 +11,7 @@
 		Task<MembreOrgane> Update(MembreOrgane membreUpdated, MembreOrgane membre);
 		Task<MembreOrgane> Create(MembreOrgane membre);
 		Task Delete(MembreOrgane membre);
+		Task<EtapeDeroulement?> GetEtapeByUser(int userId);
+		Task<MembreOrgane?> GetMembreByStep(int etapeId);
 	}
 }

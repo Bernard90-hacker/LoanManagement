@@ -1,0 +1,40 @@
+@await Html.PartialAsync("Sections/_Variables")
+
+<!DOCTYPE html>
+<html lang="en" class='light-style @ViewData["navbarFixed"] @ViewData["menuFixed"] @ViewData["menuCollapsed"] @ViewData["footerFixed"] @ViewData["customizerHidden"]' dir="ltr" data-theme="theme-default" data-assets-path="/" data-template='@((Convert.ToBoolean(@TempData.Peek("menuHorizontal")).ToString() == "True") ? "horizontal-menu-template" : "vertical-menu-template")'>
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+
+	<title>@ViewData["title"] | @Html.Raw((JsonConvert.DeserializeObject<LocalizerObj>(TempData.Peek("appName").ToString())).SharedResource) :: Banque Internationale pour l'Afrique au Togo</title>
+	<meta name="description" content="Accès aux services bancaires depuis une interface interactive" />
+	<meta name="keywords" content="eBiat BIAT, Web BIAT, BIAT" />
+	<meta name="author" content="@TempData.Peek("authorName")" />
+
+	<!-- Canonical SEO -->
+	<link rel="canonical" href='@TempData.Peek("productPage")'>
+	<!-- Favicon -->
+	<link rel="icon" type="image/x-icon" href="~/logos/bia.ico" />
+
+	<!-- Styles de base -->	
+	@await Html.PartialAsync("Sections/_Styles")
+	<!-- Styles de vendeurs -->
+	@RenderSection("VendorStyles", required: false)
+	<!-- Styles de page -->
+	@RenderSection("PageStyles", required: false)
+	<!-- Inclure des scripts pour le personnalisateur, l'assistant, l'analyse et la configuration. -->
+	@await Html.PartialAsync("Sections/_ScriptsIncludes")
+</head>
+<body>
+	<!-- Contenu de la mise en page -->
+	@RenderBody()
+	<!--/ Contenu de la mise en page -->
+	<!-- Scripts de base -->
+	@await Html.PartialAsync("Sections/_Scripts")
+	<!-- Scripts des vendeurs -->
+	@RenderSection("VendorScripts", required: false)
+	<script src="~/js/main.dist.js"></script>
+	<!-- Scripts de page -->
+	@RenderSection("PageScripts", required: false)
+</body>
+</html>

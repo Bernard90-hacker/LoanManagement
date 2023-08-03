@@ -1,6 +1,7 @@
 ﻿using LoanManagement.core;
 using Microsoft.AspNetCore.Http.Extensions;
 using System.Globalization;
+using System.Security.Claims;
 
 namespace LoanManagement.API.Controllers.Users_Management
 {
@@ -11,7 +12,7 @@ namespace LoanManagement.API.Controllers.Users_Management
 		private readonly IUtilisateurService _utilisateurService;
 		private readonly IDepartmentService _departmentService;
 		private readonly IMotDePasseService _motDePasseService;
-		private readonly IParamMotDePasseService _paramMotDePasseService;
+		private readonly IParamGlobalService _paramMotDePasseService;
 		private readonly IJournalService _journalService;
 		private readonly JournalisationService _journalisationService;
 		private readonly ITypeJournalService _typeJournalService;
@@ -25,7 +26,7 @@ namespace LoanManagement.API.Controllers.Users_Management
 		private readonly IConfiguration _config;
         public AuthController(UtilisateurService utilisateurService, ILoggerManager logger,
 			IMapper mapper, IMotDePasseService motDePasseService,
-			IProfilService profilService, IParamMotDePasseService param,
+			IProfilService profilService, IParamGlobalService param,
 			IEmployeService employeService, IJournalService journalService, 
 			IDepartmentService department, IDirectionService directionService,
 			ITypeJournalService typeJournalService, JournalisationService journalisationService,
@@ -101,16 +102,22 @@ namespace LoanManagement.API.Controllers.Users_Management
 				await _utilisateurService.Connect(user);
 				var journal = new Journal() { Libelle = "Connexion d'un utilisateur", UtilisateurId = user.Id, TypeJournalId = 1};
 				string role = string.Empty;
-				if (user.Username.Contains("admin"))
+				if (profil.Id == 1)
 					role = "Admin";
 				else
 					role = "User";
 				journal.Entite = role;
+				var claims = new List<Claim>()
+				{
+					new Claim(ClaimTypes.Role, role)
+				};
+				var token = _tokenService.GenerateAccessToken(_config.GetSection("JWT:Key").Value, claims,
+					_config.GetSection("JWT:Issuer").Value, _config.GetSection("JWT:Audience").Value);
 				await _journalisationService.Journalize(journal);
 				CookieOptions cookieOptions = new();
 				cookieOptions.Expires = DateTime.Now.AddHours(2);
 				cookieOptions.HttpOnly = true; //This will make the cookies only accessible by the backend.
-				Response.Cookies.Append("refresh_token", user.RefreshToken, cookieOptions);
+				Response.Cookies.Append("token", token, cookieOptions);
 
 				
 				return Ok(new
@@ -122,7 +129,8 @@ namespace LoanManagement.API.Controllers.Users_Management
 					DateExpirationProfil = profil.DateExpiration,
 					CodeDepartement = departement.Code,
 					Direction = direction.Code,
-					Username = user.Username
+					Username = user.Username,
+					Token = token
 				});
 			}
 			catch (Exception ex)
@@ -145,8 +153,8 @@ namespace LoanManagement.API.Controllers.Users_Management
 					return NotFound(new ApiResponse((int)CustomHttpCode.OBJECT_NOT_FOUND, description: "Utilisateur inexistant"));
 				}
 				await _utilisateurService.Disconnect(user);
-				Response.Cookies.Delete("refresh_token");
-				var journal = new Journal() { Libelle = "Déconnexion d'un utilisateur" };
+				Response.Cookies.Delete("token");
+				var journal = new Journal() { Libelle = "Déconnexion d'un utilisateur", TypeJournalId = 2, Niveau = 2 };
 				await _journalisationService.Journalize(journal);
 
 				return Ok();

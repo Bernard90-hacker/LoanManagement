@@ -1,16 +1,19 @@
 ﻿using Constants.Pagination;
 using LoanManagement.core.Models.Users_Management;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LoanManagement.API.Controllers.Users_Management
 {
 	[ApiController]
 	[Route("api/users/[controller]")]
-	public class UtilisateurController : Controller
+    [EnableCors(ServiceExtensions.AllowSpecificOrigins)]
+    public class UtilisateurController : Controller
 	{
 		private readonly IUtilisateurService _utilisateurService;
 		private readonly IMotDePasseService _motDePasseService;
-		private readonly IParamMotDePasseService _paramMotDePasseService;
+		private readonly IParamGlobalService _paramMotDePasseService;
 		private readonly IJournalService _journalService;
 		private readonly ITypeJournalService _typeJournalService;
 		private readonly IEmployeService _employeService;
@@ -20,7 +23,7 @@ namespace LoanManagement.API.Controllers.Users_Management
 		private readonly IConfiguration _config;
 		public UtilisateurController(UtilisateurService utilisateurService, ILoggerManager logger,
 			IMapper mapper, IMotDePasseService motDePasseService, IConfiguration config, 
-			IProfilService profilService, IParamMotDePasseService param, 
+			IProfilService profilService, IParamGlobalService param, 
 			IEmployeService employeService, IJournalService journalService)
 		{
 			_utilisateurService = utilisateurService;
@@ -80,7 +83,7 @@ namespace LoanManagement.API.Controllers.Users_Management
 				utilisateur.DateModificationMotDePasse = DateTime.Now.ToString("dd/MM/yyyy");
 				string refreshTokenTime = string.Empty;
 				utilisateur.RefreshToken = Constants.Utils.UtilsConstant.CreateRefreshToken(utilisateur.Username, 
-					_config.GetSection("JWT:RefreshToken").Value, out refreshTokenTime);
+					_config.GetSection("JWT:Key").Value, out refreshTokenTime);
 				utilisateur.RefreshTokenTime = refreshTokenTime;
 
 				var utilisateurCreated = await _utilisateurService.Create(utilisateur);

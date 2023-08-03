@@ -3,6 +3,7 @@ using System.Data.Common;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
 builder.WebHost.ConfigureKestrel(options =>
 {
 	options.Limits.KeepAliveTimeout = TimeSpan.FromMinutes(30);
@@ -30,7 +31,7 @@ builder.Services.AddControllers(config =>
 builder.Services.ConfigureDbContextService(builder.Configuration);
 //Configuration for UnitOfWork
 builder.Services.ConfigureUnitOfWorkService();
-builder.Services.ConfigureApiService();
+builder.Services.ConfigureApiService(builder.Configuration);
 //builder.Services.AddHttpContextAccessor();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddSingleton<HttpContextAccessor>();

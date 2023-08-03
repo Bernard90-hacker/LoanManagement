@@ -126,7 +126,7 @@ namespace LoanManagement.API.Controllers.Users_Management
 		}
 
 		[HttpPut("Edition")]
-		public async Task<ActionResult<ParamMotDePasseRessource>> UpdateEdition(UpdateHabilitationRessource ressource)
+		public async Task<ActionResult<ParamGlobalRessource>> UpdateEdition(UpdateHabilitationRessource ressource)
 		{
 			try
 			{
@@ -150,7 +150,7 @@ namespace LoanManagement.API.Controllers.Users_Management
 		}
 
 		[HttpPut("Insertion")]
-		public async Task<ActionResult<ParamMotDePasseRessource>> UpdateInsertion(UpdateHabilitationRessource ressource)
+		public async Task<ActionResult<ParamGlobalRessource>> UpdateInsertion(UpdateHabilitationRessource ressource)
 		{
 			try
 			{
@@ -174,7 +174,7 @@ namespace LoanManagement.API.Controllers.Users_Management
 		}
 
 		[HttpPut("Modification")]
-		public async Task<ActionResult<ParamMotDePasseRessource>> UpdateModification(UpdateHabilitationRessource ressource)
+		public async Task<ActionResult<ParamGlobalRessource>> UpdateModification(UpdateHabilitationRessource ressource)
 		{
 			try
 			{
@@ -199,7 +199,7 @@ namespace LoanManagement.API.Controllers.Users_Management
 
 
 		[HttpPut("Generation")]
-		public async Task<ActionResult<ParamMotDePasseRessource>> UpdateGeneration(UpdateHabilitationRessource ressource)
+		public async Task<ActionResult<ParamGlobalRessource>> UpdateGeneration(UpdateHabilitationRessource ressource)
 		{
 			try
 			{
@@ -223,7 +223,7 @@ namespace LoanManagement.API.Controllers.Users_Management
 		}
 
 		[HttpPut("Suppression")]
-		public async Task<ActionResult<ParamMotDePasseRessource>> UpdateSuppression(UpdateHabilitationRessource ressource)
+		public async Task<ActionResult<ParamGlobalRessource>> UpdateSuppression(UpdateHabilitationRessource ressource)
 		{
 			try
 			{

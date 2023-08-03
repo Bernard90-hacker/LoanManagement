@@ -68,6 +68,12 @@ namespace LoanManagement.Data.SqlServer.Repositories.Loan_Management
 			return result;
 		}
 
+		public async Task<IEnumerable<DossierClient>> GetClosed()
+		{
+			return await _context.DossierClients.Where(x => x.Cloturer == true)
+				.ToListAsync();
+		}
+
 		public async Task<IEnumerable<InfoSanteClient>> GetInfoSanteByDossier(int dossierId)
 		{
 			var result = await _context.InfoSanteClients.Where

@@ -44,8 +44,8 @@ namespace LoanManagement.API.Controllers.Users_Management
 					profils.HasNext,
 					profils.HasPrevious
 				};
-				var journal = new Journal() { Libelle = "Liste des profils", TypeJournalId = 8 };
-				await _journalisationService.Journalize(journal);
+				//var journal = new Journal() { Libelle = "Liste des profils", TypeJournalId = 8 };
+				//await _journalisationService.Journalize(journal);
 				Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
 				_logger.LogInformation($"'Liste des utilisateurs ': Opération effectuée avec succès, {profils.Count} utilisateurs retournés");
 				return Ok(result);
@@ -79,8 +79,8 @@ namespace LoanManagement.API.Controllers.Users_Management
 					profils.HasNext,
 					profils.HasPrevious
 				};
-				var journal = new Journal() { Libelle = "Liste des profils inactifs" };
-				await _journalisationService.Journalize(journal);
+				//var journal = new Journal() { Libelle = "Liste des profils inactifs" };
+				//await _journalisationService.Journalize(journal);
 				Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
 				_logger.LogInformation($"'Liste des profils désactivés ': Opération effectuée avec succès, {profils.Count} utilisateurs retournés");
 				return Ok(result);
@@ -114,8 +114,8 @@ namespace LoanManagement.API.Controllers.Users_Management
 					profils.HasNext,
 					profils.HasPrevious
 				};
-				var journal = new Journal() { Libelle = "Liste des profils actifs" };
-				await _journalisationService.Journalize(journal);
+				//var journal = new Journal() { Libelle = "Liste des profils actifs" };
+				//await _journalisationService.Journalize(journal);
 				Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
 				_logger.LogInformation($"'Liste des profils actifs ': Opération effectuée avec succès, {profils.Count} utilisateurs retournés");
 				return Ok(result);
@@ -140,8 +140,8 @@ namespace LoanManagement.API.Controllers.Users_Management
 					return NotFound(new ApiResponse((int)CustomHttpCode.OBJECT_NOT_FOUND, description: "Profil(s) non trouvé(s)"));
 				}
 				var result = _mapper.Map<ProfilRessource>(profil);
-				var journal = new Journal() { Libelle = "Identification d'un profil par son id" };
-				await _journalisationService.Journalize(journal);
+				//var journal = new Journal() { Libelle = "Identification d'un profil par son id" };
+				//await _journalisationService.Journalize(journal);
 				_logger.LogInformation($"'Détails d'un profil ': Opération effectuée avec succès");
 				return Ok(result);
 			}
@@ -164,8 +164,8 @@ namespace LoanManagement.API.Controllers.Users_Management
 					return NotFound(new ApiResponse((int)CustomHttpCode.OBJECT_NOT_FOUND, description: "Profil(s) non trouvé(s)"));
 				}
 				var result = _mapper.Map<ProfilRessource>(profil);
-				var journal = new Journal() { Libelle = "Identification d'un profil par son code" };
-				await _journalisationService.Journalize(journal);
+				//var journal = new Journal() { Libelle = "Identification d'un profil par son code" };
+				//await _journalisationService.Journalize(journal);
 				_logger.LogInformation($"'Détails d'un profil ': Opération effectuée avec succès");
 				return Ok(result);
 			}
@@ -203,8 +203,8 @@ namespace LoanManagement.API.Controllers.Users_Management
 
 				//Mappage en vue de retourner la ressource à l'utilisateur
 				var profilResult = _mapper.Map<ProfilRessource>(profilCreated);
-				var journal = new Journal() { Libelle = "Enregistrement d'un profil" };
-				await _journalisationService.Journalize(journal);
+				//var journal = new Journal() { Libelle = "Enregistrement d'un profil" };
+				//await _journalisationService.Journalize(journal);
 				_logger.LogInformation("Enregistrement d'un profil : Opération effectuée avec succès");
 				return Ok(profilResult);
 			}
@@ -233,8 +233,8 @@ namespace LoanManagement.API.Controllers.Users_Management
 				
 				//Mappage en vue de retourner la ressource à l'utilisateur
 				var profilResult = _mapper.Map<ProfilRessource>(profilUpdated);
-				var journal = new Journal() { Libelle = "Modification de la date d'expiration d'un profil" };
-				await _journalisationService.Journalize(journal);
+				//var journal = new Journal() { Libelle = "Modification de la date d'expiration d'un profil" };
+				//await _journalisationService.Journalize(journal);
 				_logger.LogInformation("Mise à jour de la date d'expiration d'un profil : Opération effectuée avec succès");
 				return Ok(profilResult);
 			}
@@ -259,8 +259,8 @@ namespace LoanManagement.API.Controllers.Users_Management
 					return NotFound(new ApiResponse((int)CustomHttpCode.OBJECT_NOT_FOUND, description: "Aucun profil trouvé"));
 				}
 				var profilUpdated = await _profilService.UpdateProfilStatus(profil, ressource.Statut);
-				var journal = new Journal() { Libelle = "Modification du statut d'un profil" };
-				await _journalisationService.Journalize(journal);
+				//var journal = new Journal() { Libelle = "Modification du statut d'un profil" };
+				//await _journalisationService.Journalize(journal);
 				//Mappage en vue de retourner la ressource à l'utilisateur
 				var profilResult = _mapper.Map<ProfilRessource>(profilUpdated);
 
@@ -296,8 +296,8 @@ namespace LoanManagement.API.Controllers.Users_Management
 				}
 				await _profilService.Delete(profil);
 
-				var journal = new Journal() { Libelle = "Suppression d'un profil" };
-				await _journalisationService.Journalize(journal);
+				//var journal = new Journal() { Libelle = "Suppression d'un profil" };
+				//await _journalisationService.Journalize(journal);
 				_logger.LogInformation($"'Suppression d'un profil ': Opération effectuée avec succès");
 				return Ok();
 			}
@@ -353,8 +353,8 @@ namespace LoanManagement.API.Controllers.Users_Management
 
 				var users = await _profilService.GetUsersByProfil(profil.Id);
 				var result = _mapper.Map<IEnumerable<GetUtilisateurRessource>>(users);
-				var journal = new Journal() { Libelle = "Liste des utilisateurs ayant un profil" };
-				await _journalisationService.Journalize(journal);
+				//var journal = new Journal() { Libelle = "Liste des utilisateurs ayant un profil" };
+				//await _journalisationService.Journalize(journal);
 				return Ok(result);
 			}
 			catch (Exception ex)

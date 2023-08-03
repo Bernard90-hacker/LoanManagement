@@ -63,5 +63,29 @@ namespace LoanManagement.service.Services.Loan_Management
 
 			return membre;
 		}
-	}
+
+        public async Task<EtapeDeroulement?> GetEtapeByUser(int userId)
+		{ 
+			var membre = (from x in (await _unitOfWork.MembreOrganes.GetAllAsync())
+						  where x.UtilisateurId == userId
+						  select x).FirstOrDefault();
+			if (membre is null) throw new Exception("L'utilisateur n'appartient à aucun organe de décision");
+			
+			var etape = (from x in (await _unitOfWork.Etapes.GetAllAsync())
+						 where x.MembreOrganeId == membre.Id
+						 select x).FirstOrDefault();
+
+			return etape;	
+        }
+        public async Task<MembreOrgane?> GetMembreByStep(int etapeId)
+		{
+			var etape = await _unitOfWork.Etapes.GetByIdAsync(etapeId);
+			if (etape is null) throw new Exception("Etape inexistant.");
+			var result = (from x in await _unitOfWork.MembreOrganes.GetAllAsync()
+						  where etape.MembreOrganeId == x.Id
+						  select x).FirstOrDefault();
+
+			return result;
+		}
+    }
 }

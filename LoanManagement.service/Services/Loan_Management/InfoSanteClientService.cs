@@ -8,9 +8,9 @@
             _unitOfWork = unitOfWork;
         }
 
-		public async Task<InfoSanteClient> Create(InfoSanteClient info)
+		public async Task<List<InfoSanteClient>> Create(List<InfoSanteClient> info)
 		{
-			await _unitOfWork.InfoSantes.AddAsync(info);
+			await _unitOfWork.InfoSantes.AddRangeAsync(info);
 			await _unitOfWork.CommitAsync();
 
 			return info;
@@ -45,14 +45,6 @@
 			await _unitOfWork.CommitAsync();
 
 			return info;
-		}
-
-		public async Task<IEnumerable<InfoSanteClient>> Create(List<InfoSanteClient> infos)
-		{
-			await _unitOfWork.InfoSantes
-				.AddRangeAsync(infos);
-
-			return infos;
 		}
 	}
 }

@@ -1,4 +1,4 @@
-﻿using LoanManagement.core.Repositories.Users_Management;
+﻿using Constants.Config;
 
 namespace LoanManagement.API.Controllers.Users_Management
 {
@@ -12,20 +12,22 @@ namespace LoanManagement.API.Controllers.Users_Management
 		private readonly ILoggerManager _logger;
 		private readonly IMapper _mapper;
 		private readonly JournalisationService _journalisationService;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
         public EmployeController(IUtilisateurService utilisateurService, IEmployeService employeService,
 			ILoggerManager logger, IMapper mapper, IDepartmentService departementService,
-			JournalisationService service)
+            JournalisationService service, IWebHostEnvironment webHostEnvironment)
         {
-			_utilisateurService = utilisateurService;
-			_employeService = employeService;
-			_logger = logger;
-			_mapper = mapper;
-			_departementService = departementService;
-			_journalisationService = service;
+            _utilisateurService = utilisateurService;
+            _employeService = employeService;
+            _logger = logger;
+            _mapper = mapper;
+            _departementService = departementService;
+            _journalisationService = service;
+            _webHostEnvironment = webHostEnvironment;
         }
 
-		[HttpGet("all")]
+        [HttpGet("all")]
 		public async Task<ActionResult<EmployeRessource>> GetAll([FromQuery] EmployeParameters parameters)
 		{
 			try
@@ -36,7 +38,7 @@ namespace LoanManagement.API.Controllers.Users_Management
 					_logger.LogWarning("'Liste des employés' : Aucun employé trouvé");
 					return NotFound(new ApiResponse((int)CustomHttpCode.OBJECT_NOT_FOUND, description: "Aucun employé trouvé qui corresponde au(x) critère(s) spécifié(s)"));
 				}
-				var result = _mapper.Map<IEnumerable<EmployeRessource>>(employes);
+				var result = _mapper.Map<IEnumerable<GetEmployeResource>>(employes);
 				var metadata = new
 				{
 					employes.PageSize,
@@ -71,7 +73,7 @@ namespace LoanManagement.API.Controllers.Users_Management
 					return NotFound(new ApiResponse((int)CustomHttpCode.OBJECT_NOT_FOUND, description: "Aucun employé trouvé qui correspond au critère spécifié"));
 				}
 
-				var result = _mapper.Map<EmployeRessource>(employe);
+				var result = _mapper.Map<GetEmployeResource>(employe);
 				_logger.LogInformation("'Détails d'un employé' : Opération effectuée avec succès");
 				var journal = new Journal() { Libelle = "Identification d'un employé par son id" };
 				await _journalisationService.Journalize(journal);
@@ -96,7 +98,7 @@ namespace LoanManagement.API.Controllers.Users_Management
 					return NotFound(new ApiResponse((int)CustomHttpCode.OBJECT_NOT_FOUND, description: "Aucun employé trouvé qui correspond au critère spécifié"));
 				}
 
-				var result = _mapper.Map<EmployeRessource>(employe);
+				var result = _mapper.Map<GetEmployeResource>(employe);
 				_logger.LogInformation("'Détails d'un employé' : Opération effectuée avec succès");
 				var journal = new Journal() { Libelle = "Identification d'un employé par son matricule" };
 				await _journalisationService.Journalize(journal);
@@ -147,7 +149,7 @@ namespace LoanManagement.API.Controllers.Users_Management
 					return NotFound(new ApiResponse((int)CustomHttpCode.OBJECT_NOT_FOUND, description: "Aucun employé trouvé qui corresponde au critère spécifié"));
 				}
 
-				var result = _mapper.Map<EmployeRessource>(employe);
+				var result = _mapper.Map<GetEmployeResource>(employe);
 				_logger.LogInformation("'Détails d'un employé' : Opération effectuée avec succès");
 				
 				return Ok(result);
@@ -160,7 +162,7 @@ namespace LoanManagement.API.Controllers.Users_Management
 		}
 
 		[HttpPost("add")]
-		public async Task<ActionResult<EmployeRessource>> Add(EmployeRessource ressource)
+		public async Task<ActionResult<EmployeRessource>> Add([FromForm] EmployeRessource ressource)
 		{
 			try
 			{
@@ -201,9 +203,19 @@ namespace LoanManagement.API.Controllers.Users_Management
 				employeDb.UserId = user.Id;
 				employeDb.DateAjout = DateTime.Now.ToString("dd/MM/yyyy");
 				employeDb.DateModification = DateTime.Now.ToString("dd/MM/yyyy");
-				var employeCreated = await _employeService.Create(employeDb);
+                if (!ressource.Photo.IsNull())
+                {
+                    employeDb.Photo = await ConfigConstants.UploadApiFile(_webHostEnvironment, ressource.Photo, GlobalConstants.PhotoUtilisateur);
+                    if (employeDb.Photo.Equals("NotAccepted"))
+                    {
+                        _logger.LogWarning("'Ajout d'un agent' : format photo non valide.");
+                        return NotFound(new ApiResponse((int)CustomHttpCode.ERROR, description: "Format de la photo non valide !! Seuls sont autorisés les formats png, jpeg ou jpg."));
+                    }
+                }
+
+                var employeCreated = await _employeService.Create(employeDb);
 				
-				var result = _mapper.Map<EmployeRessource>(employeCreated);
+				var result = _mapper.Map<GetEmployeResource>(employeCreated);
 				var journal = new Journal() { Libelle = "Enregistrement d'un employé", TypeJournalId = 5, Entite="User" };
 				await _journalisationService.Journalize(journal);
 				_logger.LogInformation("'Enregistrement d'un employé' : Opération effectuée avec succès");
@@ -244,22 +256,32 @@ namespace LoanManagement.API.Controllers.Users_Management
 		}
 
 		[HttpPut("photo")]
-		public async Task<ActionResult<EmployeRessource>> UpdatePhoto(UpdateEmployePhotoRessource ressource)
+		public async Task<ActionResult> UpdatePhoto([FromForm] UpdateEmployePhotoRessource ressource)
 		{
 			try
 			{
 				var employe = await _employeService.GetEmployeById(ressource.Id);
+				string photo = "";
 				if (employe is null)
 				{
 					_logger.LogWarning("Suppression d'un employé : Aucun employé trouvé");
 					return BadRequest();
 				}
-				var employeUpdated = await _employeService.UpdateEmployePhoto(employe, ressource.Photo);
-				var result = _mapper.Map<EmployeRessource>(employeUpdated);
-				var journal = new Journal() { Libelle = "Mise à jour de la photo d'un employé" };
-				await _journalisationService.Journalize(journal);
+                if (!ressource.Photo.IsNull())
+                {
+                    photo = await ConfigConstants.UploadApiFile(_webHostEnvironment, ressource.Photo, GlobalConstants.PhotoUtilisateur);
+                    if (photo.Equals("NotAccepted"))
+                    {
+                        _logger.LogWarning("'Ajout d'un agent' : format photo non valide.");
+                        return NotFound(new ApiResponse((int)CustomHttpCode.ERROR, description: "Format de la photo non valide !! Seuls sont autorisés les formats png, jpeg ou jpg."));
+                    }
+                }
+                var employeUpdated = await _employeService.UpdateEmployePhoto(employe, photo);
+                var result = _mapper.Map<GetEmployeResource>(employeUpdated);
+				//var journal = new Journal() { Libelle = "Mise à jour de la photo d'un employé" };
+				//await _journalisationService.Journalize(journal);
 
-				_logger.LogInformation("'Mise à jour de la modification de la photo d'un employé' : Opération effectuée avec succès");
+				_logger.LogInformation("'Mise à jour de la photo d'un employé' : Opération effectuée avec succès");
 
 				return Ok(result);
 			}
@@ -283,7 +305,7 @@ namespace LoanManagement.API.Controllers.Users_Management
 					return BadRequest();
 				}
 				var employeUpdated = await _employeService.UpdateEmployeDepartment(employe, ressource.DepartementId);
-				var result = _mapper.Map<EmployeRessource>(employeUpdated);
+				var result = _mapper.Map<GetEmployeResource>(employeUpdated);
 				var journal = new Journal() { Libelle = "Modification du département d'un employé" };
 				await _journalisationService.Journalize(journal);
 				_logger.LogInformation("'Mise à jour de la modification de la photo d'un employé' : Opération effectuée avec succès");

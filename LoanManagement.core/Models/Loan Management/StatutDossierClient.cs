@@ -3,12 +3,14 @@
 	public class StatutDossierClient
 	{
         public int Id { get; set; }
-        public string Date { get; set; } = string.Empty;
+        public string Date { get; set; } = string.Empty; //La date de traitement du dossier
+        public string DateReception { get; set; } = string.Empty;
         public bool? DecisionFinale { get; set; }
         public string Motif { get; set; } = string.Empty;
-        public int EtapeDeroulementId { get; set; }
+        public int EtapeDeroulementId { get; set; } 
         public EtapeDeroulement? EtapeDeroulement { get; set; }
         public int DossierClientId { get; set; }
         public virtual DossierClient? Dossier { get; set; }
+
     }
 }

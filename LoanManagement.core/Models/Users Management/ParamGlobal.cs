@@ -10,7 +10,12 @@
         public bool ExcludeUsername { get; set; }
         public int Taille { get; set; }
         public int DelaiExpiration { get; set; } //Jours
-      
+        public string SmtpEmail { get; set; } = string.Empty;
+        public string SmtpName { get; set; } = string.Empty;
+        public string FromPassword { get; set; } = string.Empty;
+        public string SmtpClient { get; set; } = string.Empty;
+        public int Port { get; set; }
+
 
     }
 }

@@ -24,7 +24,7 @@
         }
 
 		[HttpGet("all")]
-		public async Task<ActionResult> GetAll(EmployeurParameters parameters)
+		public async Task<ActionResult> GetAll([FromQuery] EmployeurParameters parameters)
 		{
 			using (var connection = new SqlConnection(_configuration.GetConnectionString("Default")))
 			{
