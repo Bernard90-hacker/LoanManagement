@@ -1,4 +1,4 @@
-﻿@page
+﻿@model SaveDossierClientResourceViewModel
 @section PageStyles {
     <link rel="stylesheet" href="~/vendor/css/pages/page-auth.dist.css">
 }
@@ -8,6 +8,11 @@
     <link rel="stylesheet" href="~/vendor/libs/bootstrap-select/bootstrap-select.dist.css" />
     <link rel="stylesheet" href="~/vendor/libs/select2/select2.dist.css" />
     <link rel="stylesheet" href="~/vendor/libs/formvalidation/dist/css/formValidation.min.css" />
+    <link rel="stylesheet" href="~/vendor/libs/tagify/tagify.dist.css" />
+    <link rel="stylesheet" href="~/vendor/libs/animate-css/animate.dist.css" />
+    <link rel="stylesheet" href="~/vendor/libs/spinkit/spinkit.dist.css" />
+    <link rel="stylesheet" href="~/vendor/libs/toastr/toastr.dist.css" />
+    <link rel="stylesheet" href="~/vendor/libs/sweetalert2/sweetalert2.dist.css" />
 }
 
 
@@ -74,8 +79,8 @@
                     </div>
                 </div>
                 <div class="bs-stepper-content">
-                    <form onsubmit="return valider()" asp-action="DemandeCreditAction" asp-controller="DemandeCredit" enctype='multipart/form-data' method="post">
-                        <!-- Account Details -->
+                    <form asp-action="DemandeCreditAction" method="post" asp-controller="DemandeCredit" enctype='multipart/form-data' id="myForm">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                         <div id="account-details" class="content">
                             <div class="content-header mb-3">
                                 <h6 class="mb-0">Informations physiques</h6>
@@ -83,18 +88,27 @@
                             </div>
                             <div class="row g-3">
                                 <div class="col-sm-6">
-                                    <label class="form-label" for="taille">Taille en centimètres</label>
-                                    <input type="number" id="taille" name="taille" class="form-control" min="100" required ="required"/>
+                                    <label asp-for="SaveDossierClientResource.Taille" class="col-form-label">Taille en centimètres</label>
+                                    <input type="number" id="taille" name="Taille" class="form-control" min="100" required ="required"/>
                                 </div>
                                 <div class="col-sm-6">
-                                    <label class="form-label" for="poids">Poids (Kg)</label>
-                                    <input type="number" id="poids" name="poids" class="form-control" required="required" min="20" max="250"/>
+                                    <label class="form-label" asp-for="SaveDossierClientResource.Poids">Poids (Kg)</label>
+                                    <input type="number" id="poids" name="Poids" class="form-control" required="required" min="20" max="250"/>
                                 </div>
                                 <div class="col-sm-6">
-                                    <label class="form-label" for="tension">Tension Artérielle</label>
+                                    <label class="form-label" asp-for="SaveDossierClientResource.TensionArterielle">Tension Artérielle</label>
                                     <div class="input-group input-group-merge">
-                                        <input type="number" id="tension" name="tension" class="form-control" required="required" min="0" max="20"/>
+                                        <input type="text" id="tension" name="tension" class="form-control" required="required" min="0" max="20" />
                                     </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="form-label" asp-for="SaveDossierClientResource.StatutMaritalId">Statut Marital </label>
+                                    <select class="select2" id="statut" name="statutMarital" required="required">
+                                        <option label=" "></option>
+                                        <option value="1">Célibataire</option>
+                                        <option value="2">Divorcé(e)</option>
+                                        <option value="3">Marié(e)</option>
+                                    </select>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="col-12 d-flex justify-content-between">
@@ -102,7 +116,7 @@
                                             <i class="ti ti-arrow-left me-sm-1 me-0"></i>
                                             <span class="align-middle d-sm-inline-block d-none">Previous</span>
                                         </button>
-                                        <button class="btn btn-primary btn-next"> <span class="align-middle d-sm-inline-block d-none me-sm-1">Next</span> <i class="ti ti-arrow-right"></i></button>
+                                        @*<button class="btn btn-primary btn-next"> <span class="align-middle d-sm-inline-block d-none me-sm-1">Next</span> <i class="ti ti-arrow-right"></i></button>*@
                                     </div>  
                                 </div>
                             </div>
@@ -115,20 +129,20 @@
                             </div>
                             <div class="row g-3">
                                 <div class="col-sm-6">
-                                    <label class="form-label" for="fumer">Fumez-vous</label>
-                                    <select class="select2" id="fumer" name="fumer" required="required">
+                                    <label class="form-label" asp-for="SaveDossierClientResource.Fumeur">Fumez-vous</label>
+                                    <select class="select2" id="fumeur" name="Fumeur" required="required">
                                         <option label=" "></option>
                                         <option value="1">Oui</option>
                                         <option value="0">Non</option>
                                     </select>
                                 </div>
                                 <div class="col-sm-6">
-                                    <label class="form-label" for="oui">Si oui, combien de cigarettes par jour?</label>
-                                    <input type="number" id="oui" name="oui" class="form-control" min="0"/>
+                                    <label class="form-label" asp-for="SaveDossierClientResource.NbrCigarettes">Si oui, combien de cigarettes par jour?</label>
+                                    <input type="number" id="nbrCigarettes" name="NbrCigarettes" class="form-control" min="0" />
                                 </div>
                                 <div class="col-sm-6">
-                                    <label class="form-label" for="buveur">Buvez-vous de l'alcool ?</label>
-                                    <select class="select2" id="buveur" required="required" name="buveur">
+                                    <label class="form-label" asp-for="SaveDossierClientResource.Buveur">Buvez-vous de l'alcool ?</label>
+                                    <select class="select2" id="buveur" required="required" name="Buveur">
                                         <option label=" "></option>
                                         <option value="1">Pas du tout</option>
                                         <option value="2">A l'occasion</option>
@@ -136,8 +150,8 @@
                                     </select>
                                 </div>
                                 <div class="col-sm-6">
-                                    <label class="form-label" for="distraction">Vos distractions</label>
-                                    <select class="selectpicker w-auto" id="distraction" name="distraction" data-style="btn-transparent" data-icon-base="ti" data-tick-icon="ti-check text-white" required="required" multiple>
+                                    <label class="form-label" asp-for="SaveDossierClientResource.Distractions">Vos distractions</label>
+                                    <select class="selectpicker w-auto" id="distractions" name="Distractions" data-style="btn-transparent" data-icon-base="ti" data-tick-icon="ti-check text-white" required="required" multiple>
                                         <option>Télévision</option>
                                         <option>Cinéma</option>
                                         <option>Arts</option>
@@ -155,7 +169,7 @@
                                         <i class="ti ti-arrow-left me-sm-1 me-0"></i>
                                         <span class="align-middle d-sm-inline-block d-none">Previous</span>
                                     </button>
-                                    <button class="btn btn-primary btn-next"> <span class="align-middle d-sm-inline-block d-none me-sm-1">Next</span> <i class="ti ti-arrow-right"></i></button>
+                                    @*<button class="btn btn-primary btn-next"> <span class="align-middle d-sm-inline-block d-none me-sm-1">Next</span> <i class="ti ti-arrow-right"></i></button>*@
                                 </div>
                             </div>
                         </div>
@@ -167,40 +181,43 @@
                             </div>
                             <div class="row g-3">
                                 <div class="col-sm-6">
-                                    <label class="form-label" for="sport">Pratiquez-vous un sport ?</label>
+                                    <label class="form-label" asp-for="SaveDossierClientResource.EstSportif">Pratiquez-vous un sport ?</label>
                                     <select class="selectpicker w-auto" id="sport" name="sport" data-style="btn-transparent" data-icon-base="ti" data-tick-icon="ti-check text-white" required="required">
+                                        <option value=" "> </option>
                                         <option value="1">Oui</option>
                                         <option value="0">Non</option>
                                     </select>
                                 </div>
                                 <div class="col-sm-6">
-                                    <label class="form-label" for="sportOui">Si oui, à quel titre ?</label>
-                                    <select class="select2" id="sportOui" name="sportOui" data-style="btn-transparent" data-icon-base="ti" data-tick-icon="ti-check text-white">
+                                    <label class="form-label" asp-for="SaveDossierClientResource.CategorieSport">Si oui, à quel titre ?</label>
+                                    <select class="select2" id="categorieSport" name="CategorieSport" data-style="btn-transparent" data-icon-base="ti" data-tick-icon="ti-check text-white">
+                                        <option value=""> </option>
                                         <option value="1">Amateur</option>
                                         <option value="2">Professionnel</option>
                                     </select>
                                 </div>
                                 <div class="col-sm-6">
-                                    <label class="form-label" for="infirmite">Etes vous atteint d'une infirmité ?</label>
-                                    <select class="selectpicker w-auto" id="infirmite" name="infirmite" data-style="btn-transparent" data-icon-base="ti" data-tick-icon="ti-check text-white" required="required">
+                                    <label class="form-label" asp-for="SaveDossierClientResource.EstInfirme">Etes vous atteint d'une infirmité ?</label>
+                                    <select class="selectpicker w-auto" id="estInfirme" name="EstInfirme" data-style="btn-transparent" data-icon-base="ti" data-tick-icon="ti-check text-white" required="required">
+                                        <option value=" "> </option>
                                         <option value="1">Oui</option>
                                         <option value="0">Non</option>
                                     </select>
                                 </div>
                                 <div class="col-sm-3">
-                                    <label class="form-label" for="infirmiteOui">Si oui, de quelle nature ?</label>
-                                    <input type="text" id="infirmiteOui" name="infirmiteOui" class="form-control" />
+                                    <label class="form-label" asp-for="SaveDossierClientResource.NatureInfirmite">Si oui, de quelle nature ?</label>
+                                    <input type="text" id="natureInfirmite" name="NatureInfirmite" class="form-control" />
                                 </div>
                                 <div class="col-sm-3">
-                                    <label class="form-label" for="infirmiteOuiDate">Date de survenance</label>
-                                    <input type="date" id="infirmiteOuiDate" name="infirmiteOuiDate" class="form-control" />
+                                    <label class="form-label" asp-for="SaveDossierClientResource.DateSurvenance">Date de survenance</label>
+                                    <input type="date" id="dateSurvenance" name="infirmiteOuiDate" class="form-control" />
                                 </div>
                                 <div class="col-12 d-flex justify-content-between">
                                     <button class="btn btn-label-secondary btn-prev">
                                         <i class="ti ti-arrow-left me-sm-1 me-0"></i>
                                         <span class="align-middle d-sm-inline-block d-none">Previous</span>
                                     </button>
-                                    <button class="btn btn-primary btn-next"> <span class="align-middle d-sm-inline-block d-none me-sm-1">Next</span> <i class="ti ti-arrow-right"></i></button>
+                                    @*<button class="btn btn-primary btn-next"> <span class="align-middle d-sm-inline-block d-none me-sm-1">Next</span> <i class="ti ti-arrow-right"></i></button>*@
                                 </div>
                             </div>
                         </div>
@@ -211,36 +228,36 @@
                             </div>
                             <div class="row g-3">
                                 <div class="col-sm-3">
-                                    <label class="form-label" for="attestationTravail">Attestation de travail.</label>
+                                    <label class="form-label" asp-for="SaveDossierClientResource.AttestationTravail">Attestation de travail.</label>
                                     <input type="file" id="attestationTravail" name="attestationTravail" class="form-control" accept=".pdf"/>
                                     
                                 </div>
                                 <div class="col-sm-3">
-                                    <label class="form-label" for="contratTravail">Contrat de travail.</label>
+                                    <label class="form-label" asp-for="SaveDossierClientResource.ContratTravail">Contrat de travail.</label>
                                     <input type="file" id="contratTravail" name="contratTravail" class="form-control" accept=".pdf"/>
                                 </div>
                                 <div class="col-sm-3">
-                                    <label class="form-label" for="premierBulletinSalaire">Premier Bulletin de salaire.</label>
+                                    <label class="form-label" asp-for="SaveDossierClientResource.PremierBulletinSalaire">Premier Bulletin de salaire.</label>
                                     <input type="file" id="premierBulletinSalaire" name="premierBulletinSalaire" class="form-control" accept=".pdf" />
                                 </div>
                                 <div class="col-sm-3">
-                                    <label class="form-label" for="deuxiemeBulletinSalaire">Deuxième Bulletin de salaire.</label>
+                                    <label class="form-label" asp-for="SaveDossierClientResource.DeuxiemeBulletinSalaire">Deuxième Bulletin de salaire.</label>
                                     <input type="file" id="deuxiemeBulletinSalaire" name="deuxiemeBulletinSalaire" class="form-control" accept=".pdf" />
                                 </div>
                                 <div class="col-sm-3">
-                                    <label class="form-label" for="troisiemeBulletinSalaire">Troisième Bulletin de salaire.</label>
+                                    <label class="form-label" asp-for="SaveDossierClientResource.TroisiemeBulletinSalaire">Troisième Bulletin de salaire.</label>
                                     <input type="file" id="troisiemeBulletinSalaire" name="troisiemeBulletinSalaire" class="form-control" accept=".pdf" />
                                 </div>
                                 <div class="col-sm-3">
-                                    <label class="form-label" for="facture">Facture proforma</label>
+                                    <label class="form-label" asp-for="SaveDossierClientResource.FactureProFormat">Facture proforma</label>
                                     <input type="file" id="facture" name="facture" class="form-control" accept=".pdf" />
                                 </div>
                                 <div class="col-sm-3">
-                                    <label class="form-label" for="piece">Pièce d'identité</label>
+                                    <label class="form-label" asp-for="SaveDossierClientResource.CarteIdentite">Pièce d'identité</label>
                                     <input type="file" id="piece" name="piece" class="form-control" accept=".pdf"/>
                                 </div>
                                 <div class="col-sm-3">
-                                    <label class="form-label" for="echeance">Echeance de la pièce</label>
+                                    <label class="form-label" asp-for="SaveDossierClientResource.EcheanceCarteIdentite">Echeance de la pièce</label>
                                     <input type="date" id="echeance" name="echeance" class="form-control"/>
                                 </div>
                                 <div class="col-12 d-flex justify-content-between">
@@ -248,7 +265,7 @@
                                         <i class="ti ti-arrow-left me-sm-1 me-0"></i>
                                         <span class="align-middle d-sm-inline-block d-none">Previous</span>
                                     </button>
-                                    <input type="submit" class="btn btn-success btn-submit" />
+                                    <button type="submit" class="btn btn-label-primary" id="myFormSubmit">Submit</button>
                                 </div>
                             </div>
                         </div>
@@ -727,8 +744,9 @@
                                         <i class="ti ti-arrow-left me-sm-1 me-0"></i>
                                         <span class="align-middle d-sm-inline-block d-none">Previous</span>
                                     </button>
-                                    <button class="btn btn-success btn-submit">Submit</button>                                
+                                     <input type="submit" class="btn btn-success" value="Submit"/>                        
                                 </div>
+                               
                             </div>
                         </div>
                     </form>
@@ -750,24 +768,218 @@
     <script src="~/vendor/libs/bs-stepper/bs-stepper.dist.js"></script>
     <script src="~/vendor/libs/bootstrap-select/bootstrap-select.dist.js"></script>
     <script src="~/vendor/libs/select2/select2.dist.js"></script>
-@*    <script src="~/vendor/libs/formvalidation/dist/js/FormValidation.min.js"></script>
-*@    <script src="~/vendor/libs/formvalidation/dist/js/plugins/Bootstrap5.min.js"></script>
-    <script src="~/vendor/libs/formvalidation/dist/js/plugins/AutoFocus.min.js"></script>
+    <script src="~/vendor/libs/cleavejs/cleave.dist.js"></script>
+    <script src="~/vendor/libs/cleavejs/cleave-phone.dist.js"></script>
+    <script src="~/vendor/libs/tagify/tagify.dist.js"></script>
+    <script src="~/vendor/libs/block-ui/block-ui.dist.js"></script>
+    <script src="~/vendor/libs/toastr/toastr.dist.js"></script>
+    <script src="~/vendor/libs/sweetalert2/sweetalert2.dist.js"></script>
 }
 
 @section PageScripts {
-    <script src="~/js/form-wizard-numbered.dist.js"></script>
-    <script src="~/js/form-wizard-validation.dist.js"></script>
+    @*<script src="~/js/form-wizard-numbered.js"></script>*@
+   <script src="~/bernard/assets/js/form-wizard-numbered.js"></script>
+    <script src="~/js/custom/home-index.js"></script>
     <script>
-        function valider(){
-            var dateSaisie = new Date(document.getElementById("infirmiteOuiDate").value);
-            var today = new Date();
-            if(dateSaisie >= today){
-                alert("La date saisie ne peut pas être supérieure à aujourd'hui.");
-                return false;
+        $(function () {
+            var nbrCigarettes = 0;
+            var cigarettesField = $('#nbrCigarettes');
+            if($('#fumeur').val() == "0"){
+                cigarettesField.attr('disabled', 'disabled');
             }
+            else{
+                nbrCigarettes = $('#nbrCigarettes');
+            }
+            var form = window.$('#myForm'),
+                submit = window.$('#myFormSubmit'),
+                taille = $('#taille'),
+                poids = $('#poids'),
+                tension = $('#tension'),
+                statut = $('#statut'),
+                fumeur = $('#fumeur'),
+                nbrCigarettes = nbrCigarettes,
+                buveur = $('#buveur'),
+                distractions = $('#distractions'),
+                carteIdentite = $('#piece'),
+                contratTravail = $('#contratTravail'),
+                attestationTravail = $('#attestationTravail'),
+                premierBulletinSalaire = $('#premierBulletinSalaire'),
+                deuxiemeBulletinSalaire = $('#deuxiemeBulletinSalaire'),
+                troisiemeBulletinSalaire = $('#troisiemeBulletinSalaire'),
+                factureProFormat = $('#facture'),
+                estSportif = $('#sport'),
+                categorieSport = $('#tcategorieSport'),
+                echeanceCarteIdentite = $('#echeanceCarteIdentite'),
+                estInfirme = $('#estInfirme'),
+                natureInfirmite = $('#natureInfirmite'),
+                dateSurvenance = $('#dateSurvenance'),
+                title,
+                message,
+                errorTitle = new DOMParser().parseFromString('Erreur', 'text/html').body.innerHTML,
+                errorTypeMessage = 'error',
+                errorMessage = new DOMParser().parseFromString('Une erreur s\'est produite', 'text/html').body.innerHTML,
+                errorDescription = '',
+                errorTimeOut = 500000,
+                errors = [];
 
-            return true;
-        }
+            form.on("submit",
+                function (event) {
+                    event.preventDefault();
+                    var url = window.$(this).attr("action");
+                    var data = window.$(this).serialize();
+                    window.$.ajax({
+                        url: url,
+                        type: "POST",
+                        data: data,
+                        dataType: "json",
+                        beforeSend: function () {
+                            submit.attr('disabled', 'disabled');
+                            window.$.blockUI({
+                                message: '<div class="spinner-border text-primary" role="status"></div>',
+                                css: {
+                                    backgroundColor: 'transparent',
+                                    border: '0'
+                                },
+                                overlayCSS: {
+                                    backgroundColor: '#fff',
+                                    opacity: 0.8
+                                }
+                            });
+                        },
+                        success: function (response) {
+                            var strJson = JSON.parse(response.strJsonDemandeCredit);
+                            taille.val(strJson.Taille);
+                            poids.val(strJson.Poids);
+                            tension.val(strJson.TensionArterielle);
+                            statut.val(strJson.StatutMaritalId);
+                            fumeur.val(strJson.Fumeur);
+                            codeBanqueVirement.val(strJson.CodeBanqueVirement);
+                            codeAgenceVirement.val(strJson.CodeAgenceVirement);
+                            numeroCompteVirement.val(strJson.NumeroCompteVirement);
+                            cleRibVirement.val(strJson.CleRibVirement);
+                            motifVirement.val(strJson.MotifVirement);
+                            message = new DOMParser().parseFromString(response.message, 'text/html').body.innerHTML;
+                            window.toastr[response.typeMessage]('👋 ' + message,
+                                response.title,
+                                {
+                                    showMethod: 'slideDown',
+                                    hideMethod: 'slideUp',
+                                    closeButton: true,
+                                    tapToDismiss: false,
+                                    progressBar: true,
+                                    timeOut: response.timeOut,
+                                    rtl: window.$('html').attr('data-textdirection') === 'rtl',
+                                    onHidden: function () { }
+                                });
+                        },
+                        error: function (response) {
+                            try {
+                                var obj = JSON.parse(JSON.stringify(response.responseJSON));
+                                if (obj.length !== 0) {
+                                    if (response.status === 500) {
+                                        message = new DOMParser().parseFromString('Une erreur s\'est produite', 'text/html').body.innerHTML;
+                                        window.toastr[errorTypeMessage]('👋 ' + message,
+                                            errorTitle,
+                                            {
+                                                showMethod: 'slideDown',
+                                                hideMethod: 'slideUp',
+                                                closeButton: true,
+                                                tapToDismiss: false,
+                                                progressBar: true,
+                                                timeOut: errorTimeOut,
+                                                rtl: window.$('html').attr('data-textdirection') === 'rtl'
+                                            });
+                                    }
+                                    else {
+                                        if (obj.typeMessage != null && obj.typeMessage !== undefined) {
+                                            if (response.status === 0) {
+                                            } else if (response.status === 400 || response.status === 404 || response.status === 405 || response.status === 500) {
+                                                errorTitle = obj.title;
+                                                errorTypeMessage = obj.typeMessage;
+                                                errorMessage = obj.message;
+                                                errorDescription = obj.description;
+                                                errorTimeOut = obj.timeOut;
+                                                if (obj.erreurs != null && obj.erreurs != undefined) errors = obj.erreurs;
+                                            }
+                                            if (errors !== null && errors !== undefined && errors.length > 0) {
+                                                var messages = '';
+                                                if (errors.length == 1) {
+                                                    messages = errors;
+                                                }
+                                                else {
+                                                    for (var i = 0; i < errors.length; i++) {
+                                                        messages += errors[i] + "<br>";
+                                                    }
+                                                    messages = messages.slice(0, -4);
+                                                }
+                                                errorMessage = new DOMParser().parseFromString(messages, 'text/html').body.innerHTML;
+
+                                            } else if (errorDescription !== null && errorDescription !== undefined) {
+                                                errorMessage = new DOMParser().parseFromString(errorDescription, 'text/html').body.innerHTML;
+                                            } else {
+                                                errorMessage = new DOMParser().parseFromString(errorMessage, 'text/html').body.innerHTML;
+                                            }
+                                            window.toastr[errorTypeMessage]('👋 ' + errorMessage,
+                                                errorTitle,
+                                                {
+                                                    showMethod: 'slideDown',
+                                                    hideMethod: 'slideUp',
+                                                    closeButton: true,
+                                                    tapToDismiss: false,
+                                                    progressBar: true,
+                                                    timeOut: errorTimeOut,
+                                                    rtl: window.$('html').attr('data-textdirection') === 'rtl'
+                                                });
+                                        }
+                                    }
+                                }
+                            } catch (err) {
+                                window.toastr[errorTypeMessage]('👋 ' + err,
+                                    errorTitle,
+                                    {
+                                        showMethod: 'slideDown',
+                                        hideMethod: 'slideUp',
+                                        closeButton: true,
+                                        tapToDismiss: false,
+                                        progressBar: true,
+                                        timeOut: errorTimeOut,
+                                        rtl: window.$('html').attr('data-textdirection') === 'rtl'
+                                    });
+                            }
+                        },
+                        complete: function () {
+                            submit.removeAttr('disabled');
+                            window.$.unblockUI();
+                        }
+                    });
+                });
+
+        });
+
     </script>
+}
+
+
+@{
+    if (TempData["IsSuccess"] != null)
+    {
+        <script>
+
+            alert('Connexion réussie.');
+        </script>
+        TempData["IsSuccess"] = null;
+    }
+
+    //if (!ViewBag.IsLoanSuccess.IsNull())
+    //{
+    //     <script>
+    //        alert('Demande effectuée avec succès');
+    //    </script>
+    //}
+    //if (!ViewBag.IsApplyFailed.IsNull())
+    //{
+    //     <script>
+    //        alert('Une erreur a été levée.');
+    //    </script>
+    //}
 }

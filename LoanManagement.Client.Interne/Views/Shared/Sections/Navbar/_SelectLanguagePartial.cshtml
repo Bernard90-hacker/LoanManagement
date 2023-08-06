@@ -1,0 +1,52 @@
+﻿@{
+	var requestCulture = Context.Features.Get<IRequestCultureFeature>()?.RequestCulture;
+}
+
+<li class="nav-item dropdown-language dropdown me-2 me-xl-0">
+	<a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
+		@if (requestCulture != null)
+		{
+			@switch (requestCulture.Culture.Name)
+			{
+				case "en":
+					<i class='fi fi-us fis rounded-circle me-1 fs-3'></i>
+					break;
+				case "de":
+					<i class='fi fi-de fis rounded-circle me-1 fs-3'></i>
+					break;
+				case "pt":
+					<i class='fi fi-pt fis rounded-circle me-1 fs-3'></i>
+					break;
+				default:
+					<i class='fi fi-fr fis rounded-circle me-1 fs-3'></i>
+					break;
+			}
+		}
+	</a>
+	<ul class="dropdown-menu dropdown-menu-end">
+		<li>
+			<a class="dropdown-item" asp-controller="Language" asp-action="Change" asp-route-culture="fr">
+				<i class="fi fi-fr fis rounded-circle me-1 fs-3"></i>
+				<span class="align-middle">@Html.Raw(sharedResource["Français"])</span>
+			</a>
+		</li>
+		<li>
+			<a class="dropdown-item" asp-controller="Language" asp-action="Change" asp-route-culture="en">
+				<i class="fi fi-us fis rounded-circle me-1 fs-3"></i>
+				<span class="align-middle">@Html.Raw(sharedResource["Anglais"])</span>
+			</a>
+		</li>
+		<li>
+			<a class="dropdown-item" asp-controller="Language" asp-action="Change" asp-route-culture="de">
+				<i class="fi fi-de fis rounded-circle me-1 fs-3"></i>
+				<span class="align-middle">@Html.Raw(sharedResource["Allemand"])</span>
+			</a>
+		</li>
+		<li>
+			<a class="dropdown-item" asp-controller="Language" asp-action="Change" asp-route-culture="pt">
+				<i class="fi fi-pt fis rounded-circle me-1 fs-3"></i>
+				<span class="align-middle">@Html.Raw(sharedResource["Portugais"])</span>
+			</a>
+		</li>
+	</ul>
+</li>

@@ -1,4 +1,4 @@
-﻿@page
+﻿@model ClientLoginViewModel
 @{
     Layout = "_BlankLayout";
 }
@@ -8,12 +8,23 @@
     <link rel="stylesheet" href="~/dist/colored-theme.min.css">
     <link rel="stylesheet" href="~/dist/dark-theme.min.css">
     <link rel="stylesheet" href="~/dist/light-theme.min.css">
+    <link rel="stylesheet" href="~/vendor/libs/tagify/tagify.dist.css" />
+    <link rel="stylesheet" href="~/vendor/libs/animate-css/animate.dist.css" />
+    <link rel="stylesheet" href="~/vendor/libs/spinkit/spinkit.dist.css" />
+    <link rel="stylesheet" href="~/vendor/libs/toastr/toastr.dist.css" />
+    <link rel="stylesheet" href="~/vendor/libs/sweetalert2/sweetalert2.dist.css" />
 }
 
 @section VendorScripts {
     <script src="~/vendor/libs/formvalidation/dist/js/FormValidation.min.js"></script>
     <script src="~/vendor/libs/formvalidation/dist/js/plugins/Bootstrap5.min.js"></script>
     <script src="~/vendor/libs/formvalidation/dist/js/plugins/AutoFocus.min.js"></script>
+    <script src="~/vendor/libs/cleavejs/cleave.dist.js"></script>
+    <script src="~/vendor/libs/cleavejs/cleave-phone.dist.js"></script>
+    <script src="~/vendor/libs/tagify/tagify.dist.js"></script>
+    <script src="~/vendor/libs/block-ui/block-ui.dist.js"></script>
+    <script src="~/vendor/libs/toastr/toastr.dist.js"></script>
+    <script src="~/vendor/libs/sweetalert2/sweetalert2.dist.js"></script>
 }
 
 @section PageStyles {
@@ -24,6 +35,151 @@
     <script src="~/js/pages-auth.dist.js"></script>
     <script src="~/dist/growl-notification.min.js">
     </script>
+    <script src="~/js/custom/home-index.js"></script>
+	<script>
+		$(function () {
+			var form = window.$('#myForm'),
+				btn = window.$('#btnSubmit'),
+				indice = $('#indice'),
+				tel = $('#tel'),
+				title = '',
+				message = '',
+				errorTitle = new DOMParser().parseFromString('Erreur', 'text/html').body.innerHTML,
+				errorTypeMessage = 'error',
+				errorMessage = new DOMParser().parseFromString('Erreur Produite', 'text/html').body.innerHTML,
+				errorDescription = '',
+				errorTimeOut = 500000,
+				errors = [];
+
+			form.on("submit",
+				function (event) {
+					event.preventDefault();
+					var data = window.$(this).serialize();
+					console.log(data);
+					var json = JSON.stringify(data);
+					var url = $(this).attr("action");
+					window.$.ajax({
+						url: url,
+						type: "POST",
+						data: data,
+						dataType: "json",
+						beforeSend: function () {
+							btn.attr('disabled', 'disabled');
+							window.$.blockUI({
+								message: '<div class="spinner-border text-primary" role="status"></div>',
+								css: {
+									backgroundColor: 'transparent',
+									border: '0'
+								},
+								overlayCSS: {
+									backgroundColor: '#fff',
+									opacity: 0.8
+								}
+							});
+						},
+						success: function (response) {
+							var strJson = JSON.parse(response.strLogin);
+							var nom = strJson.Nom;
+							var prenoms = strJson.Prenoms;
+							indice.val(strJson.Indice);
+							tel.val(strJson.Telephone);
+							message = new DOMParser().parseFromString(response.message, 'text/html').body.innerHTML;
+							window.toastr[response.typeMessage]('👋 ' + message,
+								response.title,
+								{
+									showMethod: 'slideDown',
+									hideMethod: 'slideUp',
+									closeButton: true,
+									tapToDismiss: false,
+									progressBar: true,
+									timeOut: response.timeOut,
+									rtl: window.$('html').attr('data-textdirection') === 'rtl',
+									onHidden: function () { }
+								});
+						},
+						error: function (response) {
+							try {
+								var obj = JSON.parse(JSON.stringify(response.responseJSON));
+								if (obj.length !== 0) {
+									if (response.status === 401) {
+										message = new DOMParser().parseFromString('Non autorisé', 'text/html').body.innerHTML;
+										window.toastr[errorTypeMessage]('👋 ' + message,
+											errorTitle,
+											{
+												showMethod: 'slideDown',
+												hideMethod: 'slideUp',
+												closeButton: true,
+												tapToDismiss: false,
+												progressBar: true,
+												timeOut: errorTimeOut,
+												rtl: window.$('html').attr('data-textdirection') === 'rtl'
+											});
+									}
+									else {
+										if (obj.typeMessage != null && obj.typeMessage !== undefined) {
+											if (response.status === 0) {
+											} else if (response.status === 400 || response.status === 404 || response.status === 405 || response.status === 500) {
+												errorTitle = obj.title;
+												errorTypeMessage = obj.typeMessage;
+												errorMessage = obj.message;
+												errorDescription = obj.description;
+												errorTimeOut = obj.timeOut;
+												if (obj.erreurs != null && obj.erreurs != undefined) errors = obj.erreurs;
+											}
+											if (errors !== null && errors !== undefined && errors.length > 0) {
+												var messages = '';
+												if (errors.length == 1) {
+													messages = errors;
+												}
+												else {
+													for (var i = 0; i < errors.length; i++) {
+														messages += errors[i] + "<br>";
+													}
+													messages = messages.slice(0, -4);
+												}
+												errorMessage = new DOMParser().parseFromString(messages, 'text/html').body.innerHTML;
+
+											} else if (errorDescription !== null && errorDescription !== undefined) {
+												errorMessage = new DOMParser().parseFromString(errorDescription, 'text/html').body.innerHTML;
+											} else {
+												errorMessage = new DOMParser().parseFromString(errorMessage, 'text/html').body.innerHTML;
+											}
+											window.toastr[errorTypeMessage]('👋 ' + errorMessage,
+												errorTitle,
+												{
+													showMethod: 'slideDown',
+													hideMethod: 'slideUp',
+													closeButton: true,
+													tapToDismiss: false,
+													progressBar: true,
+													timeOut: errorTimeOut,
+													rtl: window.$('html').attr('data-textdirection') === 'rtl'
+												});
+										}
+									}
+								}
+							} catch (err) {
+								window.toastr[errorTypeMessage]('👋 ' + err,
+									errorTitle,
+									{
+										showMethod: 'slideDown',
+										hideMethod: 'slideUp',
+										closeButton: true,
+										tapToDismiss: false,
+										progressBar: true,
+										timeOut: errorTimeOut,
+										rtl: window.$('html').attr('data-textdirection') === 'rtl'
+									});
+							}
+						},
+						complete: function () {
+							btn.removeAttr('disabled');
+							window.$.unblockUI();
+						}
+					});
+				});
+		});
+	</script>
 }
 
 @* ************** Content ************** *@
@@ -45,9 +201,10 @@
                     <h4 class="mb-1 pt-2">Welcome to Loan Application</h4>
                     <p class="mb-4">Please sign-in to your account and start the adventure</p>
 
-                    <form id="formAuthentication" class="mb-3" method="POST" asp-action="Login" asp-controller="Home">
+                    <form id="myForm" class="mb-3" method="post" asp-action="Login" asp-controller="Home">				
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                         <div class="mb-3">
-                            <label for="username" class="form-label">Indice</label>
+                            <label for="indice" class="form-label" asp-for="ClientLoginResource.Indice">Indice</label>
                             <input type="text" class="form-control" id="indice" name="indice" placeholder="Entrez votre indice" autofocus>
                         </div>
                         <div class="mb-3 form-password-toggle">
@@ -55,7 +212,7 @@
                                 <label class="form-label" for="tel">Téléphone</label>
                             </div>
                             <div class="input-group input-group-merge">
-                                <input type="tel" id="tel" class="form-control" name="tel" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="tel" />
+                                <input type="tel" id="tel" class="form-control" asp-for="ClientLoginResource.Telephone" name="tel" aria-describedby="tel" />
                                 <span class="input-group-text cursor-pointer"><i class="ti ti-eye-off"></i></span>
                             </div>
                         </div>
@@ -68,35 +225,10 @@
                             </div>
                         </div>
                         <div class="mb-3">
-                            <button class="btn btn-primary d-grid w-100" type="submit">Sign in</button>
+                            <button class="btn btn-primary d-grid w-100" type="submit" id="btnSubmit">Sign in</button>
                         </div>
                     </form>
-                    @{
-                        if (ViewBag.IsSuccess != null)
-                        {
-                            <script>
-                                GrowlNotification.notify({
-                                    title: 'Login successfull',
-                                    description: 'You just submit your resume successfully.',
-                                    type: 'success',
-                                    position: 'top-right',
-                                    closeTimeout: 0
-                                });
-                            </script>
-                        }
-                        if (ViewBag.Error != null)
-                        {
-                            <script>
-                                GrowlNotification.notify({
-                                    title: 'Login successfull',
-                                    description: @ViewBag.Error,
-                                    type: 'danger',
-                                    position: 'top-right',
-                                    closeTimeout: 0
-                                });
-                            </script>
-                        }
-                    }
+                    
 
             
                 </div>
@@ -105,3 +237,12 @@
         </div>
     </div>
 </div>
+@*@{
+    if (ViewBag.IsSuccess != null)
+    {
+        <script>
+            alert('Identifiants incorrects.');
+        </script>
+    }
+}*@
+

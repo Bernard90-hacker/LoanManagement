@@ -14,11 +14,10 @@ public class AppConstant
 	/// <param name="httpResponse"></param>
 	/// <param name="sharedLocalizer"></param>
 	/// <returns></returns>
-	public static async Task<JQueryViewModel> GetResponseMessage(HttpResponseMessage httpResponse,
-		IStringLocalizer<SharedResource> sharedLocalizer)
+	public static async Task<JQueryViewModel> GetResponseMessage(HttpResponseMessage httpResponse)
 	{
 		string typeMessage = TypeMessage.Warning.GetString(),
-			title = sharedLocalizer["Attention"].ToString(),
+			title = "Attention",
 			message = string.Empty, description = string.Empty;
 		const int timeOut = 8000;
 		IEnumerable<string> errors = null;
@@ -27,8 +26,8 @@ public class AppConstant
 		switch (httpResponse.StatusCode)
 		{
 			case HttpStatusCode.MethodNotAllowed:
-				message = sharedLocalizer["MéthodeNonAutorisée"].ToString();
-				description = sharedLocalizer["SourceIntrouvable"].ToString();
+				message = "Méthode non autorisée";
+				description = "Source Introuvable";
 				break;
 			case HttpStatusCode.BadRequest:
 				{
@@ -43,7 +42,7 @@ public class AppConstant
 					var validationProblem = JsonConvert.DeserializeObject<ValidationProblem>(objectResult);
 					if (!validationProblem.IsNull() && !string.IsNullOrEmpty(validationProblem?.Title))
 					{
-						message = sharedLocalizer["ErreurProduite"].ToString();
+						message = "Erreur Produite";
 						description = validationProblem.Title;
 					}
 					break;
@@ -53,7 +52,7 @@ public class AppConstant
 					var apiResponse = JsonConvert.DeserializeObject<ApiResponse>(objectResult);
 					if (!apiResponse.IsNull() && !string.IsNullOrEmpty(apiResponse?.Message))
 					{
-						message = sharedLocalizer["ErreurProduite"].ToString();
+						message = "Erreur Produite";
 						description = apiResponse.Description;
 					}
 					break;
@@ -175,7 +174,7 @@ public class AppConstant
 			case HttpStatusCode.NetworkAuthenticationRequired:
 				break;
 			default:
-				message = sharedLocalizer["ErreurNonIdentifiée"].ToString();
+				message = "ErreurNonIdentifiée";
 				break;
 		}
 

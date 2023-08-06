@@ -1,7 +1,9 @@
 ﻿using Constants.Config;
 using FluentValidation;
+using LoanManagement.API.Ressources.Loan_Management;
 using LoanManagement.core.Models.Users_Management;
 using Microsoft.AspNetCore.Hosting;
+using System.Linq;
 
 namespace LoanManagement.API.Controllers.Loan_Management
 {
@@ -53,7 +55,7 @@ namespace LoanManagement.API.Controllers.Loan_Management
 					try
 					{
 						var all = await _dossierClientService.GetAll();
-						var result = _mapper.Map<IEnumerable<SaveDossierClientRessource>>(all);
+						var result = _mapper.Map<IEnumerable<SaveDossierClientResource>>(all);
 						Journal.Niveau = 3; //INFORMATION
 						await _journalisationService.Journalize(Journal);
 						_logger.LogInformation("Liste des demandes de prêts : Opération effectuée avec succès");
@@ -89,7 +91,7 @@ namespace LoanManagement.API.Controllers.Loan_Management
 					try
 					{
 						var closed = await _dossierClientService.GetClosed();
-						var result = _mapper.Map<IEnumerable<SaveDossierClientRessource>>(closed);
+						var result = _mapper.Map<IEnumerable<SaveDossierClientResource>>(closed);
 						Journal.Niveau = 3; //INFORMATION
 						await _journalisationService.Journalize(Journal);
 						_logger.LogInformation("Liste des demandes de prêts : Opération effectuée avec succès");
@@ -130,7 +132,45 @@ namespace LoanManagement.API.Controllers.Loan_Management
 						journal.Niveau = 3;
 						await _journalisationService.Journalize(journal);
 						_logger.LogInformation("Détails d'un dossier crédit : Opération effectuée avec succès");
-						var result = _mapper.Map<SaveDossierClientRessource>(dossier);
+						var result = _mapper.Map<SaveDossierClientResource>(dossier);
+
+						return Ok(result);
+					}
+					catch (Exception ex)
+					{
+						journal.Niveau = 1;
+						await _journalisationService.Journalize(journal);
+						_logger.LogError("Une erreur est survenue pendant le traitement de la requête");
+						return ValidationProblem(statusCode: (int)HttpCode.INTERNAL_SERVER_ERROR, title: "Erreur interne du serveur", detail: ex.Message);
+					}
+				}
+			}
+		}
+
+		[HttpGet("Client/{id}")]
+		public async Task<ActionResult> GetByClientId(int id)
+		{
+			using (var connection = new SqlConnection(_configuration.GetConnectionString("Default")))
+			{
+				connection.Open();
+				using (var transaction = connection.BeginTransaction())
+				{
+					var journal = new Journal() { Libelle = "Identification d'un dossier crédit par son id", Entite = "User", TypeJournalId = 6 };
+					try
+					{
+						var client = await _clientService.GetById(id);
+						if (client is null)
+						{
+							_logger.LogWarning("Détails d'un dossier crédit : Client introuvable");
+							journal.Niveau = 1; // ECHEC
+							await _journalisationService.Journalize(journal);
+							return NotFound(new ApiResponse((int)CustomHttpCode.OBJECT_NOT_FOUND, description: "Client introuvable"));
+						}
+						var dossier = await _dossierClientService.GetByClientId(client.Id);
+						journal.Niveau = 3;
+						await _journalisationService.Journalize(journal);
+						_logger.LogInformation("Détails d'un dossier crédit : Opération effectuée avec succès");
+						var result = _mapper.Map<DossierClientRessource>(dossier);
 
 						return Ok(result);
 					}
@@ -153,8 +193,17 @@ namespace LoanManagement.API.Controllers.Loan_Management
 				connection.Open();
 				using (var transaction = connection.BeginTransaction())
 				{
-					var Journal = new Journal() { Libelle = "Enregistrement d'une demande de prêt", 
-						TypeJournalId = 5, Entite = "Client" };
+					var Journal = new Journal();
+					if (Request.Headers.ContainsKey("X-Journalisation"))
+					{
+						var x = Request.Headers["X-Journalisation"];
+						Journal = JsonConvert.DeserializeObject<Journal>(x);
+					}
+
+					Journal.Libelle = "Enregistrement d'une demande de prêt";
+					Journal.TypeJournalId = 5;
+					Journal.Entite = "Client";
+					
 					try
 					{
 						var validation = new SaveDossierClientResourceValidator();
@@ -239,7 +288,7 @@ namespace LoanManagement.API.Controllers.Loan_Management
                             }
                         }
                         var dossierCreated = await _dossierClientService.Create(dossier);
-						var dossierCreatedSuccessFully = _mapper.Map<SaveDossierClientRessource>(dossierCreated);
+						var dossierCreatedSuccessFully = _mapper.Map<DossierClientRessource>(dossierCreated);
 						_logger.LogInformation("Enregistrement d'une demande de prêt : Opération effectuée avec succès");
 
 						return Ok(dossierCreatedSuccessFully);

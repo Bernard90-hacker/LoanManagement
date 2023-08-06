@@ -34,10 +34,7 @@
             RuleFor(x => x.Fumeur)
                 .NotNull();
 
-            RuleFor(x => x.BuveurOccasionnel)
-                .NotNull();
-
-            RuleFor(x => x.BuveurRegulier)
+            RuleFor(x => x.Buveur)
                 .NotNull();
 
             RuleFor(x => x.CarteIdentite)

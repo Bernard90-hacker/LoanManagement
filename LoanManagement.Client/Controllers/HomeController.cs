@@ -58,39 +58,81 @@ public class HomeController : Controller
 
     [HttpGet]
     [Route("MesDemandes")]
-    public IActionResult MesDemandes()
+    public async Task<ActionResult> MesDemandes()
     {
         ConfigConstant.AddCurrentRouteToSession(HttpContext);
+        try
+        {
+            if (HttpContext.Session.GetString("_SESSIONID").IsNull())
+                return RedirectToAction("Index", "Home");
+            var id = int.Parse(HttpContext.Session.GetString("_SESSIONID"));
+            var result = await Client.GetAsync(URL + $"/DossierClient/Client/{id}");
+            if (result.IsSuccessStatusCode)
+            {
+                var response = await result.Content.ReadFromJsonAsync<SaveDossierClientResource>();
+                ViewBag.Response = response;
+            }
+            return View();  
+        }
+        catch (Exception)
+        {
 
-        return View();
+            return View();
+        }
     }
 
     [HttpPost]
-    public async Task<ActionResult> Login()
+    [Route("Login")]
+    public async Task<IActionResult> Login(ClientLoginViewModel model)
     {
+        if (!ModelState.IsValid)
+            return new JsonResult(new
+            { }, ConfigConstant.JsonSettings())
+            {
+                StatusCode = (int)HttpStatusCode.BadRequest
+            };
         try
         {
-            var indice = int.Parse(Request.Form["indice"].ToString());
-            var tel = Request.Form["tel"].ToString();
-            var loginResource = new ClientLoginResource() { Indice = indice, Telephone = tel };
+            var loginResource = new ClientLoginResource() 
+            { 
+                Indice = model.ClientLoginResource.Indice, 
+                Telephone = model.ClientLoginResource.Telephone 
+            };
             var content = new StringContent(JsonConvert.SerializeObject(loginResource), Encoding.UTF8, "application/json");
             var result = await Client.PostAsync(URL + "/Client/login", content);
             if (result.IsSuccessStatusCode)
             {
-                ViewBag.IsSucess = true;
-                var value = await result.Content.ReadFromJsonAsync<ClientResource>();
-                if(value is not null)
-                    HttpContext.Session.SetString("_SESSIONID", value.Id.ToString());
-                else RedirectToAction("Index", "Home");
-                TempData["Client"] = JsonConvert.SerializeObject(value);
-
-                return RedirectToAction("DemandeCredit", "DemandeCredit");
+                TempData["IsSuccess"] = true;
+                return new JsonResult(new
+                {
+                    title = "Demande de crédit",
+                    typeMessage = TypeMessage.Success.GetString(),
+                    message = "Demande de crédit effectuée avec succès",
+                    description = string.Empty,
+                    timeOut = 8000,
+                    strJsonDemandeCredit = JsonConvert.SerializeObject(JsonConvert.DeserializeObject<ClientResource>(
+                       await result.Content.ReadAsStringAsync(), ConfigConstant.SetDateTimeConverter()))
+                }, ConfigConstant.JsonSettings())
+                {
+                    StatusCode = (int)HttpStatusCode.OK
+                };
             }
-            return RedirectToAction("Index", "Home");
+            var jQueryViewModel = await AppConstant.GetResponseMessage(result);
+            return new JsonResult(new
+            {
+                title = jQueryViewModel.Title,
+                typeMessage = jQueryViewModel.TypeMessage,
+                message = jQueryViewModel.Message,
+                description = jQueryViewModel.Description,
+                erreurs = jQueryViewModel.Errors,
+                timeOut = jQueryViewModel.TimeOut
+
+            });
         }
+        
         catch (HttpRequestException e)
         {
-            ViewBag.Error = e.ToString();
+            
             return RedirectToAction("Index", "Home");
         }
     }

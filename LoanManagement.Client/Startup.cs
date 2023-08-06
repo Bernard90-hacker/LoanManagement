@@ -1,4 +1,5 @@
 using AspNetCore.RouteAnalyzer;
+using LoanManagement.Client.Services;
 
 namespace LoanManagement.Client;
 
@@ -15,6 +16,9 @@ public class Startup
     public void ConfigureServices(IServiceCollection services)
     {
         services.AddBrowserDetection();
+        services.AddTransient<JournalisationService>();
+        services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+        services.AddSingleton<HttpContextAccessor>();
         services.AddControllers()
             .AddNewtonsoftJson(options =>
             {

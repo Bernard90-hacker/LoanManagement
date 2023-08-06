@@ -1,4 +1,5 @@
 ﻿@page
+@using LoanManagement.Client.Resources;
 @{
 }
 
@@ -38,20 +39,23 @@
             <table class="datatables-basic table">
                 <thead>
                     <tr>
-                        <th>Nom</th>
-                        <th>Prenoms</th>
-                        <th>Montant</th>
                         <th>Date de soumission</th>
                         <th>Statut</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td>SOGBO</td>
-                        <td>Kokou Venunye Bernard</td>
-                        <td>2500000</td>
-                        <td>20/07/2023 11:11:11</td>
-                        <td>Validé</td>
+                        @{
+                            if(ViewBag.Response != null)
+                            {
+                                var response = ViewBag.Response as IEnumerable<SaveDossierClientResource>;
+                                foreach (var item in response)
+                                {
+                                    <td>@item.DateSoumission</td>
+                                    <td>En cours</td>
+                                }
+                            }
+                        }
                     </tr>
                 </tbody>
             </table>

@@ -184,9 +184,9 @@ namespace LoanManagement.service.Services.Loan_Management
 			var categorieSport = "";
 			var isInfirme = "Non";
 			var responseInfirme = "";
-			if (dossier.BuveurRegulier) buveur = "Régulièrement";
-			if (dossier.BuveurOccasionnel) buveur = "Occasionnellement";
-			if (!dossier.BuveurOccasionnel && !dossier.BuveurRegulier) buveur = "Pas du tout";
+			if (dossier.Buveur == 1) buveur = "Pas du tout";
+			if (dossier.Buveur == 2) buveur = "Occasionnellement";
+			if (dossier.Buveur == 3 ) buveur = "Régulièrement";
 			if (dossier.Fumeur)
 			{
 				isFumeur = "Oui";

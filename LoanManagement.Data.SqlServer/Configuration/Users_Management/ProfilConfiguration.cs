@@ -26,7 +26,7 @@
 			builder
 				.Property(x => x.Libelle)
 				.IsRequired()
-				.HasMaxLength(30);
+				.HasMaxLength(50);
 
 			builder
 				.Property(x => x.Description)

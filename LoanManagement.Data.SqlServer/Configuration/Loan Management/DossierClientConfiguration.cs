@@ -31,11 +31,8 @@
 			.Property(x => x.NbrCigarettes);
 
 			builder
-			.Property(x => x.BuveurOccasionnel)
+			.Property(x => x.Buveur)
 			.IsRequired();
-
-			builder
-			.Property(x => x.BuveurRegulier);
 
 			builder
 			.Property(x => x.Distractions)

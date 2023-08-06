@@ -16,6 +16,8 @@
 		Task<IEnumerable<InfoSanteClient>> GetInfoSanteByDossier(int dossierId);
 		Task<IEnumerable<DossierClient>> GetClosed();
 		Task AddCouverture(DossierClient dossierClient, string couverture);
+		Task<DossierClient?> GetByClientId(int Id);
 
-    }
+
+	}
 }

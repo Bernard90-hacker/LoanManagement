@@ -38,6 +38,10 @@
 			return await _unitOfWork.DossierClients.GetById(Id);
 		}
 
+		public async Task<DossierClient?> GetByClientId(int Id)
+		{
+			return await _unitOfWork.DossierClients.GetByClientId(Id);
+		}
 		public async Task<DossierClient?> GetByNumber(string numeroDossier)
 		{
 			return await _unitOfWork.DossierClients.GetByNumber(numeroDossier);

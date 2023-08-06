@@ -1,5 +1,6 @@
 ﻿using LoanManagement.API.Dto;
 using LoanManagement.API.Ressources;
+using LoanManagement.API.Ressources.Loan_Management;
 using LoanManagement.core.Models.Loan_Management;
 
 namespace LoanManagement.API.Mapping
@@ -57,8 +58,8 @@ namespace LoanManagement.API.Mapping
 			CreateMap<UpdateRoleOrganeRessource, RoleOrgane>();
 			CreateMap<EtapeDeroulementRessource, EtapeDeroulement>();
 			CreateMap<EtapeDeroulement, EtapeDeroulementRessource>();
-			CreateMap<DossierClient, SaveDossierClientRessource>();
 			CreateMap<DossierClient, SaveDossierClientResource>();
+			CreateMap<DossierClient, DossierClientRessource>();
 			CreateMap<SaveDossierClientResource, DossierClient>();
 			CreateMap<InfoSanteClientRessource, InfoSanteClient>();
 			CreateMap<InfoSanteClient, InfoSanteClientRessource>();

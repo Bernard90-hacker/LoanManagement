@@ -1,5 +1,9 @@
-﻿using LoanManagement.Client.Resources;
+﻿using IdentityServer4.Models;
+using LoanManagement.Client.Resources;
+using LoanManagement.Client.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics.Contracts;
+using System.IO.Pipelines;
 
 namespace LoanManagement.Client.Controllers
 {
@@ -8,135 +12,150 @@ namespace LoanManagement.Client.Controllers
     {
         private readonly ILogger<DemandeCreditController> _logger;
         private readonly IConfiguration _config;
+        private readonly JournalisationService _journalisationService;
         private readonly HttpClient Client = new HttpClient();
         public DemandeCreditController(ILogger<DemandeCreditController> logger, 
-            IConfiguration config)
+            IConfiguration config, JournalisationService service)
         {
             _logger = logger;
             _config = config;
+            _journalisationService = service;
         }
 
         private string UrlBase => MyConstants.LoanManagementApiUrl;
         [HttpGet]
         public IActionResult DemandeCredit()
         {
+            if (HttpContext.Session.GetString("_SESSIONID").IsNull())
+                return RedirectToAction("Index", "Home");
             ConfigConstant.AddCurrentRouteToSession(HttpContext);
             return View();
         }
         [HttpPost]
-        public async Task<ActionResult> DemandeCreditAction()
+        public async Task<IActionResult> DemandeCreditAction(SaveDossierClientResourceViewModel model)
         {
+            if (!ModelState.IsValid)
+                return new JsonResult(new
+                { }, ConfigConstant.JsonSettings())
+                {
+                    StatusCode = (int)HttpStatusCode.BadRequest
+                };
             try
             {
-                int nbrCigarettes = 0;
-                int categorieSport = 0;
-                string dateSurvenance = "";
-                string natureInfirmite = "";
-                bool fumer = false;
-                bool sportif = false;
-                bool infirme = false;
-                var taille = Double.Parse(Request.Form["taille"].ToString());
-                var poids = Double.Parse(Request.Form["poids"].ToString());
-                var tension = Double.Parse(Request.Form["tension"].ToString());
-                switch (Request.Form["fumer"].ToString())
-                {
-                    case "1":
-                        fumer = true;
-                        break;
-                    case "0":
-                        fumer = false;
-                        break;
-                    default:
-                        break;
-                }
-                if (fumer) nbrCigarettes = int.Parse(Request.Form["oui"].ToString());
-                var buveur = int.Parse(Request.Form["buveur"].ToString());
-                var distractions = Request.Form["distraction"].ToString();
-                switch (Request.Form["sport"].ToString())
-                {
-                    case "1":
-                        sportif = true;
-                        break;
-                    case "0":
-                        sportif = false;
-                        break;
-                    default:
-                        break;
-                }
-                if (sportif) categorieSport = int.Parse(Request.Form["sportOui"].ToString());
-                switch (Request.Form["infirmite"].ToString())
-                {
-                    case "1":
-                        infirme = true;
-                        break;
-                    case "0":
-                        infirme = false;
-                        break;
-                    default:
-                        break;
-                }
-                if (infirme == true)
-                {
-                    dateSurvenance = Request.Form["infirmiteOuiDate"].ToString();
-                    natureInfirmite = Request.Form["infirmiteOui"].ToString();
-                }
-                var echeancePiece = Request.Form["echeance"].ToString();
-                var attestation = Request.Form.Files["attestationTravail"];
-                var contrat = Request.Form.Files["contratTravail"];
-                var premierBulletinSalaire = Request.Form.Files["premierBulletinSalaire"];
-                var deuxiemeBulletinSalaire = Request.Form.Files["deuxiemeBulletinSalaire"];
-                var troisiemeBulletinSalaire = Request.Form.Files["troisiemeBulletinSalaire"];
-                var piece = Request.Form.Files["piece"];
-                var factureProForma = Request.Form.Files["facture"];
-                var dossier = new DossierClientResource()
-                {
-                    Taille = taille,
-                    Poids = poids,
-                    TensionArterielle = tension,
-                    Fumeur = fumer,
-                    NbrCigarettes = nbrCigarettes,
-                    Distractions = distractions,
-                    EstSportif = sportif,
-                    EstInfirme = infirme,
-                    CategorieSport = categorieSport,
-                    NatureInfirmite = natureInfirmite,
-                    DateSurvenance = dateSurvenance,
-                    AttestationTravail = attestation,
-                    ContratTravail = contrat,
-                    PremierBulletinSalaire = premierBulletinSalaire,
-                    DeuxiemeBulletinSalaire = deuxiemeBulletinSalaire,
-                    TroisiemeBulletinSalaire = troisiemeBulletinSalaire,
-                    FactureProFormat = factureProForma,
-                    EcheanceCarteIdentite = echeancePiece,
-                    CarteIdentite = piece,
-                    ClientId = int.Parse(HttpContext.Session.GetString("_SESSIONID"))
+                if (HttpContext.Session.GetString("_SESSIONID").IsNull())
+                    return RedirectToAction("Index", "Home");
+
+                List<IFormFile> files = new() 
+                { 
+                    model.SaveDossierClientResource.AttestationTravail, 
+                    model.SaveDossierClientResource.ContratTravail, 
+                    model.SaveDossierClientResource.PremierBulletinSalaire, 
+                    model.SaveDossierClientResource.DeuxiemeBulletinSalaire, 
+                    model.SaveDossierClientResource.TroisiemeBulletinSalaire, 
+                    model.SaveDossierClientResource.FactureProFormat 
                 };
-                switch (buveur)
+                var content = new MultipartFormDataContent();
+                int i = 0;
+                foreach (var file in files)
                 {
-                    case 1:
-                        dossier.BuveurOccasionnel = false;
-                        dossier.BuveurRegulier = false;
-                        break;
-                    case 2:
-                        dossier.BuveurOccasionnel = true;
-                        dossier.BuveurRegulier = false;
-                        break;
-                    case 3:
-                        dossier.BuveurOccasionnel = false;
-                        dossier.BuveurRegulier = true;
-                        break;
-                    default:
-                        break;
+                    byte[] data;
+                    using (var br = new BinaryReader(file.OpenReadStream()))
+                    {
+                        data = br.ReadBytes((int)file.OpenReadStream().Length);
+                    }
+                    var bytes = new ByteArrayContent(data);
+                    switch (i)
+                    {
+                        case 0:
+                            content.Add(bytes, "attestationTravail", file.FileName);
+                            break;
+                        case 1:
+                            content.Add(bytes, "contratTravail", file.FileName);
+                            break;
+                        case 2:
+                            content.Add(bytes, "premierBulletinSalaire", file.FileName);
+                            break;
+                        case 3:
+                            content.Add(bytes, "deuxiemeBulletinSalaire", file.FileName);
+                            break;
+                        case 4:
+                            content.Add(bytes, "troisiemeBulletinSalaire", file.FileName);
+                            break;
+                        case 5:
+                            content.Add(bytes, "factureProFormat", file.FileName);
+                            break;
+                        default:
+                            break;
+                    }
+                    i++;
                 }
-                var content = new StringContent(JsonConvert.SerializeObject(dossier), Encoding.UTF8, "application/json");
+
+                var dossier = new SaveDossierClientResource()
+                {
+                    Taille = model.SaveDossierClientResource.Taille,
+                    Poids = model.SaveDossierClientResource.Poids,
+                    TensionArterielle = model.SaveDossierClientResource.TensionArterielle,
+                    Fumeur = model.SaveDossierClientResource.Fumeur,
+                    NbrCigarettes = model.SaveDossierClientResource.NbrCigarettes,
+                    Distractions = model.SaveDossierClientResource.Distractions,
+                    EstSportif = model.SaveDossierClientResource.EstSportif,
+                    EstInfirme = model.SaveDossierClientResource.EstInfirme,
+                    CategorieSport = model.SaveDossierClientResource.CategorieSport,
+                    NatureInfirmite = model.SaveDossierClientResource.NatureInfirmite,
+                    DateSurvenance = model.SaveDossierClientResource.DateSurvenance,
+                    AttestationTravail = model.SaveDossierClientResource.AttestationTravail,
+                    ContratTravail = model.SaveDossierClientResource.ContratTravail,
+                    PremierBulletinSalaire = model.SaveDossierClientResource.PremierBulletinSalaire,
+                    DeuxiemeBulletinSalaire = model.SaveDossierClientResource.DeuxiemeBulletinSalaire,
+                    TroisiemeBulletinSalaire = model.SaveDossierClientResource.TroisiemeBulletinSalaire,
+                    FactureProFormat = model.SaveDossierClientResource.FactureProFormat,
+                    CarteIdentite = model.SaveDossierClientResource.CarteIdentite,
+                    EcheanceCarteIdentite = model.SaveDossierClientResource.EcheanceCarteIdentite,
+                    ClientId = int.Parse(HttpContext.Session.GetString("_SESSIONID")),
+                    StatutMaritalId = model.SaveDossierClientResource.StatutMaritalId
+                };
+               
+                var journal = await _journalisationService.Journalize();
+               content.Add(new StringContent(JsonConvert.SerializeObject(dossier), Encoding.UTF8, "application/json"));
+
+                Client.Timeout = TimeSpan.FromMilliseconds(Timeout.Infinite);
+                Client.DefaultRequestHeaders.Add("X-Journalisation", JsonConvert.SerializeObject(journal));
                 var response = await Client.PostAsync(UrlBase + "/DossierClient/Add", content);
-                if (response.IsSuccessStatusCode) return Ok();
-                return Ok();
+                if (response.IsSuccessStatusCode)
+                {
+                    ViewBag.IsApplySuccess = true;
+                    return new JsonResult(new
+                    {
+                        title = "Demande de crédit",
+                        typeMessage = TypeMessage.Success.GetString(),
+                        message = "Demande de crédit effectuée avec succès",
+                        description = string.Empty,
+                        timeOut = 8000,
+                        strJsonDemandeCredit = JsonConvert.SerializeObject(JsonConvert.DeserializeObject<SaveDossierClientResource>(
+                        await response.Content.ReadAsStringAsync(), ConfigConstant.SetDateTimeConverter()))
+                    }, ConfigConstant.JsonSettings())
+                    {
+                        StatusCode = (int)HttpStatusCode.OK
+                    };
+                }
+                var jQueryViewModel = await AppConstant.GetResponseMessage(response);
+                return new JsonResult(new
+                {
+                    title = jQueryViewModel.Title,
+                    typeMessage = jQueryViewModel.TypeMessage,
+                    message = jQueryViewModel.Message,
+                    description = jQueryViewModel.Description,
+                    erreurs = jQueryViewModel.Errors,
+                    timeOut = jQueryViewModel.TimeOut
+
+
+                }); 
             }
             catch (Exception)
             {
 
                 throw new Exception("Quelque chose s'est mal passé");
+
             }
         }
     }

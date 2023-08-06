@@ -7,11 +7,10 @@ namespace LoanManagement.core.Models.Loan_Management
         public string NumeroDossier { get; set; } = string.Empty;
         public double Taille { get; set; }
         public double Poids { get; set; }
-        public double TensionArterielle { get; set; }
+        public string TensionArterielle { get; set; }
         public bool Fumeur { get; set; }
         public int NbrCigarettes { get; set; }
-        public bool BuveurOccasionnel { get; set; }
-        public bool BuveurRegulier { get; set; }
+        public int Buveur { get; set; } //1. Pas Du tout, 2. Occassionnellement, 3. Régulièrement
         public string Distractions { get; set; } = string.Empty;
         public bool EstSportif { get; set; }
         public int CategorieSport { get; set; } //1. Amateur 2. Professionnel.

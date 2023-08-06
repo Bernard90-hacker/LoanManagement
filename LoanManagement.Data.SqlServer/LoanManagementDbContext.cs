@@ -309,7 +309,7 @@ namespace LoanManagement.Data.SqlServer
                     {
                         Id = 5,
                         Code = "PROFIL-005",
-                        Libelle = "Chef Département Back-Office Engagement",
+                        Libelle = "Chef Departement Back-Office Engagement",
                         Description = "Profil destiné aux utilisateurs",
                         DateAjout = DateTime.Now.ToString("dd/MM/yyyy"),
                         Statut = 1,
