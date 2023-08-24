@@ -86,8 +86,8 @@ namespace LoanManagement.API.Controllers.Users_Management
 			}
 		}
 
-		[HttpGet("{matricule:int}")]
-		public async Task<ActionResult<EmployeRessource>> GetEmployeByMatricule(int matricule)
+		[HttpGet("{matricule}")]
+		public async Task<ActionResult<EmployeRessource>> GetEmployeByMatricule(string matricule)
 		{
 			try
 			{
@@ -162,7 +162,7 @@ namespace LoanManagement.API.Controllers.Users_Management
 		}
 
 		[HttpPost("add")]
-		public async Task<ActionResult<EmployeRessource>> Add([FromForm] EmployeRessource ressource)
+		public async Task<ActionResult<EmployeRessource>> Add(EmployeRessource ressource)
 		{
 			try
 			{
@@ -203,15 +203,15 @@ namespace LoanManagement.API.Controllers.Users_Management
 				employeDb.UserId = user.Id;
 				employeDb.DateAjout = DateTime.Now.ToString("dd/MM/yyyy");
 				employeDb.DateModification = DateTime.Now.ToString("dd/MM/yyyy");
-                if (!ressource.Photo.IsNull())
-                {
-                    employeDb.Photo = await ConfigConstants.UploadApiFile(_webHostEnvironment, ressource.Photo, GlobalConstants.PhotoUtilisateur);
-                    if (employeDb.Photo.Equals("NotAccepted"))
-                    {
-                        _logger.LogWarning("'Ajout d'un agent' : format photo non valide.");
-                        return NotFound(new ApiResponse((int)CustomHttpCode.ERROR, description: "Format de la photo non valide !! Seuls sont autorisés les formats png, jpeg ou jpg."));
-                    }
-                }
+                //if (!ressource.Photo.IsNull())
+                //{
+                //    employeDb.Photo = await ConfigConstants.UploadApiFile(_webHostEnvironment, ressource.Photo, GlobalConstants.PhotoUtilisateur);
+                //    if (employeDb.Photo.Equals("NotAccepted"))
+                //    {
+                //        _logger.LogWarning("'Ajout d'un agent' : format photo non valide.");
+                //        return NotFound(new ApiResponse((int)CustomHttpCode.ERROR, description: "Format de la photo non valide !! Seuls sont autorisés les formats png, jpeg ou jpg."));
+                //    }
+                //}
 
                 var employeCreated = await _employeService.Create(employeDb);
 				

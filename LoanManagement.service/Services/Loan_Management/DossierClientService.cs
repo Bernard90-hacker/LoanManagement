@@ -38,7 +38,7 @@
 			return await _unitOfWork.DossierClients.GetById(Id);
 		}
 
-		public async Task<DossierClient?> GetByClientId(int Id)
+		public async Task<IEnumerable<DossierClient?>> GetByClientId(int Id)
 		{
 			return await _unitOfWork.DossierClients.GetByClientId(Id);
 		}

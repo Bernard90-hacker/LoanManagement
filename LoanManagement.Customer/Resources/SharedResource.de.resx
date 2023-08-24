@@ -1,0 +1,747 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Accueil" xml:space="preserve">
+    <value>Startseite</value>
+  </data>
+  <data name="Actions" xml:space="preserve">
+    <value>Aktionen</value>
+  </data>
+  <data name="Actualiser" xml:space="preserve">
+    <value>Aktualisieren</value>
+  </data>
+  <data name="AddCleRibVirement" xml:space="preserve">
+    <value>Geben Sie den RIB-Code ein</value>
+  </data>
+  <data name="AddCodeAgenceVirement" xml:space="preserve">
+    <value>Geben Sie den Schalter ein</value>
+  </data>
+  <data name="AddCodeBanqueVirement" xml:space="preserve">
+    <value>Bitte geben Sie den Code der Einrichtung ein</value>
+  </data>
+  <data name="AddDateTraitement" xml:space="preserve">
+    <value>Geben Sie das Behandlungsdatum ein</value>
+  </data>
+  <data name="AddMotifVirement" xml:space="preserve">
+    <value>Geben Sie den Überweisungsgrund ein</value>
+  </data>
+  <data name="AddNumeroCompteVirement" xml:space="preserve">
+    <value>Geben Sie die Kontonummer ein</value>
+  </data>
+  <data name="AddSignesPonctuation" xml:space="preserve">
+    <value>Füllen Sie die Satzzeichen aus</value>
+  </data>
+  <data name="AffichageEntrées" xml:space="preserve">
+    <value>Anzeigen von _START_ bis _END_ Einträge auf _TOTAL_</value>
+  </data>
+  <data name="AffichageZéroEntrée" xml:space="preserve">
+    <value>Anzeige von 0 bis 0 auf 0 Einträge</value>
+  </data>
+  <data name="AfficherEntrées" xml:space="preserve">
+    <value>Einträge anzeigen _MENU_</value>
+  </data>
+  <data name="Aide" xml:space="preserve">
+    <value>Hilfe</value>
+  </data>
+  <data name="Ajouter" xml:space="preserve">
+    <value>Hinzufügen</value>
+  </data>
+  <data name="Allemand" xml:space="preserve">
+    <value>Deutsch</value>
+  </data>
+  <data name="Anglais" xml:space="preserve">
+    <value>Englisch</value>
+  </data>
+  <data name="Annuler" xml:space="preserve">
+    <value>Abbrechen</value>
+  </data>
+  <data name="Aoû" xml:space="preserve">
+    <value>Aug</value>
+  </data>
+  <data name="Août" xml:space="preserve">
+    <value>August</value>
+  </data>
+  <data name="Appliquer" xml:space="preserve">
+    <value>Anwenden</value>
+  </data>
+  <data name="APropos" xml:space="preserve">
+    <value>Über</value>
+  </data>
+  <data name="Attention" xml:space="preserve">
+    <value>Achtung !!!</value>
+  </data>
+  <data name="AucuneDonnéeDispo" xml:space="preserve">
+    <value>Keine Einträge vorhanden</value>
+  </data>
+  <data name="AucunEnregTrouvé" xml:space="preserve">
+    <value>Kein passender Datensatz gefunden</value>
+  </data>
+  <data name="AucunRésultat" xml:space="preserve">
+    <value>Keine Ergebnisse</value>
+  </data>
+  <data name="Avr" xml:space="preserve">
+    <value>Apr</value>
+  </data>
+  <data name="Avril" xml:space="preserve">
+    <value>April</value>
+  </data>
+  <data name="BientôtDisponible" xml:space="preserve">
+    <value>Bald verfügbar</value>
+  </data>
+  <data name="Calculer" xml:space="preserve">
+    <value>Berechnen</value>
+  </data>
+  <data name="Chargement" xml:space="preserve">
+    <value>Laden...</value>
+  </data>
+  <data name="ChargementGénérationFichiers" xml:space="preserve">
+    <value>Dateien hochladen und generieren</value>
+  </data>
+  <data name="ChargerFichier" xml:space="preserve">
+    <value>Sie müssen mindestens eine Datei hochladen</value>
+  </data>
+  <data name="Chercher" xml:space="preserve">
+    <value>Suchen :</value>
+  </data>
+  <data name="ChoisirDate" xml:space="preserve">
+    <value>Wählen Sie das Datum</value>
+  </data>
+  <data name="CleRibVirement" xml:space="preserve">
+    <value>RIB-Code</value>
+  </data>
+  <data name="Code" xml:space="preserve">
+    <value>Code</value>
+  </data>
+  <data name="CodeAgenceVirement" xml:space="preserve">
+    <value>Schalter</value>
+  </data>
+  <data name="CodeBanqueVirement" xml:space="preserve">
+    <value>Code der Einrichtung</value>
+  </data>
+  <data name="ConditionsChargement" xml:space="preserve">
+    <value>Bedingungen für das Laden</value>
+  </data>
+  <data name="Courant" xml:space="preserve">
+    <value>Laufend</value>
+  </data>
+  <data name="DateAjout" xml:space="preserve">
+    <value>Datum der Erstellung</value>
+  </data>
+  <data name="DateHeureChargement" xml:space="preserve">
+    <value>Datum/Uhrzeit des Hochladens</value>
+  </data>
+  <data name="DateHeureGeneration" xml:space="preserve">
+    <value>Datum/Uhrzeit der Generierung</value>
+  </data>
+  <data name="DateModification" xml:space="preserve">
+    <value>Datum der Aktualisierung</value>
+  </data>
+  <data name="DateTraitement" xml:space="preserve">
+    <value>Behandlungsdatum</value>
+  </data>
+  <data name="DemandeMajNavigateur" xml:space="preserve">
+    <value>Ihr Browser ist mit dieser Funktion nicht kompatibel. Bitte aktualisieren Sie ihn</value>
+  </data>
+  <data name="Dernier" xml:space="preserve">
+    <value>Letzter</value>
+  </data>
+  <data name="Di" xml:space="preserve">
+    <value>So</value>
+  </data>
+  <data name="Dim" xml:space="preserve">
+    <value>So</value>
+  </data>
+  <data name="Dimanche" xml:space="preserve">
+    <value>Sonntag</value>
+  </data>
+  <data name="Documentation" xml:space="preserve">
+    <value>Dokumentation</value>
+  </data>
+  <data name="Déc" xml:space="preserve">
+    <value>Dez</value>
+  </data>
+  <data name="Décembre" xml:space="preserve">
+    <value>Dezember</value>
+  </data>
+  <data name="Déconnexion" xml:space="preserve">
+    <value>Abmelden</value>
+  </data>
+  <data name="Détails" xml:space="preserve">
+    <value>Einzelheiten</value>
+  </data>
+  <data name="EditéPar" xml:space="preserve">
+    <value>herausgegeben von</value>
+  </data>
+  <data name="Effacer" xml:space="preserve">
+    <value>Löschen</value>
+  </data>
+  <data name="Enregistrer" xml:space="preserve">
+    <value>Speichern</value>
+  </data>
+  <data name="EntréesFiltrées" xml:space="preserve">
+    <value>(gefiltert nach _MAX_ Gesamteinträgen)</value>
+  </data>
+  <data name="Envoyer" xml:space="preserve">
+    <value>Senden</value>
+  </data>
+  <data name="Eo" xml:space="preserve">
+    <value>Eb</value>
+  </data>
+  <data name="Erreur" xml:space="preserve">
+    <value>Fehler!!!</value>
+  </data>
+  <data name="ErreurNonIdentifiée" xml:space="preserve">
+    <value>Ein erkannter, nicht identifizierter Fehler, bitte wenden Sie sich an den Administrator</value>
+  </data>
+  <data name="ErreurProduite" xml:space="preserve">
+    <value>Es ist ein Fehler aufgetreten!!! Bitte versuchen Sie es später noch einmal</value>
+  </data>
+  <data name="EtatFichierChargé" xml:space="preserve">
+    <value>Status der hochgeladenen Dateien</value>
+  </data>
+  <data name="Exporter" xml:space="preserve">
+    <value>Exportieren</value>
+  </data>
+  <data name="Facturation" xml:space="preserve">
+    <value>Rechnungsstellung</value>
+  </data>
+  <data name="Faq" xml:space="preserve">
+    <value>Häufig gestellte Fragen</value>
+  </data>
+  <data name="Fermer" xml:space="preserve">
+    <value>Schließen</value>
+  </data>
+  <data name="Fermer sans modifier" xml:space="preserve">
+    <value>Schließen ohne Änderung</value>
+  </data>
+  <data name="FichiersChargésEtGénérés" xml:space="preserve">
+    <value>Geladene und erzeugte Dateien</value>
+  </data>
+  <data name="FormatAccentuation" xml:space="preserve">
+    <value>Akzentzeichen formatieren ?</value>
+  </data>
+  <data name="FormatPonctuation" xml:space="preserve">
+    <value>Formatieren von Satzzeichen ?</value>
+  </data>
+  <data name="FormatPonctuationInfos" xml:space="preserve">
+    <value>Parametrisierte Satzzeichen, die in den Kontobezeichnungen identifiziert werden, werden in der/den Zieldatei(en) durch ein Leerzeichen ersetzt</value>
+  </data>
+  <data name="Français" xml:space="preserve">
+    <value>Französisch</value>
+  </data>
+  <data name="Fév" xml:space="preserve">
+    <value>Feb</value>
+  </data>
+  <data name="Février" xml:space="preserve">
+    <value>Februar</value>
+  </data>
+  <data name="Go" xml:space="preserve">
+    <value>Gb</value>
+  </data>
+  <data name="GénérationDeFichieEnCours" xml:space="preserve">
+    <value>Aktuelle Datei(en) generieren...</value>
+  </data>
+  <data name="Générer" xml:space="preserve">
+    <value>Generieren</value>
+  </data>
+  <data name="Information" xml:space="preserve">
+    <value>Informationen</value>
+  </data>
+  <data name="InformationsVirement" xml:space="preserve">
+    <value>Überweisungsinformationen</value>
+  </data>
+  <data name="Jan" xml:space="preserve">
+    <value>Jan</value>
+  </data>
+  <data name="Janvier" xml:space="preserve">
+    <value>Januar</value>
+  </data>
+  <data name="Je" xml:space="preserve">
+    <value>Do</value>
+  </data>
+  <data name="Jeu" xml:space="preserve">
+    <value>Do</value>
+  </data>
+  <data name="Jeudi" xml:space="preserve">
+    <value>Donnerstag</value>
+  </data>
+  <data name="Juillet" xml:space="preserve">
+    <value>Juli</value>
+  </data>
+  <data name="Juin" xml:space="preserve">
+    <value>Juni</value>
+  </data>
+  <data name="Jul" xml:space="preserve">
+    <value>Jul</value>
+  </data>
+  <data name="Jun" xml:space="preserve">
+    <value>Jun</value>
+  </data>
+  <data name="Ko" xml:space="preserve">
+    <value>Kb</value>
+  </data>
+  <data name="Libellé" xml:space="preserve">
+    <value>Wortlaut</value>
+  </data>
+  <data name="LibelléAbrégé" xml:space="preserve">
+    <value>Abgekürzte Bezeichnung</value>
+  </data>
+  <data name="Licence" xml:space="preserve">
+    <value>Lizenz</value>
+  </data>
+  <data name="Lu" xml:space="preserve">
+    <value>Mo</value>
+  </data>
+  <data name="Lun" xml:space="preserve">
+    <value>Mo</value>
+  </data>
+  <data name="Lundi" xml:space="preserve">
+    <value>Montag</value>
+  </data>
+  <data name="Ma" xml:space="preserve">
+    <value>Di</value>
+  </data>
+  <data name="Mai" xml:space="preserve">
+    <value>Mai</value>
+  </data>
+  <data name="Maintenance" xml:space="preserve">
+    <value>Wartung</value>
+  </data>
+  <data name="Mar" xml:space="preserve">
+    <value>Mar</value>
+  </data>
+  <data name="Mardi" xml:space="preserve">
+    <value>Dienstag</value>
+  </data>
+  <data name="Mars" xml:space="preserve">
+    <value>März</value>
+  </data>
+  <data name="Me" xml:space="preserve">
+    <value>Mi</value>
+  </data>
+  <data name="Mer" xml:space="preserve">
+    <value>Mi</value>
+  </data>
+  <data name="Mercredi" xml:space="preserve">
+    <value>Mittwoch</value>
+  </data>
+  <data name="MettreJour" xml:space="preserve">
+    <value>Aktualisieren</value>
+  </data>
+  <data name="MiseJour" xml:space="preserve">
+    <value>Aktualisierung</value>
+  </data>
+  <data name="Mo" xml:space="preserve">
+    <value>Mb</value>
+  </data>
+  <data name="Modifier" xml:space="preserve">
+    <value>Bearbeiten</value>
+  </data>
+  <data name="MonProfil" xml:space="preserve">
+    <value>Mein Profil</value>
+  </data>
+  <data name="MotifVirement" xml:space="preserve">
+    <value>Grund für die Überweisung</value>
+  </data>
+  <data name="MéthodeNonAutorisée" xml:space="preserve">
+    <value>Unerlaubte Methode</value>
+  </data>
+  <data name="NbreJour" xml:space="preserve">
+    <value>Anzahl der Tage</value>
+  </data>
+  <data name="Nom" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="NombreMaxFichierDépassé" xml:space="preserve">
+    <value>Sie haben die Gesamtzahl der hochzuladenden Dateien überschritten</value>
+  </data>
+  <data name="NomComplet" xml:space="preserve">
+    <value>Vollständiger name</value>
+  </data>
+  <data name="NomFichier" xml:space="preserve">
+    <value>Name der Datei</value>
+  </data>
+  <data name="NomFichierChargé" xml:space="preserve">
+    <value>Geladene Datei</value>
+  </data>
+  <data name="NomFichierGénéré" xml:space="preserve">
+    <value>Erstellte Datei</value>
+  </data>
+  <data name="Nov" xml:space="preserve">
+    <value>Nov</value>
+  </data>
+  <data name="Novembre" xml:space="preserve">
+    <value>November</value>
+  </data>
+  <data name="NumeroCompteVirement" xml:space="preserve">
+    <value>Nummer des Kontos</value>
+  </data>
+  <data name="NuméroTelephone" xml:space="preserve">
+    <value>Telefonnummer</value>
+  </data>
+  <data name="Oct" xml:space="preserve">
+    <value>Okt</value>
+  </data>
+  <data name="Octobre" xml:space="preserve">
+    <value>Oktober</value>
+  </data>
+  <data name="PageNonAutorisée" xml:space="preserve">
+    <value>Seite nicht autorisiert</value>
+  </data>
+  <data name="Paramètres" xml:space="preserve">
+    <value>Parameter</value>
+  </data>
+  <data name="ParamétrageInfosVirement" xml:space="preserve">
+    <value>Einrichten von Überweisungsinformationen</value>
+  </data>
+  <data name="ParamétrageVariables" xml:space="preserve">
+    <value>Parametrisierung von Variablen</value>
+  </data>
+  <data name="PasAutorisé" xml:space="preserve">
+    <value>Nicht erlaubt</value>
+  </data>
+  <data name="PlusDeRésultats" xml:space="preserve">
+    <value>Laden von mehr Ergebnissen...</value>
+  </data>
+  <data name="Po" xml:space="preserve">
+    <value>Pb</value>
+  </data>
+  <data name="Portugais" xml:space="preserve">
+    <value>Portugiesisch</value>
+  </data>
+  <data name="Premier" xml:space="preserve">
+    <value>Erste</value>
+  </data>
+  <data name="Précédent" xml:space="preserve">
+    <value>Vorherige</value>
+  </data>
+  <data name="Prénom" xml:space="preserve">
+    <value>Vorname</value>
+  </data>
+  <data name="Qo" xml:space="preserve">
+    <value>Qb</value>
+  </data>
+  <data name="Quitter" xml:space="preserve">
+    <value>Beenden</value>
+  </data>
+  <data name="RechercheEnCours" xml:space="preserve">
+    <value>Suche wird fortgesetzt...</value>
+  </data>
+  <data name="Rechercher" xml:space="preserve">
+    <value>Suche</value>
+  </data>
+  <data name="ReqCleRibVirement" xml:space="preserve">
+    <value>Bitte geben Sie den RIB-Code an</value>
+  </data>
+  <data name="ReqCodeAgenceVirement" xml:space="preserve">
+    <value>Bitte geben Sie den Schalter an</value>
+  </data>
+  <data name="ReqCodeBanqueVirement" xml:space="preserve">
+    <value>Bitte geben Sie den Code der Einrichtung an</value>
+  </data>
+  <data name="ReqDateTraitement" xml:space="preserve">
+    <value>Bitte geben Sie das Behandlungsdatum ein</value>
+  </data>
+  <data name="ReqMotifVirement" xml:space="preserve">
+    <value>Bitte geben Sie den Überweisungsgrund ein</value>
+  </data>
+  <data name="ReqNumeroCompteVirement" xml:space="preserve">
+    <value>Bitte geben Sie die Kontonummer an</value>
+  </data>
+  <data name="ReqSignesPonctuation" xml:space="preserve">
+    <value>Bitte füllen Sie das/die Satzzeichen aus</value>
+  </data>
+  <data name="RessourceNonAutorisée" xml:space="preserve">
+    <value>Die Ressource ist nicht autorisiert. Ungültige Authentifizierungsinformationen für die gesuchte Ressource</value>
+  </data>
+  <data name="Restauration" xml:space="preserve">
+    <value>Wiederherstellung</value>
+  </data>
+  <data name="Restaurer" xml:space="preserve">
+    <value>Wiederherstellen</value>
+  </data>
+  <data name="Ro" xml:space="preserve">
+    <value>Rb</value>
+  </data>
+  <data name="Réinitialiser" xml:space="preserve">
+    <value>Zurücksetzen</value>
+  </data>
+  <data name="RésultatsNonChargés" xml:space="preserve">
+    <value>Es konnten keine Ergebnisse geladen werden</value>
+  </data>
+  <data name="Sa" xml:space="preserve">
+    <value>Sa</value>
+  </data>
+  <data name="Sam" xml:space="preserve">
+    <value>Sa</value>
+  </data>
+  <data name="Samedi" xml:space="preserve">
+    <value>Samstag</value>
+  </data>
+  <data name="Sauvegarde" xml:space="preserve">
+    <value>Sichern</value>
+  </data>
+  <data name="Sauvegarder" xml:space="preserve">
+    <value>Speichern</value>
+  </data>
+  <data name="Sep" xml:space="preserve">
+    <value>Sep</value>
+  </data>
+  <data name="Septembre" xml:space="preserve">
+    <value>September</value>
+  </data>
+  <data name="Sexe" xml:space="preserve">
+    <value>Geschlecht</value>
+  </data>
+  <data name="SignesPonctuation" xml:space="preserve">
+    <value>Satzzeichen</value>
+  </data>
+  <data name="Sm" xml:space="preserve">
+    <value>Sm</value>
+  </data>
+  <data name="SourceIntrouvable" xml:space="preserve">
+    <value>Die Quelle, nach der Sie suchen, wurde nicht gefunden</value>
+  </data>
+  <data name="Succès" xml:space="preserve">
+    <value>Erfolg</value>
+  </data>
+  <data name="SuccèsDeRemiseOrdre" xml:space="preserve">
+    <value>Generierung der Datei(en) erfolgreich abgeschlossen</value>
+  </data>
+  <data name="SuccèsMajParamGlobal" xml:space="preserve">
+    <value>Konfiguration der Variablen erfolgreich durchgeführt</value>
+  </data>
+  <data name="SuccèsMajParamInfosVirement" xml:space="preserve">
+    <value>Konfiguration der Größe der Überweisungsinformationen erfolgreich durchgeführt</value>
+  </data>
+  <data name="Suivant" xml:space="preserve">
+    <value>Weiter</value>
+  </data>
+  <data name="Supports" xml:space="preserve">
+    <value>Supports</value>
+  </data>
+  <data name="Supprimer" xml:space="preserve">
+    <value>Löschen</value>
+  </data>
+  <data name="SupprimerLesEléments" xml:space="preserve">
+    <value>Alle Einträge löschen</value>
+  </data>
+  <data name="Sélectionner" xml:space="preserve">
+    <value>Auswählen</value>
+  </data>
+  <data name="SélectionnerSignesPonctuation" xml:space="preserve">
+    <value>Zeichen auswählen</value>
+  </data>
+  <data name="TailleCleRib" xml:space="preserve">
+    <value>Schlüsselgröße RIB</value>
+  </data>
+  <data name="TailleCleRibVirement" xml:space="preserve">
+    <value>Schlüsselgröße RIB</value>
+  </data>
+  <data name="TailleCodeAgence" xml:space="preserve">
+    <value>Größe der Filialcodes</value>
+  </data>
+  <data name="TailleCodeAgenceVirement" xml:space="preserve">
+    <value>Größe der Filialcode</value>
+  </data>
+  <data name="TailleCodeBanque" xml:space="preserve">
+    <value>Größe der Bankcodes</value>
+  </data>
+  <data name="TailleCodeBanqueVirement" xml:space="preserve">
+    <value>Größe der Bankcode</value>
+  </data>
+  <data name="TailleMaxFichierDépassé" xml:space="preserve">
+    <value>Sie haben die maximal zulässige Größe überschritten</value>
+  </data>
+  <data name="TailleNumeroCompte" xml:space="preserve">
+    <value>Größe der Kontonummern</value>
+  </data>
+  <data name="TailleNumeroCompteVirement" xml:space="preserve">
+    <value>Größe der Kontonummer</value>
+  </data>
+  <data name="Tarification" xml:space="preserve">
+    <value>Tarifierung</value>
+  </data>
+  <data name="TauxExonere" xml:space="preserve">
+    <value>Befreiungssatz</value>
+  </data>
+  <data name="To" xml:space="preserve">
+    <value>Tb</value>
+  </data>
+  <data name="ToutTélécharger" xml:space="preserve">
+    <value>Alle herunterladen</value>
+  </data>
+  <data name="Traitement" xml:space="preserve">
+    <value>Bearbeiten...</value>
+  </data>
+  <data name="TraitementFichiers" xml:space="preserve">
+    <value>Verarbeitung von Dateien</value>
+  </data>
+  <data name="TraitementFichiersBIANET" xml:space="preserve">
+    <value>Verarbeitung von Dateien (BIANET-Mehrfachüberweisungen)</value>
+  </data>
+  <data name="Télécharger" xml:space="preserve">
+    <value>Download</value>
+  </data>
+  <data name="TéléchargerFichier" xml:space="preserve">
+    <value>Hinterlegen Sie Ihre Dateien hier oder klicken Sie, um sie herunterzuladen</value>
+  </data>
+  <data name="Utilisateur" xml:space="preserve">
+    <value>Benutzer</value>
+  </data>
+  <data name="Valider" xml:space="preserve">
+    <value>Bestätigen</value>
+  </data>
+  <data name="VariablesContrôle" xml:space="preserve">
+    <value>Kontrollvariablen</value>
+  </data>
+  <data name="Ve" xml:space="preserve">
+    <value>Fr</value>
+  </data>
+  <data name="Ven" xml:space="preserve">
+    <value>Fr</value>
+  </data>
+  <data name="Vendredi" xml:space="preserve">
+    <value>Freitag</value>
+  </data>
+  <data name="VoirAutreAnnée" xml:space="preserve">
+    <value>Ein anderes Jahr ansehen</value>
+  </data>
+  <data name="VoirAutreMois" xml:space="preserve">
+    <value>Einen anderen Monat ansehen</value>
+  </data>
+  <data name="VoirMoisCourant" xml:space="preserve">
+    <value>Aktuellen Monat anzeigen</value>
+  </data>
+  <data name="VoirMoisPrécédent" xml:space="preserve">
+    <value>Vorherigen Monat ansehen</value>
+  </data>
+  <data name="VoirMoisSuivant" xml:space="preserve">
+    <value>Nächsten Monat anzeigen</value>
+  </data>
+  <data name="Yo" xml:space="preserve">
+    <value>Yb</value>
+  </data>
+  <data name="Zo" xml:space="preserve">
+    <value>Zb</value>
+  </data>
+  <data name="ZoneDeDémonstrationFichier" xml:space="preserve">
+    <value>(Es handelt sich um einen Demobereich. Die ausgewählten Dateien &lt;strong&gt;werden nicht&lt;/strong&gt; tatsächlich heruntergeladen)</value>
+  </data>
+</root>

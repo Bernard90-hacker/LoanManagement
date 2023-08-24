@@ -1,6 +1,7 @@
-﻿using LoanManagement.Client.Interne.Resources;
+﻿using IdentityServer4.Models;
 
-namespace FileProcess.Fps.MVC.Controllers;
+
+namespace LoanManagement.Client.Interne.Controllers;
 
 /// <summary>
 /// 
@@ -38,7 +39,7 @@ public class HomeController : Controller
     /// <summary>
     /// 
     /// </summary>
-    private static string URL = MyConstants.LoanManagementApiUrl;
+    private static string URL = MyConstants.GduApiUrl;
     /// <summary>
     /// 
     /// </summary>
@@ -48,361 +49,454 @@ public class HomeController : Controller
     /// 
     /// </summary>
     /// <returns></returns>
-    [HttpGet]
+    [HttpGet]   
     public IActionResult Index()
     {
-        ConfigConstant.AddCurrentRouteToSession(HttpContext);
+        if (string.IsNullOrEmpty(HttpContext.Session.GetString("_SESSIONID")))
+            return RedirectToAction("Login", "Compte");
 
+        ConfigConstant.AddCurrentRouteToSession(HttpContext);
         return View();
+        
     }
 
+	[HttpPost]
+	[Route("Login")]
+	public async Task<IActionResult> Login(LoginViewModel model)
+	{
+		if (!ModelState.IsValid)
+		{
+			return new JsonResult(new
+			{ }, ConfigConstant.JsonSettings())
+			{
+				StatusCode = (int)HttpStatusCode.BadRequest
+			};
+		}
+		try
+		{
+			TempData["Admin"] = string.Empty ;
+			TempData["Analyste"] = string.Empty;
+			TempData["Gestionnaire"] = string.Empty;
+			TempData["User"] = string.Empty;
+			var loginResource = new LoginResource()
+			{
+				Username = model.LoginResource.Username,
+				Password = model.LoginResource.Password
+			};
+			var content = new StringContent(JsonConvert.SerializeObject(loginResource), Encoding.UTF8, "application/json");
+			var result = await Client.PostAsync(URL + "/Auth/Login", content);
+			if (result.IsSuccessStatusCode)
+			{
+				var response = await result.Content.ReadFromJsonAsync<UtilisateurResource>();
+				HttpContext.Session.SetString("_SESSIONID", response.Username.ToString());
+				TempData["User"] = $"{response.Nom} {response.Prenoms}";
+				switch (response.CodeProfil)
+				{
+					case "PROFIL-001":
+						TempData["Admin"] = "admin";
+						break;
+					case "PROFIL-002":
+						TempData["Gestionnaire"] = "gestionnaire";
+						break;
+					case "PROFIL-003":
+						TempData["Analyste"] = "analyste";
+						break;
+					default:
+						break;
+				}
+
+				return new JsonResult(new
+				{
+					title = "Connexion",
+					typeMessage = TypeMessage.Success.GetString(),
+					message = "Connexion effectuée avec succès",
+					description = string.Empty,
+					timeOut = 8000,
+					strJsonLogin = JsonConvert.SerializeObject(JsonConvert.DeserializeObject<UtilisateurResource>(
+					   await result.Content.ReadAsStringAsync(), ConfigConstant.SetDateTimeConverter()))
+				}, ConfigConstant.JsonSettings())
+				{
+					StatusCode = (int)HttpStatusCode.OK
+				};
+
+			}
+			var jQueryViewModel = await AppConstant.GetResponseMessage(result);
+			return new JsonResult(new
+			{
+				title = "Connexion",
+				typeMessage = TypeMessage.Error.GetString(),
+				message = "Identifiants incorrects",
+				description = "Vos identifiants sont incorrects",
+				strJsonLogin = JsonConvert.SerializeObject(jQueryViewModel),
+				timeOut = jQueryViewModel.TimeOut
+
+			});
+		}
+
+		catch (Exception e)
+		{
+
+			return new JsonResult(new
+			{
+				title = "Erreur",
+				typeMessage = TypeMessage.Error.GetString(),
+				message = e.Message,
+				description = e.Message,
+				timeOut = 8000
+			}, ConfigConstant.JsonSettings())
+			{
+				StatusCode = (int)HttpStatusCode.InternalServerError
+			};
+		}
+	}
 
 
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="files"></param>
-    /// <returns></returns>
-    //[HttpPost]
-    //[Route("remise-odre")]
-    //public async Task<IActionResult> RemiseOrdre(List<IFormFile> files, string dateTraitement)
-    //{
-    //    try
-    //    {
-    //        var contentData = new MultipartFormDataContent();
-    //        foreach (var file in files)
-    //        {
-    //            byte[] data;
-    //            using (var br = new BinaryReader(file.OpenReadStream()))
-    //            {
-    //                data = br.ReadBytes((int)file.OpenReadStream().Length);
-    //            }
-    //            var bytes = new ByteArrayContent(data);
-    //            contentData.Add(bytes, "files", file.FileName);
-    //        }
-    //        contentData.Add(new StringContent(dateTraitement), "dateTraitement");
 
-    //        using var httpClient = new HttpClient();
-    //        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", AuthentificationString);
-    //        httpClient.Timeout = TimeSpan.FromMilliseconds(Timeout.Infinite);
-    //        using var response = await httpClient.PostAsync(UrlFpsBase + "FileProcessing/UploadGSProcessFiles", contentData);
-    //        var result = response.IsSuccessStatusCode;
-    //        if (result)
-    //        {
-    //            if (TempData.ContainsKey("chargementVirements"))
-    //                TempData.Remove("chargementVirements");
-    //            var content = await response.Content.ReadAsStringAsync();
-    //            TempData["chargementVirements"] = content;
-    //            var chargementVirements = JsonConvert.DeserializeObject<List<ChargementVirementViewModel>>(content, ConfigConstant.SetDateTimeConverter());
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="files"></param>
+	/// <returns></returns>
+	//[HttpPost]
+	//[Route("remise-odre")]
+	//public async Task<IActionResult> RemiseOrdre(List<IFormFile> files, string dateTraitement)
+	//{
+	//    try
+	//    {
+	//        var contentData = new MultipartFormDataContent();
+	//        foreach (var file in files)
+	//        {
+	//            byte[] data;
+	//            using (var br = new BinaryReader(file.OpenReadStream()))
+	//            {
+	//                data = br.ReadBytes((int)file.OpenReadStream().Length);
+	//            }
+	//            var bytes = new ByteArrayContent(data);
+	//            contentData.Add(bytes, "files", file.FileName);
+	//        }
+	//        contentData.Add(new StringContent(dateTraitement), "dateTraitement");
 
-    //            return new JsonResult(new
-    //            {
-    //                title = _sharedLocalizer["Success"].ToString(),
-    //                typeMessage = TypeMessage.Success.GetString(),
-    //                message = _sharedLocalizer["SuccèsDeRemiseOrdre"].ToString(),
-    //                description = string.Empty,
-    //                timeOut = 8000,
-    //                culture = HttpContext.Features.Get<IRequestCultureFeature>()?.RequestCulture.Culture.Name ?? "fr",
-    //                chargementVirements
-    //            }, ConfigConstant.JsonSettings())
-    //            {
-    //                StatusCode = (int)HttpStatusCode.OK
-    //            };
-    //        }
+	//        using var httpClient = new HttpClient();
+	//        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", AuthentificationString);
+	//        httpClient.Timeout = TimeSpan.FromMilliseconds(Timeout.Infinite);
+	//        using var response = await httpClient.PostAsync(UrlFpsBase + "FileProcessing/UploadGSProcessFiles", contentData);
+	//        var result = response.IsSuccessStatusCode;
+	//        if (result)
+	//        {
+	//            if (TempData.ContainsKey("chargementVirements"))
+	//                TempData.Remove("chargementVirements");
+	//            var content = await response.Content.ReadAsStringAsync();
+	//            TempData["chargementVirements"] = content;
+	//            var chargementVirements = JsonConvert.DeserializeObject<List<ChargementVirementViewModel>>(content, ConfigConstant.SetDateTimeConverter());
 
-    //        var jQueryViewModel = await AppConstant.GetResponseMessage(response, _sharedLocalizer);
-    //        return new JsonResult(new
-    //        {
-    //            title = jQueryViewModel.Title,
-    //            typeMessage = jQueryViewModel.TypeMessage,
-    //            message = jQueryViewModel.Message,
-    //            description = jQueryViewModel.Description,
-    //            erreurs = jQueryViewModel.Errors,
-    //            timeOut = jQueryViewModel.TimeOut
-    //        }, ConfigConstant.JsonSettings())
-    //        {
-    //            StatusCode = (int)HttpStatusCode.BadRequest
-    //        };
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        return new JsonResult(new
-    //        {
-    //            title = _sharedLocalizer["Erreur"].ToString(),
-    //            typeMessage = TypeMessage.Error.GetString(),
-    //            message = _sharedLocalizer["ErreurProduite"].ToString(),
-    //            description = ex.Message,
-    //            timeOut = 8000
-    //        }, ConfigConstant.JsonSettings())
-    //        {
-    //            StatusCode = (int)HttpStatusCode.InternalServerError
-    //        };
-    //    }
-    //}
+	//            return new JsonResult(new
+	//            {
+	//                title = _sharedLocalizer["Success"].ToString(),
+	//                typeMessage = TypeMessage.Success.GetString(),
+	//                message = _sharedLocalizer["SuccèsDeRemiseOrdre"].ToString(),
+	//                description = string.Empty,
+	//                timeOut = 8000,
+	//                culture = HttpContext.Features.Get<IRequestCultureFeature>()?.RequestCulture.Culture.Name ?? "fr",
+	//                chargementVirements
+	//            }, ConfigConstant.JsonSettings())
+	//            {
+	//                StatusCode = (int)HttpStatusCode.OK
+	//            };
+	//        }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns></returns>
-    //[HttpGet]
-    //[Route("paramétrage-variables")]
-    //public async Task<IActionResult> Parametrage()
-    //{
-    //    ConfigConstant.AddCurrentRouteToSession(HttpContext);
+	//        var jQueryViewModel = await AppConstant.GetResponseMessage(response, _sharedLocalizer);
+	//        return new JsonResult(new
+	//        {
+	//            title = jQueryViewModel.Title,
+	//            typeMessage = jQueryViewModel.TypeMessage,
+	//            message = jQueryViewModel.Message,
+	//            description = jQueryViewModel.Description,
+	//            erreurs = jQueryViewModel.Errors,
+	//            timeOut = jQueryViewModel.TimeOut
+	//        }, ConfigConstant.JsonSettings())
+	//        {
+	//            StatusCode = (int)HttpStatusCode.BadRequest
+	//        };
+	//    }
+	//    catch (Exception ex)
+	//    {
+	//        return new JsonResult(new
+	//        {
+	//            title = _sharedLocalizer["Erreur"].ToString(),
+	//            typeMessage = TypeMessage.Error.GetString(),
+	//            message = _sharedLocalizer["ErreurProduite"].ToString(),
+	//            description = ex.Message,
+	//            timeOut = 8000
+	//        }, ConfigConstant.JsonSettings())
+	//        {
+	//            StatusCode = (int)HttpStatusCode.InternalServerError
+	//        };
+	//    }
+	//}
 
-    //    using var httpClient = new HttpClient();
-    //    httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", AuthentificationString);
-    //    using var response = await httpClient.GetAsync(UrlFpsBase + nameof(ParamGlobal));
-    //    var paramGlobal = JsonConvert.DeserializeObject<ParamGlobal>(await response.Content.ReadAsStringAsync(), ConfigConstant.SetDateTimeConverter());
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <returns></returns>
+	//[HttpGet]
+	//[Route("paramétrage-variables")]
+	//public async Task<IActionResult> Parametrage()
+	//{
+	//    ConfigConstant.AddCurrentRouteToSession(HttpContext);
 
-    //    var paramGlobalViewModel = new ParamGlobalViewModel
-    //    {
-    //        ParamGlobal = new ParamGlobal
-    //        {
-    //            TailleNumeroCompte = paramGlobal.TailleNumeroCompte ?? 0,
-    //            TailleCleRib = paramGlobal.TailleCleRib ?? 0,
-    //            TailleCodeBanque = paramGlobal.TailleCodeBanque ?? 0,
-    //            TailleCodeAgence = paramGlobal.TailleCodeAgence ?? 0,
-    //            FormatAccentuation = paramGlobal.FormatAccentuation,
-    //            FormatPonctuation = paramGlobal.FormatPonctuation,
-    //            SignesPonctuation = !paramGlobal.SignesPonctuation.Contains("\"\"\"") ? paramGlobal.SignesPonctuation : paramGlobal.SignesPonctuation.Replace("\"\"\"", '"' + "\\\"" + '"'),
-    //            CodeBanqueVirement = paramGlobal.CodeBanqueVirement,
-    //            TailleCodeBanqueVirement = paramGlobal.TailleCodeBanqueVirement,
-    //            CodeAgenceVirement = paramGlobal.CodeAgenceVirement,
-    //            TailleCodeAgenceVirement = paramGlobal.TailleCodeAgenceVirement,
-    //            NumeroCompteVirement = paramGlobal.NumeroCompteVirement,
-    //            TailleNumeroCompteVirement = paramGlobal.TailleNumeroCompteVirement,
-    //            CleRibVirement = paramGlobal.CleRibVirement,
-    //            TailleCleRibVirement = paramGlobal.TailleCleRibVirement,
-    //            MotifVirement = paramGlobal.MotifVirement
-    //        }
-    //    };
+	//    using var httpClient = new HttpClient();
+	//    httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", AuthentificationString);
+	//    using var response = await httpClient.GetAsync(UrlFpsBase + nameof(ParamGlobal));
+	//    var paramGlobal = JsonConvert.DeserializeObject<ParamGlobal>(await response.Content.ReadAsStringAsync(), ConfigConstant.SetDateTimeConverter());
 
-    //    return View(paramGlobalViewModel);
-    //}
-    
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="paramGlobalViewModel"></param>
-    /// <returns></returns>
-    //[HttpPost]
-    //[Route("paramétrage-variables/édition")]
-    //public async Task<IActionResult> EditParamGlobal(ParamGlobalViewModel paramGlobalViewModel)
-    //{
-    //    if (!ModelState.IsValid)
-    //        return new JsonResult(new
-    //        { }, ConfigConstant.JsonSettings())
-    //        {
-    //            StatusCode = (int)HttpStatusCode.BadRequest
-    //        };
+	//    var paramGlobalViewModel = new ParamGlobalViewModel
+	//    {
+	//        ParamGlobal = new ParamGlobal
+	//        {
+	//            TailleNumeroCompte = paramGlobal.TailleNumeroCompte ?? 0,
+	//            TailleCleRib = paramGlobal.TailleCleRib ?? 0,
+	//            TailleCodeBanque = paramGlobal.TailleCodeBanque ?? 0,
+	//            TailleCodeAgence = paramGlobal.TailleCodeAgence ?? 0,
+	//            FormatAccentuation = paramGlobal.FormatAccentuation,
+	//            FormatPonctuation = paramGlobal.FormatPonctuation,
+	//            SignesPonctuation = !paramGlobal.SignesPonctuation.Contains("\"\"\"") ? paramGlobal.SignesPonctuation : paramGlobal.SignesPonctuation.Replace("\"\"\"", '"' + "\\\"" + '"'),
+	//            CodeBanqueVirement = paramGlobal.CodeBanqueVirement,
+	//            TailleCodeBanqueVirement = paramGlobal.TailleCodeBanqueVirement,
+	//            CodeAgenceVirement = paramGlobal.CodeAgenceVirement,
+	//            TailleCodeAgenceVirement = paramGlobal.TailleCodeAgenceVirement,
+	//            NumeroCompteVirement = paramGlobal.NumeroCompteVirement,
+	//            TailleNumeroCompteVirement = paramGlobal.TailleNumeroCompteVirement,
+	//            CleRibVirement = paramGlobal.CleRibVirement,
+	//            TailleCleRibVirement = paramGlobal.TailleCleRibVirement,
+	//            MotifVirement = paramGlobal.MotifVirement
+	//        }
+	//    };
 
-    //    try
-    //    {
-    //        var builder = new StringBuilder();
-    //        if (!paramGlobalViewModel.ParamGlobal.SignesPonctuation.IsNullOrEmpty())
-    //        {
-    //            foreach (var s in JsonConvert.DeserializeObject<List<SignesPonctuation>>(paramGlobalViewModel.ParamGlobal.SignesPonctuation))
-    //            {
-    //                if (!s.Value.IsNullOrEmpty())
-    //                    builder.Append("\"" + s.Value + "\"").Append(",");
-    //            }
-    //        }
-    //        var paramGlobal = new ParamGlobal()
-    //        {
-    //            TailleNumeroCompte = paramGlobalViewModel.ParamGlobal.TailleNumeroCompte,
-    //            TailleCleRib = paramGlobalViewModel.ParamGlobal.TailleCleRib,
-    //            TailleCodeBanque = paramGlobalViewModel.ParamGlobal.TailleCodeBanque,
-    //            TailleCodeAgence = paramGlobalViewModel.ParamGlobal.TailleCodeAgence,
-    //            FormatAccentuation = paramGlobalViewModel.ParamGlobal.FormatAccentuation,
-    //            FormatPonctuation = paramGlobalViewModel.ParamGlobal.FormatPonctuation,
-    //            SignesPonctuation = builder.ToString().TrimEnd(new char[] { ',' }),
-    //            CodeBanqueVirement = paramGlobalViewModel.ParamGlobal.CodeBanqueVirement,
-    //            CodeAgenceVirement = paramGlobalViewModel.ParamGlobal.CodeAgenceVirement,
-    //            NumeroCompteVirement = paramGlobalViewModel.ParamGlobal.NumeroCompteVirement,
-    //            CleRibVirement = paramGlobalViewModel.ParamGlobal.CleRibVirement,
-    //            MotifVirement = paramGlobalViewModel.ParamGlobal.MotifVirement
-    //        };
-    //        var contentData = new StringContent(JsonConvert.SerializeObject(paramGlobal), Encoding.UTF8, "application/json");
-    //        using var httpClient = new HttpClient();
-    //        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", AuthentificationString);
-    //        using var response = await httpClient.PutAsync(UrlFpsBase + nameof(ParamGlobal), contentData);
-    //        var result = response.IsSuccessStatusCode;
-    //        if (result)
-    //            return new JsonResult(new
-    //            {
-    //                title = _sharedLocalizer["Succès"].ToString(),
-    //                typeMessage = TypeMessage.Success.GetString(),
-    //                message = _sharedLocalizer["SuccèsMajParamGlobal"].ToString(),
-    //                description = string.Empty,
-    //                timeOut = 8000,
-    //                strJsonParamGlobal = JsonConvert.SerializeObject(JsonConvert.DeserializeObject<ParamGlobal>(
-    //                    await response.Content.ReadAsStringAsync(), ConfigConstant.SetDateTimeConverter()))
-    //            }, ConfigConstant.JsonSettings())
-    //            {
-    //                StatusCode = (int)HttpStatusCode.OK
-    //            };
+	//    return View(paramGlobalViewModel);
+	//}
 
-    //        var jQueryViewModel = await AppConstant.GetResponseMessage(response, _sharedLocalizer);
-    //        return new JsonResult(new
-    //        {
-    //            title = jQueryViewModel.Title,
-    //            typeMessage = jQueryViewModel.TypeMessage,
-    //            message = jQueryViewModel.Message,
-    //            description = jQueryViewModel.Description,
-    //            erreurs = jQueryViewModel.Errors,
-    //            timeOut = jQueryViewModel.TimeOut
-    //        }, ConfigConstant.JsonSettings())
-    //        {
-    //            StatusCode = (int)HttpStatusCode.BadRequest
-    //        };
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        return new JsonResult(new
-    //        {
-    //            title = _sharedLocalizer["Erreur"].ToString(),
-    //            typeMessage = TypeMessage.Error.GetString(),
-    //            message = _sharedLocalizer["ErreurProduite"].ToString(),
-    //            description = ex.Message,
-    //            timeOut = 8000
-    //        }, ConfigConstant.JsonSettings())
-    //        {
-    //            StatusCode = (int)HttpStatusCode.InternalServerError
-    //        };
-    //    }
-    //}
-    
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="paramGlobalViewModel"></param>
-    /// <returns></returns>
-    //[HttpPost]
-    //[Route("paramétrage-infos-virement/édition")]
-    //public async Task<IActionResult> EditInfosVirement(ParamGlobalViewModel paramGlobalViewModel)
-    //{
-    //    try
-    //    {
-    //        var paramInfosVirement = new ParamInfosVirement()
-    //        {
-    //            TailleNumeroCompteVirement = paramGlobalViewModel.ParamGlobal.TailleNumeroCompteVirement,
-    //            TailleCleRibVirement = paramGlobalViewModel.ParamGlobal.TailleCleRibVirement,
-    //            TailleCodeBanqueVirement = paramGlobalViewModel.ParamGlobal.TailleCodeBanqueVirement,
-    //            TailleCodeAgenceVirement = paramGlobalViewModel.ParamGlobal.TailleCodeAgenceVirement
-    //        };
-    //        var contentData = new StringContent(JsonConvert.SerializeObject(paramInfosVirement), Encoding.UTF8, "application/json");
-    //        using var httpClient = new HttpClient();
-    //        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", AuthentificationString);
-    //        using var response = await httpClient.PutAsync(UrlFpsBase + nameof(ParamGlobal) + "/UpdateParamInfoVirement", contentData);
-    //        var result = response.IsSuccessStatusCode;
-    //        if (result)
-    //            return new JsonResult(new
-    //            {
-    //                title = _sharedLocalizer["Succès"].ToString(),
-    //                typeMessage = TypeMessage.Success.GetString(),
-    //                message = _sharedLocalizer["SuccèsMajParamInfosVirement"].ToString(),
-    //                description = string.Empty,
-    //                timeOut = 8000,
-    //                strJsonParamGlobal = JsonConvert.SerializeObject(JsonConvert.DeserializeObject<ParamGlobal>(
-    //                    await response.Content.ReadAsStringAsync(), ConfigConstant.SetDateTimeConverter()))
-    //            }, ConfigConstant.JsonSettings())
-    //            {
-    //                StatusCode = (int)HttpStatusCode.OK
-    //            };
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="paramGlobalViewModel"></param>
+	/// <returns></returns>
+	//[HttpPost]
+	//[Route("paramétrage-variables/édition")]
+	//public async Task<IActionResult> EditParamGlobal(ParamGlobalViewModel paramGlobalViewModel)
+	//{
+	//    if (!ModelState.IsValid)
+	//        return new JsonResult(new
+	//        { }, ConfigConstant.JsonSettings())
+	//        {
+	//            StatusCode = (int)HttpStatusCode.BadRequest
+	//        };
 
-    //        var jQueryViewModel = await AppConstant.GetResponseMessage(response, _sharedLocalizer);
-    //        return new JsonResult(new
-    //        {
-    //            title = jQueryViewModel.Title,
-    //            typeMessage = jQueryViewModel.TypeMessage,
-    //            message = jQueryViewModel.Message,
-    //            description = jQueryViewModel.Description,
-    //            erreurs = jQueryViewModel.Errors,
-    //            timeOut = jQueryViewModel.TimeOut
-    //        }, ConfigConstant.JsonSettings())
-    //        {
-    //            StatusCode = (int)HttpStatusCode.BadRequest
-    //        };
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        return new JsonResult(new
-    //        {
-    //            title = _sharedLocalizer["Erreur"].ToString(),
-    //            typeMessage = TypeMessage.Error.GetString(),
-    //            message = _sharedLocalizer["ErreurProduite"].ToString(),
-    //            description = ex.Message,
-    //            timeOut = 8000
-    //        }, ConfigConstant.JsonSettings())
-    //        {
-    //            StatusCode = (int)HttpStatusCode.InternalServerError
-    //        };
-    //    }
-    //}
+	//    try
+	//    {
+	//        var builder = new StringBuilder();
+	//        if (!paramGlobalViewModel.ParamGlobal.SignesPonctuation.IsNullOrEmpty())
+	//        {
+	//            foreach (var s in JsonConvert.DeserializeObject<List<SignesPonctuation>>(paramGlobalViewModel.ParamGlobal.SignesPonctuation))
+	//            {
+	//                if (!s.Value.IsNullOrEmpty())
+	//                    builder.Append("\"" + s.Value + "\"").Append(",");
+	//            }
+	//        }
+	//        var paramGlobal = new ParamGlobal()
+	//        {
+	//            TailleNumeroCompte = paramGlobalViewModel.ParamGlobal.TailleNumeroCompte,
+	//            TailleCleRib = paramGlobalViewModel.ParamGlobal.TailleCleRib,
+	//            TailleCodeBanque = paramGlobalViewModel.ParamGlobal.TailleCodeBanque,
+	//            TailleCodeAgence = paramGlobalViewModel.ParamGlobal.TailleCodeAgence,
+	//            FormatAccentuation = paramGlobalViewModel.ParamGlobal.FormatAccentuation,
+	//            FormatPonctuation = paramGlobalViewModel.ParamGlobal.FormatPonctuation,
+	//            SignesPonctuation = builder.ToString().TrimEnd(new char[] { ',' }),
+	//            CodeBanqueVirement = paramGlobalViewModel.ParamGlobal.CodeBanqueVirement,
+	//            CodeAgenceVirement = paramGlobalViewModel.ParamGlobal.CodeAgenceVirement,
+	//            NumeroCompteVirement = paramGlobalViewModel.ParamGlobal.NumeroCompteVirement,
+	//            CleRibVirement = paramGlobalViewModel.ParamGlobal.CleRibVirement,
+	//            MotifVirement = paramGlobalViewModel.ParamGlobal.MotifVirement
+	//        };
+	//        var contentData = new StringContent(JsonConvert.SerializeObject(paramGlobal), Encoding.UTF8, "application/json");
+	//        using var httpClient = new HttpClient();
+	//        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", AuthentificationString);
+	//        using var response = await httpClient.PutAsync(UrlFpsBase + nameof(ParamGlobal), contentData);
+	//        var result = response.IsSuccessStatusCode;
+	//        if (result)
+	//            return new JsonResult(new
+	//            {
+	//                title = _sharedLocalizer["Succès"].ToString(),
+	//                typeMessage = TypeMessage.Success.GetString(),
+	//                message = _sharedLocalizer["SuccèsMajParamGlobal"].ToString(),
+	//                description = string.Empty,
+	//                timeOut = 8000,
+	//                strJsonParamGlobal = JsonConvert.SerializeObject(JsonConvert.DeserializeObject<ParamGlobal>(
+	//                    await response.Content.ReadAsStringAsync(), ConfigConstant.SetDateTimeConverter()))
+	//            }, ConfigConstant.JsonSettings())
+	//            {
+	//                StatusCode = (int)HttpStatusCode.OK
+	//            };
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="id"></param>
-    /// <returns></returns>
-    //[HttpGet]
-    //[Route("download-file")]
-    //public ActionResult DownloadFile(string id)
-    //{
-    //    var chargementVirementViewModels = TempData.ContainsKey("chargementVirements") ? JsonConvert.DeserializeObject
-    //        <List<ChargementVirementViewModel>>((string)TempData["chargementVirements"] ?? string.Empty,
-    //        ConfigConstant.SetDateTimeConverter()) : null;
-    //    TempData.Keep("chargementVirements");
-    //    if (!chargementVirementViewModels.IsNull())
-    //    {
-    //        var chargementVirement = chargementVirementViewModels.SingleOrDefault(c => id.Equals(c.Id.ToString()));
+	//        var jQueryViewModel = await AppConstant.GetResponseMessage(response, _sharedLocalizer);
+	//        return new JsonResult(new
+	//        {
+	//            title = jQueryViewModel.Title,
+	//            typeMessage = jQueryViewModel.TypeMessage,
+	//            message = jQueryViewModel.Message,
+	//            description = jQueryViewModel.Description,
+	//            erreurs = jQueryViewModel.Errors,
+	//            timeOut = jQueryViewModel.TimeOut
+	//        }, ConfigConstant.JsonSettings())
+	//        {
+	//            StatusCode = (int)HttpStatusCode.BadRequest
+	//        };
+	//    }
+	//    catch (Exception ex)
+	//    {
+	//        return new JsonResult(new
+	//        {
+	//            title = _sharedLocalizer["Erreur"].ToString(),
+	//            typeMessage = TypeMessage.Error.GetString(),
+	//            message = _sharedLocalizer["ErreurProduite"].ToString(),
+	//            description = ex.Message,
+	//            timeOut = 8000
+	//        }, ConfigConstant.JsonSettings())
+	//        {
+	//            StatusCode = (int)HttpStatusCode.InternalServerError
+	//        };
+	//    }
+	//}
 
-    //        return File(System.IO.File.ReadAllBytes(chargementVirement.CheminAcces), "text/plain", Path.GetFileName(chargementVirement.CheminAcces));
-    //    }
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="paramGlobalViewModel"></param>
+	/// <returns></returns>
+	//[HttpPost]
+	//[Route("paramétrage-infos-virement/édition")]
+	//public async Task<IActionResult> EditInfosVirement(ParamGlobalViewModel paramGlobalViewModel)
+	//{
+	//    try
+	//    {
+	//        var paramInfosVirement = new ParamInfosVirement()
+	//        {
+	//            TailleNumeroCompteVirement = paramGlobalViewModel.ParamGlobal.TailleNumeroCompteVirement,
+	//            TailleCleRibVirement = paramGlobalViewModel.ParamGlobal.TailleCleRibVirement,
+	//            TailleCodeBanqueVirement = paramGlobalViewModel.ParamGlobal.TailleCodeBanqueVirement,
+	//            TailleCodeAgenceVirement = paramGlobalViewModel.ParamGlobal.TailleCodeAgenceVirement
+	//        };
+	//        var contentData = new StringContent(JsonConvert.SerializeObject(paramInfosVirement), Encoding.UTF8, "application/json");
+	//        using var httpClient = new HttpClient();
+	//        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", AuthentificationString);
+	//        using var response = await httpClient.PutAsync(UrlFpsBase + nameof(ParamGlobal) + "/UpdateParamInfoVirement", contentData);
+	//        var result = response.IsSuccessStatusCode;
+	//        if (result)
+	//            return new JsonResult(new
+	//            {
+	//                title = _sharedLocalizer["Succès"].ToString(),
+	//                typeMessage = TypeMessage.Success.GetString(),
+	//                message = _sharedLocalizer["SuccèsMajParamInfosVirement"].ToString(),
+	//                description = string.Empty,
+	//                timeOut = 8000,
+	//                strJsonParamGlobal = JsonConvert.SerializeObject(JsonConvert.DeserializeObject<ParamGlobal>(
+	//                    await response.Content.ReadAsStringAsync(), ConfigConstant.SetDateTimeConverter()))
+	//            }, ConfigConstant.JsonSettings())
+	//            {
+	//                StatusCode = (int)HttpStatusCode.OK
+	//            };
 
-    //    return NoContent();
-    //}
+	//        var jQueryViewModel = await AppConstant.GetResponseMessage(response, _sharedLocalizer);
+	//        return new JsonResult(new
+	//        {
+	//            title = jQueryViewModel.Title,
+	//            typeMessage = jQueryViewModel.TypeMessage,
+	//            message = jQueryViewModel.Message,
+	//            description = jQueryViewModel.Description,
+	//            erreurs = jQueryViewModel.Errors,
+	//            timeOut = jQueryViewModel.TimeOut
+	//        }, ConfigConstant.JsonSettings())
+	//        {
+	//            StatusCode = (int)HttpStatusCode.BadRequest
+	//        };
+	//    }
+	//    catch (Exception ex)
+	//    {
+	//        return new JsonResult(new
+	//        {
+	//            title = _sharedLocalizer["Erreur"].ToString(),
+	//            typeMessage = TypeMessage.Error.GetString(),
+	//            message = _sharedLocalizer["ErreurProduite"].ToString(),
+	//            description = ex.Message,
+	//            timeOut = 8000
+	//        }, ConfigConstant.JsonSettings())
+	//        {
+	//            StatusCode = (int)HttpStatusCode.InternalServerError
+	//        };
+	//    }
+	//}
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns></returns>
-    //[HttpGet]
-    //[Route("download-files")]
-    //public ActionResult DownloadFiles()
-    //{
-    //    var chargementVirementViewModels = TempData.ContainsKey("chargementVirements") ? JsonConvert.DeserializeObject
-    //        <List<ChargementVirementViewModel>>((string)TempData["chargementVirements"] ?? string.Empty,
-    //        ConfigConstant.SetDateTimeConverter()) : null;
-    //    TempData.Keep("chargementVirements");
-    //    if (!chargementVirementViewModels.IsNull())
-    //    {
-    //        if (chargementVirementViewModels.Count == 1)
-    //        {
-    //            var chargementVirement = chargementVirementViewModels.SingleOrDefault();
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="id"></param>
+	/// <returns></returns>
+	//[HttpGet]
+	//[Route("download-file")]
+	//public ActionResult DownloadFile(string id)
+	//{
+	//    var chargementVirementViewModels = TempData.ContainsKey("chargementVirements") ? JsonConvert.DeserializeObject
+	//        <List<ChargementVirementViewModel>>((string)TempData["chargementVirements"] ?? string.Empty,
+	//        ConfigConstant.SetDateTimeConverter()) : null;
+	//    TempData.Keep("chargementVirements");
+	//    if (!chargementVirementViewModels.IsNull())
+	//    {
+	//        var chargementVirement = chargementVirementViewModels.SingleOrDefault(c => id.Equals(c.Id.ToString()));
 
-    //            return File(System.IO.File.ReadAllBytes(chargementVirement.CheminAcces), "text/plain", Path.GetFileName(chargementVirement.CheminAcces));
-    //        }
+	//        return File(System.IO.File.ReadAllBytes(chargementVirement.CheminAcces), "text/plain", Path.GetFileName(chargementVirement.CheminAcces));
+	//    }
 
-    //        List<string> filePaths = new();
-    //        foreach (var chargementVirementViewModel in chargementVirementViewModels)
-    //            filePaths.Add(chargementVirementViewModel.CheminAcces);
+	//    return NoContent();
+	//}
 
-    //        var (fileType, archiveData, archiveName) = UtilsConstant.DownloadFiles($"Archive-VIREMENT_SAL-{DateTime.Now:yyMMddHHmmss}.zip", filePaths);
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <returns></returns>
+	//[HttpGet]
+	//[Route("download-files")]
+	//public ActionResult DownloadFiles()
+	//{
+	//    var chargementVirementViewModels = TempData.ContainsKey("chargementVirements") ? JsonConvert.DeserializeObject
+	//        <List<ChargementVirementViewModel>>((string)TempData["chargementVirements"] ?? string.Empty,
+	//        ConfigConstant.SetDateTimeConverter()) : null;
+	//    TempData.Keep("chargementVirements");
+	//    if (!chargementVirementViewModels.IsNull())
+	//    {
+	//        if (chargementVirementViewModels.Count == 1)
+	//        {
+	//            var chargementVirement = chargementVirementViewModels.SingleOrDefault();
 
-    //        return File(archiveData, fileType, archiveName);
-    //    }
+	//            return File(System.IO.File.ReadAllBytes(chargementVirement.CheminAcces), "text/plain", Path.GetFileName(chargementVirement.CheminAcces));
+	//        }
 
-    //    return NoContent();
-    //}
+	//        List<string> filePaths = new();
+	//        foreach (var chargementVirementViewModel in chargementVirementViewModels)
+	//            filePaths.Add(chargementVirementViewModel.CheminAcces);
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns></returns>
-    [Route("erreur")]
+	//        var (fileType, archiveData, archiveName) = UtilsConstant.DownloadFiles($"Archive-VIREMENT_SAL-{DateTime.Now:yyMMddHHmmss}.zip", filePaths);
+
+	//        return File(archiveData, fileType, archiveName);
+	//    }
+
+	//    return NoContent();
+	//}
+
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <returns></returns>
+	[Route("erreur")]
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
     {

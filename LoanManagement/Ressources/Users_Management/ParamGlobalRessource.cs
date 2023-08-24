@@ -8,7 +8,7 @@
 		public bool IncludeSpecialCharacters { get; set; }
 		public bool ExcludeUsername { get; set; }
 		public int Taille { get; set; }
-		public int DelaiExpiration { get; set; } //Jours
+		public int DelaiExpiration { get; set; } //Mois
         public string SmtpEmail { get; set; } = string.Empty;
         public string SmtpName { get; set; } = string.Empty;
         public string FromPassword { get; set; } = string.Empty;

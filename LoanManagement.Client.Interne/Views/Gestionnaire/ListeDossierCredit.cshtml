@@ -1,0 +1,194 @@
+﻿@model ClientViewModel;
+@section PageStyles {
+    <link rel="stylesheet" href="~/vendor/css/pages/page-auth.dist.css">
+}
+
+@section VendorStyles{
+    <link rel="stylesheet" href="~/vendor/libs/select2/select2.dist.css" />
+    <link rel="stylesheet" href="~/vendor/libs/formvalidation/dist/css/formValidation.min.css" />
+    <link rel="stylesheet" href="~/vendor/libs/tagify/tagify.dist.css" />
+    <link rel="stylesheet" href="~/vendor/libs/animate-css/animate.dist.css" />
+    <link rel="stylesheet" href="~/vendor/libs/spinkit/spinkit.dist.css" />
+    <link rel="stylesheet" href="~/vendor/libs/toastr/toastr.dist.css" />
+    <link rel="stylesheet" href="~/vendor/libs/sweetalert2/sweetalert2.dist.css" />
+    <link rel="stylesheet" href="~/vendor/libs/datatables-bs5/datatables.bootstrap5.dist.css">
+    <link rel="stylesheet" href="~/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.dist.css">
+    <link rel="stylesheet" href="~/vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.dist.css">
+}
+
+
+<section class="bernard">
+    <div class="col-md-12">
+        @await Html.PartialAsync("Sections/Menu/_GestionnairePartial")
+    </div>
+    <h4 class="fw-bold py-3 mb-4">
+        <span class="text-muted fw-light">Liste des dossiers de crédit.</span>
+    </h4>
+
+    <div>
+        <div class="col-12">
+            <h5></h5>
+        </div>
+
+        <div class="row my-4">
+            <div class="col">
+                <h6>  </h6>
+                <h2 class="accordion-header" id="headingDeliveryAddress">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDeliveryAddress" aria-expanded="true" aria-controls="collapseDeliveryAddress">
+                        Dossiers de crédit
+                    </button>
+                </h2>
+                <div class="table-responsive border-top div-datatable">
+                    <div class="card-datatable table-responsive pt-0">
+                        <table class="table dossier-credit">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>Montant</th>
+                                    <th>Durée</th>
+                                    <th>Mensualité</th>
+                                    <th>Client</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .bernard {
+        position: absolute;
+        left: 300px;
+        top: 60px;
+    }
+</style>
+
+@section VendorScripts{
+    <script src="~/vendor/libs/select2/select2.dist.js"></script>
+    <script src="~/vendor/libs/cleavejs/cleave.dist.js"></script>
+    <script src="~/vendor/libs/cleavejs/cleave-phone.dist.js"></script>
+    <script src="~/vendor/libs/tagify/tagify.dist.js"></script>
+    <script src="~/vendor/libs/block-ui/block-ui.dist.js"></script>
+    <script src="~/vendor/libs/toastr/toastr.dist.js"></script>
+    <script src="~/vendor/libs/sweetalert2/sweetalert2.dist.js"></script>
+    <script src="~/vendor/libs/datatables/jquery.dataTables.dist.js"></script>
+    <script src="~/vendor/libs/datatables-bs5/datatables-bootstrap5.dist.js"></script>
+    <script src="~/vendor/libs/datatables-responsive/datatables.responsive.dist.js"></script>
+    <script src="~/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.dist.js"></script>
+    <script src="~/vendor/libs/datatables-buttons/datatables-buttons.dist.js"></script>
+    <script src="~/vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.dist.js"></script>
+}
+
+@section PageScripts {
+    @*<script src="~/js/form-wizard-numbered.js"></script>*@
+   @* <script src="~/bernard/assets/js/form-wizard-numbered.js"></script>*@
+    <script src="~/js/custom/home-index.js"></script>
+    <script>
+        var dossierCredit = $('.dossier-credit'),
+        data = {"Montant": 250000, "Durée" : 2, "Mensualité": 15000, "Client": 'ATTIOGBE Godwin'};
+        $(".div-datable").show();
+        dossierCredit.DataTable({
+            processing: true,
+            destroy: true,
+            data: data,
+            columns: [
+                { data: 'Montant' },
+                { data: 'Durée' },
+                { data: 'Mensualité' },
+                { data: 'Client' }
+            ],
+            columnDefs: [
+                {
+                    className: 'control',
+                    orderable: false,
+                    searchable: false,
+                    responsivePriority: 2,
+                    targets: 0,
+                    render: function (data, type, full, meta) {
+                        return '';
+                    }
+                }
+            ],
+            order: [[2, 'desc']],
+            dom: '<"card-header flex-column flex-md-row"<"head-label text-center"><"dt-action-buttons text-end pt-3 pt-md-0"B>><"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6 d-flex justify-content-center justify-content-md-end"f>>t<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
+            displayLength: 3,
+            lengthMenu: [3, 7, 10],
+            language: {
+                paginate: {
+                    //Supprimer le texte précédent et suivant de la pagination
+                    previous: new DOMParser().parseFromString("Précédent", 'text/html').body.innerHTML,
+                    next: new DOMParser().parseFromString("Suivant", 'text/html').body.innerHTML,
+                    last: new DOMParser().parseFromString("Dernier", 'text/html').body.innerHTML,
+                    first: new DOMParser().parseFromString("Premier", 'text/html').body.innerHTML
+                },
+                processing: new DOMParser().parseFromString("Traitement", 'text/html').body.innerHTML,
+                lengthMenu: new DOMParser().parseFromString("AfficherEntrées", 'text/html').body.innerHTML,
+                loadingRecords: new DOMParser().parseFromString("Chargement", 'text/html').body.innerHTML,
+                search: new DOMParser().parseFromString("Chercher", 'text/html').body.innerHTML,
+                zeroRecords: new DOMParser().parseFromString("AucunEnregTrouvé", 'text/html').body.innerHTML,
+                emptyTable: '<div class="text-center">' +
+                    '<img class="mt-2 mb-2" src="' + assetsPath + 'img/illustrations/no-records.png" alt="pas-de-données" width="160" height="160" />' +
+                    '<h6>' + new DOMParser().parseFromString("AucuneDonnéeDispo", 'text/html').body.innerHTML + '</h6>' +
+                    '</div>',
+                info: new DOMParser().parseFromString("AffichageEntrées", 'text/html').body.innerHTML,
+                infoEmpty: new DOMParser().parseFromString("AffichageZéroEntrée", 'text/html').body.innerHTML,
+                infoFiltered: new DOMParser().parseFromString("EntréesFiltrées", 'text/html').body.innerHTML
+            },
+            responsive: {
+                details: {
+                    display: $.fn.dataTable.Responsive.display.modal({
+                        header: function (row) {
+                            var data = row.data();
+
+                            return new DOMParser().parseFromString("Détails", 'text/html').body.innerHTML;
+                        }
+                    }),
+                    type: 'column',
+                    renderer: function (api, rowIdx, columns) {
+                        var data = $.map(columns, function (col, i) {
+                            return col.title !== '' // ? Ne pas afficher la ligne dans la fenêtre popup modale si le titre est vide (pour les cases à cocher)
+                                ? '<tr data-dt-row="' +
+                                col.rowIndex +
+                                '" data-dt-column="' +
+                                col.columnIndex +
+                                '">' +
+                                '<td>' +
+                                col.title +
+                                ' :' +
+                                '</td> ' +
+                                '<td>' +
+                                col.data +
+                                '</td>' +
+                                '</tr>'
+                                : '';
+                        }).join('');
+
+                        return data ? $('<table class="table"/><tbody />').append(data) : false;
+                    }
+                }
+            }
+        });
+
+
+
+    </script>
+}
+
+
+@{
+    if (TempData["IsSuccess"] != null)
+    {
+        <script>
+
+            alert('Connexion réussie.');
+        </script>
+        TempData["IsSuccess"] = null;
+    }
+}
+
+
+

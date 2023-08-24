@@ -1,0 +1,74 @@
+﻿@section VendorStyles{
+
+    <link rel="stylesheet" href="~/vendor/libs/flatpickr/flatpickr.dist.css" />
+    <link rel="stylesheet" href="~/vendor/libs/select2/select2.dist.css" />
+}
+@section VendorScripts {
+    <script src="~/vendor/libs/cleavejs/cleave.dist.js"></script>
+    <script src="~/vendor/libs/cleavejs/cleave-phone.dist.js"></script>
+    <script src="~/vendor/libs/moment/moment.dist.js"></script>
+    <script src="~/vendor/libs/flatpickr/flatpickr.dist.js"></script>
+    <script src="~/vendor/libs/select2/select2.dist.js"></script>
+}
+
+
+<section class="bernard">
+    <div class="col-md-12">
+        @await Html.PartialAsync("Sections/Menu/_AdminPartial")
+    </div>
+    <h4 class="fw-bold py-3 mb-4">
+        <span class="text-muted fw-light"></span>
+    </h4>
+
+    <div>
+        <div class="col-10">
+            <div class="card mb-4">
+                <h5 class="card-header"></h5>
+                <form class="card-body">
+                    <h6 class="mb-b fw-semibold">Etape</h6>
+                    <div class="row mb-3">
+                        <label class="col-sm-3 col-form-label text-sm-end" for="deroulement">Choisissez le déroulement</label>
+                        <div class="col-sm-9">
+                            <select id="typePret" class="select2 form-select" data-allow-clear="true">
+                                <option value="">Select</option>
+                                <option value="1">Gestionnaire</option>
+                                <option value="2">Analyste</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label class="col-sm-3 col-form-label text-sm-end" for="etape">Etape</label>
+                        <div class="col-sm-9">
+                            <input type="number" min="0" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="pt-4">
+                        <div class="row justify-content-end">
+                            <div class="col-sm-9">
+                                <button type="submit" class="btn btn-primary me-sm-2 me-1">Submit</button>
+                                <button type="reset" class="btn btn-label-secondary">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+<style>
+    .bernard {
+        position: relative;
+        left: 300px;
+        top: 60px;
+    }
+</style>
+
+@section PageScripts {
+    @*<script src="~/js/form-wizard-numbered.js"></script>*@
+    @* <script src="~/bernard/assets/js/form-wizard-numbered.js"></script>
+    <script src="~/js/custom/home-index.js"></script>*@
+    <script src="~/js/form-layouts.dist.js"></script>
+    <script>
+
+    </script>
+}

@@ -105,7 +105,7 @@ namespace LoanManagement.API.Extensions
 			services.AddTransient<TypePretService>();
 			services.AddTransient<ITokenService, TokenService>();
 			services.AddCustomAuthentification(configuration);
-			services.AddCustomCors(configuration);
+			//services.AddCustomCors(configuration);
         }
 
 		public static void ConfigureUnitOfWorkService(this IServiceCollection services)

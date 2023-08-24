@@ -6,6 +6,6 @@
 		Task<PagedList<Employe>> GetAll(EmployeParameters parameters);
 		Task<Employe?> GetEmployeByEmail(string email);
 		Task<Employe?> GetEmployeById(int id);
-		Task<Employe?> GetEmployeByMatricule(int matricule);
+		Task<Employe?> GetEmployeByMatricule(string matricule);
 	}
 }

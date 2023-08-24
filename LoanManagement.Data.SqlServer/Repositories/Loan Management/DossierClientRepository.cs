@@ -31,10 +31,10 @@ namespace LoanManagement.Data.SqlServer.Repositories.Loan_Management
 				.FirstOrDefaultAsync();
 		}
 
-		public async Task<DossierClient?> GetByClientId(int Id)
+		public async Task<IEnumerable<DossierClient?>> GetByClientId(int Id)
 		{
 			return await _context.DossierClients.Where(x => x.ClientId == Id)
-				.FirstOrDefaultAsync();
+				.ToListAsync();
 		}
 
 		public async Task<DossierClient?> GetByNumber(string numeroDossier)

@@ -37,7 +37,7 @@ namespace LoanManagement.API.Controllers.Loan_Management
         }
 
 		[HttpGet("all")]
-		public async Task<ActionResult<IEnumerable<ClientRessource>>> GetAll([FromQuery] ClientParameters parameters)
+		public async Task<ActionResult<IEnumerable<ClientRessource>>> GetAll()
 		{
 			using(var connection = new SqlConnection(_configuration.GetConnectionString("Default")))
 			{
@@ -47,21 +47,11 @@ namespace LoanManagement.API.Controllers.Loan_Management
 					var journal = new Journal() { Libelle = "Liste des clients", TypeJournalId = 8, Entite = "User" };
 					try
 					{
-						var result = await _clientService.GetAll(parameters);
-						var metadata = new
-						{
-							result.PageSize,
-							result.CurrentPage,
-							result.TotalCount,
-							result.TotalPages,
-							result.HasNext,
-							result.HasPrevious
-						};
+						var result = await _clientService.GetAll();
 						var finalResult = _mapper.Map<IEnumerable<ClientRessource>>(result);
-						journal.Niveau = 3;
+						journal.Niveau = 3; //INFO
 						await _journalisationService.Journalize(journal);
-						Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
-						_logger.LogInformation($"'Liste des modules ': Opération effectuée avec succès, {result.Count} modules retournés");
+						_logger.LogInformation($"'Liste des modules ': Opération effectuée avec succès, {result.Count()} modules retournés");
 
 						return Ok(finalResult);
 					}
@@ -120,7 +110,7 @@ namespace LoanManagement.API.Controllers.Loan_Management
 		[HttpPost("login")]
 		public async Task<ActionResult> Login(ClientLoginRessource ressource)
 		{
-			using (SqlConnection connection = new SqlConnection(_configuration.GetConnectionString("Default")))
+			using (	SqlConnection connection = new SqlConnection(_configuration.GetConnectionString("Default")))
 			{
 				connection.Open();
 				using (SqlTransaction transaction = connection.BeginTransaction())

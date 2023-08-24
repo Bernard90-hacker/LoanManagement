@@ -7,7 +7,7 @@
         {
             _context = context;
         }
-
+			
 		public async Task<IEnumerable<Employe>> GetAll()
 		{
 			return await _context.Employes.ToListAsync();
@@ -34,7 +34,7 @@
 				.Where(x => x.Id == id).FirstOrDefaultAsync();
 		}
 
-		public async Task<Employe?> GetEmployeByMatricule(int matricule)
+		public async Task<Employe?> GetEmployeByMatricule(string matricule)
 		{
 			return await _context.Employes.Where(x => x.Matricule == matricule).FirstOrDefaultAsync();
 		}

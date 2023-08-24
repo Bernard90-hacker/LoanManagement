@@ -5,6 +5,7 @@
         public int Id { get; set; }
         public int Indice{ get; set; } //Doit être unique
         public string Nom { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
         public string Prenoms { get; set; } = string.Empty;
         public string DateNaissance { get; set; } = string.Empty;
         public string LieuNaissance { get; set; } = string.Empty;

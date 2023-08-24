@@ -7,6 +7,7 @@
 		Task<ParamGlobal?> GetById(int id);
 		Task<ParamGlobal> Create(ParamGlobal p);
 		Task<ParamGlobal> Update(ParamGlobal p, ParamGlobal paramToBeUpdated);
+		Task<ParamGlobal> UpdatePwdParam(ParamGlobal p, ParamGlobal paramToBeUpdated);
 		Task Delete(ParamGlobal p);
 		Task<ParamGlobal> UpdatePasswordsExpiryFrequency(ParamGlobal param, int ExpiryDate);
 		Task<ParamGlobal> PasswordMustIncludeUpperCase(ParamGlobal param, bool response);

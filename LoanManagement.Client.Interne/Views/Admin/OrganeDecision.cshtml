@@ -1,0 +1,84 @@
+﻿@model RoleOrganeDecisionViewModel
+@section VendorStyles{
+
+    <link rel="stylesheet" href="~/vendor/libs/flatpickr/flatpickr.dist.css" />
+    <link rel="stylesheet" href="~/vendor/libs/select2/select2.dist.css" />
+}
+@section VendorScripts {
+    <script src="~/vendor/libs/cleavejs/cleave.dist.js"></script>
+    <script src="~/vendor/libs/cleavejs/cleave-phone.dist.js"></script>
+    <script src="~/vendor/libs/moment/moment.dist.js"></script>
+    <script src="~/vendor/libs/flatpickr/flatpickr.dist.js"></script>
+    <script src="~/vendor/libs/select2/select2.dist.js"></script>
+}
+@{
+    var organes = ViewBag.organes as IEnumerable<OrganeDecisionRessource>;
+}
+
+<div class="col-10">
+        <div class="card mb-4">
+            <h5 class="card-header"></h5>
+            <div class="col-sm-7">
+                <div class="card-body text-sm-end text-center ps-sm-0">
+                    <button data-bs-target="#addOrgane" data-bs-toggle="modal" class="btn btn-primary mb-2 text-nowrap add-new-role">Ajouter un organe de décision</button>
+                </div>
+            </div>
+            <form class="card-body">
+                <hr class="my-4 mx-n4" />
+                <h6 class="mb-3 fw-semibold"> Role Organe</h6>
+                <div class="row mb-3">
+                    <label class="col-sm-3 col-form-label text-sm-end" for="role">Organe de décision</label>
+                    <div class="col-sm-9">
+                        <select id="typePret" class="select2 form-select" data-allow-clear="true" asp-for="@Model.Resource.OrganeDecisionId">
+                            <option value="">Select</option>
+                            @if(organes is not null)
+                            {
+                                @foreach (var item in organes)
+                                {
+                                    <option value="@item.Id">@item.Libelle</option>
+                                }
+                            }   
+                            else
+                            {
+                                <option>Aucun organe de décision n'a été enregistré.</option>
+                            }
+                    </select>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label class="col-sm-3 col-form-label text-sm-end" for="libelle">Libellé</label>
+                    <div class="col-sm-9">
+                    <input type="text" id="libelle" class="form-control" asp-for="@Model.Resource.Libelle" />
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label class="col-sm-3 col-form-label text-sm-end" for="duree">Durée de traitement(heures).</label>
+                    <div class="col-sm-9">
+                    <input type="number" id="duree" class="form-control" min="0" asp-for="@Model.Resource.DureeTraitement" />
+                    </div>
+                </div>
+                <div class="pt-4">
+                    <div class="row justify-content-end">
+                        <div class="col-sm-9">
+                            <button type="submit" class="btn btn-primary me-sm-2 me-1">Submit</button>
+                            <button type="reset" class="btn btn-label-secondary">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            
+        </div>
+</div>
+@await Html.PartialAsync("OrganeDecisionModal")
+
+
+@section PageScripts {
+    @*<script src="~/js/form-wizard-numbered.js"></script>*@
+    @* <script src="~/bernard/assets/js/form-wizard-numbered.js"></script>
+    <script src="~/js/custom/home-index.js"></script>*@
+    <script src="~/js/form-layouts.dist.js"></script>
+    <script>
+
+    </script>
+}
+

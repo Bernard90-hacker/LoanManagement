@@ -15,11 +15,18 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Views\_Partials\_Modals\" />
+    <Folder Include="Models\" />
     <Folder Include="wwwroot\vendor\libs\iconify\" />
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="Views\Shared\Sections\Navbar\_LoginPartial.cshtml" />
+    <None Include="Views\Shared\Sections\Navbar\_Navbar.cshtml" />
+    <None Include="Views\Shared\Sections\Navbar\_NavbarPartial.cshtml" />
+    <None Include="Views\Shared\Sections\Navbar\_NotificationPartial.cshtml" />
+    <None Include="Views\Shared\Sections\Navbar\_QuickLinksPartial.cshtml" />
+    <None Include="Views\Shared\Sections\Navbar\_SearchPartial.cshtml" />
+    <None Include="Views\Shared\Sections\Navbar\_SelectLanguagePartial.cshtml" />
     <None Include="wwwroot\js\site.js" />
   </ItemGroup>
 
@@ -31,6 +38,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Update="Views\Admin\Admin.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
     <Content Update="Views\Home\Index.cshtml">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>

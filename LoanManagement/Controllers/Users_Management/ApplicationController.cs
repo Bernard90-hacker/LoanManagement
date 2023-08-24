@@ -32,6 +32,7 @@ namespace LoanManagement.API.Controllers.Users_Management
 		[HttpGet("all")]
 		public async Task<ActionResult<PagedList<GetApplicationRessource>>> GetAll([FromQuery] ApplicationParameters parameters)
 		{
+			var Journal = new Journal() { Libelle = "Liste des modules", TypeJournalId = 8, Entite = "User"};
 			try
 			{
 				var all = await _applicationService.GetAll(parameters);
@@ -40,8 +41,7 @@ namespace LoanManagement.API.Controllers.Users_Management
 					_logger.LogWarning("'Détails module : Aucun module n'a pas été trouvée");
 					return NotFound(new ApiResponse((int)CustomHttpCode.OBJECT_NOT_FOUND, description: "Departement(s) non trouvée(s)"));
 				}
-				var journalisation = new Journal() { Libelle = "Liste des modules" };
-				await _journalisationService.Journalize(journalisation);
+				
 				var allResult = _mapper.Map<IEnumerable<GetApplicationRessource>>(all);
 				var metadata = new
 				{
@@ -52,33 +52,23 @@ namespace LoanManagement.API.Controllers.Users_Management
 					all.HasNext,
 					all.HasPrevious
 				};
-				var journalRessource = new JournalRessource()
+
+				
+				if (Request.Headers.ContainsKey("X-Journalisation"))
 				{
-					Libelle = "Liste des modules de l'application"
-				};
-				if (Request.Cookies["Username"] == null || Request.Cookies["Username"] == string.Empty)
-				{
-					_logger.LogWarning("L'utilisateur actuel est déconnecté : Impossible d'effectuer la journalisation");
-					return BadRequest("L'utilisateur actuel est déconnecté : Impossible d'effectuer la journalisation");
+					var x = Request.Headers["X-Journalisation"];
+					Journal = JsonConvert.DeserializeObject<Journal>(x);
 				}
-				journalRessource.Username = Request.Cookies["Username"].ToString();
-				var user = await _utilisateurService.GetUserByUsername(journalRessource.Username);
-				if(user is null)
-				{
-					_logger.LogWarning("Quelque chose s'est mal passé : Impossible d'effectuer la journalisation");
-					return BadRequest("Quelque chose s'est mal passé: Impossible d'effectuer la journalisation");
-				}
-				var journal = _mapper.Map<Journal>(journalRessource);
-				journal.UtilisateurId = user.Id;
-				var typeJournal = await _typeJournalService.GetTypeJournalByCode("CONN");
-				journal.TypeJournalId = typeJournal.Id;
-				await _journalisationService.Journalize(journal);
+				Journal.Niveau = 2; //SUCCES
+				await _journalisationService.Journalize(Journal);
 				Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
 				_logger.LogInformation($"'Liste des modules ': Opération effectuée avec succès, {all.Count} modules retournés");
 				return Ok(allResult);
 			}
 			catch (Exception ex)
 			{
+				Journal.Niveau = 1; //ECHEC
+				await _journalisationService.Journalize(Journal);
 				_logger.LogError("Une erreur est survenue pendant le traitement de la requête");
 				return ValidationProblem(statusCode: (int)HttpCode.INTERNAL_SERVER_ERROR, title: "Erreur interne du serveur", detail: ex.Message);
 			}

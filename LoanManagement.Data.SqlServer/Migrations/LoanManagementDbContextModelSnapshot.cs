@@ -132,6 +132,10 @@ namespace LoanManagement.Data.SqlServer.Migrations
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
 
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("Indice")
                         .HasColumnType("int");
 
@@ -175,6 +179,24 @@ namespace LoanManagement.Data.SqlServer.Migrations
                         .IsUnique();
 
                     b.ToTable("Clients", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            AdressePostale = "99",
+                            DateNaissance = "07/10/2002",
+                            Email = "attiogbegodwin2002@gmail.com",
+                            Indice = 310,
+                            LieuNaissance = "Lomé",
+                            Nom = "ATTIOGBE",
+                            Prenoms = "Godwin",
+                            Profession = "Etudiant",
+                            Quartier = "ABLOGAME",
+                            Residence = "WOGLO",
+                            Tel = "70556049",
+                            Ville = "Lomé"
+                        });
                 });
 
             modelBuilder.Entity("LoanManagement.core.Models.Loan_Management.Compte", b =>
@@ -315,6 +337,9 @@ namespace LoanManagement.Data.SqlServer.Migrations
 
                     b.Property<bool>("Fumeur")
                         .HasColumnType("bit");
+
+                    b.Property<double>("Montant")
+                        .HasColumnType("float");
 
                     b.Property<string>("NatureInfirmite")
                         .IsRequired()
@@ -866,13 +891,13 @@ namespace LoanManagement.Data.SqlServer.Migrations
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(max)")
-                        .HasDefaultValue("04/08/2023");
+                        .HasDefaultValue("24/08/2023");
 
                     b.Property<string>("DateModification")
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(max)")
-                        .HasDefaultValue("04/08/2023");
+                        .HasDefaultValue("24/08/2023");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -1016,8 +1041,14 @@ namespace LoanManagement.Data.SqlServer.Migrations
                         new
                         {
                             Id = 4,
+                            Code = "GGR",
+                            Libelle = "Direction gestion globale des risques."
+                        },
+                        new
+                        {
+                            Id = 5,
                             Code = "GAR",
-                            Libelle = "Direction rédaction des garanties"
+                            Libelle = "Direction rédaction des garanties."
                         });
                 });
 
@@ -1033,13 +1064,13 @@ namespace LoanManagement.Data.SqlServer.Migrations
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(max)")
-                        .HasDefaultValue("04/08/2023");
+                        .HasDefaultValue("24/08/2023");
 
                     b.Property<string>("DateModification")
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(max)")
-                        .HasDefaultValue("04/08/2023");
+                        .HasDefaultValue("24/08/2023");
 
                     b.Property<int>("DepartementId")
                         .HasColumnType("int");
@@ -1049,8 +1080,9 @@ namespace LoanManagement.Data.SqlServer.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<int>("Matricule")
-                        .HasColumnType("int");
+                    b.Property<string>("Matricule")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Nom")
                         .IsRequired()
@@ -1058,7 +1090,6 @@ namespace LoanManagement.Data.SqlServer.Migrations
                         .HasColumnType("nvarchar(30)");
 
                     b.Property<string>("Photo")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Prenoms")
@@ -1083,6 +1114,20 @@ namespace LoanManagement.Data.SqlServer.Migrations
                         .IsUnique();
 
                     b.ToTable("Employes", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            DateAjout = "24/08/2023",
+                            DateModification = "24/08/2023",
+                            DepartementId = 1,
+                            Email = "ekeoula@gmail.com",
+                            Matricule = "6060",
+                            Nom = "KEOULA",
+                            Prenoms = "Lonlon Edem",
+                            UserId = 1
+                        });
                 });
 
             modelBuilder.Entity("LoanManagement.core.Models.Users_Management.HabilitationProfil", b =>
@@ -1130,7 +1175,7 @@ namespace LoanManagement.Data.SqlServer.Migrations
                         new
                         {
                             Id = 1,
-                            DateAjout = "04/08/2023",
+                            DateAjout = "24/08/2023",
                             DateModification = "",
                             Edition = true,
                             Generation = true,
@@ -1142,7 +1187,7 @@ namespace LoanManagement.Data.SqlServer.Migrations
                         new
                         {
                             Id = 2,
-                            DateAjout = "04/08/2023",
+                            DateAjout = "24/08/2023",
                             DateModification = "",
                             Edition = true,
                             Generation = false,
@@ -1154,7 +1199,7 @@ namespace LoanManagement.Data.SqlServer.Migrations
                         new
                         {
                             Id = 3,
-                            DateAjout = "04/08/2023",
+                            DateAjout = "24/08/2023",
                             DateModification = "",
                             Edition = true,
                             Generation = false,
@@ -1166,7 +1211,7 @@ namespace LoanManagement.Data.SqlServer.Migrations
                         new
                         {
                             Id = 4,
-                            DateAjout = "04/08/2023",
+                            DateAjout = "24/08/2023",
                             DateModification = "",
                             Edition = true,
                             Generation = false,
@@ -1178,7 +1223,7 @@ namespace LoanManagement.Data.SqlServer.Migrations
                         new
                         {
                             Id = 5,
-                            DateAjout = "04/08/2023",
+                            DateAjout = "24/08/2023",
                             DateModification = "",
                             Edition = true,
                             Generation = false,
@@ -1204,7 +1249,7 @@ namespace LoanManagement.Data.SqlServer.Migrations
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(max)")
-                        .HasDefaultValue("04/08/2023");
+                        .HasDefaultValue("24/08/2023");
 
                     b.Property<string>("DateSysteme")
                         .IsRequired()
@@ -1285,7 +1330,7 @@ namespace LoanManagement.Data.SqlServer.Migrations
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(max)")
-                        .HasDefaultValue("04/08/2023");
+                        .HasDefaultValue("24/08/2023");
 
                     b.Property<string>("DateModification")
                         .IsRequired()
@@ -1341,7 +1386,7 @@ namespace LoanManagement.Data.SqlServer.Migrations
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(max)")
-                        .HasDefaultValue("04/08/2023");
+                        .HasDefaultValue("24/08/2023");
 
                     b.Property<string>("OldPasswordHash")
                         .IsRequired()
@@ -1412,6 +1457,24 @@ namespace LoanManagement.Data.SqlServer.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ParamGlobals", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            DelaiExpiration = 6,
+                            ExcludeUsername = true,
+                            FromPassword = "",
+                            IncludeDigits = true,
+                            IncludeLowerCase = true,
+                            IncludeSpecialCharacters = true,
+                            IncludeUpperCase = true,
+                            Port = 0,
+                            SmtpClient = "",
+                            SmtpEmail = "",
+                            SmtpName = "",
+                            Taille = 8
+                        });
                 });
 
             modelBuilder.Entity("LoanManagement.core.Models.Users_Management.Profil", b =>
@@ -1430,7 +1493,7 @@ namespace LoanManagement.Data.SqlServer.Migrations
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(max)")
-                        .HasDefaultValue("04/08/2023");
+                        .HasDefaultValue("24/08/2023");
 
                     b.Property<string>("DateExpiration")
                         .IsRequired()
@@ -1440,7 +1503,7 @@ namespace LoanManagement.Data.SqlServer.Migrations
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(max)")
-                        .HasDefaultValue("04/08/2023");
+                        .HasDefaultValue("24/08/2023");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -1466,8 +1529,8 @@ namespace LoanManagement.Data.SqlServer.Migrations
                         {
                             Id = 1,
                             Code = "PROFIL-001",
-                            DateAjout = "04/08/2023",
-                            DateExpiration = "04/08/2024",
+                            DateAjout = "24/08/2023",
+                            DateExpiration = "24/08/2024",
                             DateModification = "",
                             Description = "Profil destiné à l'administrateur",
                             Libelle = "Administrateur",
@@ -1477,8 +1540,8 @@ namespace LoanManagement.Data.SqlServer.Migrations
                         {
                             Id = 2,
                             Code = "PROFIL-002",
-                            DateAjout = "04/08/2023",
-                            DateExpiration = "04/08/2024",
+                            DateAjout = "24/08/2023",
+                            DateExpiration = "24/08/2024",
                             DateModification = "",
                             Description = "Profil destiné aux au gestionnaire",
                             Libelle = "Gestionnaire",
@@ -1488,8 +1551,8 @@ namespace LoanManagement.Data.SqlServer.Migrations
                         {
                             Id = 3,
                             Code = "PROFIL-003",
-                            DateAjout = "04/08/2023",
-                            DateExpiration = "04/08/2024",
+                            DateAjout = "24/08/2023",
+                            DateExpiration = "24/08/2024",
                             DateModification = "",
                             Description = "Profil destiné à l'analyste",
                             Libelle = "Analyste",
@@ -1499,8 +1562,8 @@ namespace LoanManagement.Data.SqlServer.Migrations
                         {
                             Id = 4,
                             Code = "PROFIL-004",
-                            DateAjout = "04/08/2023",
-                            DateExpiration = "04/08/2024",
+                            DateAjout = "24/08/2023",
+                            DateExpiration = "24/08/2024",
                             DateModification = "",
                             Description = "Profil destiné au directeur de la GGR",
                             Libelle = "Directeur GGR",
@@ -1510,8 +1573,8 @@ namespace LoanManagement.Data.SqlServer.Migrations
                         {
                             Id = 5,
                             Code = "PROFIL-005",
-                            DateAjout = "04/08/2023",
-                            DateExpiration = "04/08/2024",
+                            DateAjout = "24/08/2023",
+                            DateExpiration = "24/08/2024",
                             DateModification = "",
                             Description = "Profil destiné aux utilisateurs",
                             Libelle = "Chef Departement Back-Office Engagement",
@@ -1631,7 +1694,7 @@ namespace LoanManagement.Data.SqlServer.Migrations
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(max)")
-                        .HasDefaultValue("04/08/2023");
+                        .HasDefaultValue("24/08/2023");
 
                     b.Property<string>("DateDesactivation")
                         .IsRequired()
@@ -1693,6 +1756,27 @@ namespace LoanManagement.Data.SqlServer.Migrations
                         .IsUnique();
 
                     b.ToTable("Utilisateurs", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            DateAjout = "24/08/2023",
+                            DateDesactivation = "20/08/2025",
+                            DateExpirationCompte = "20/08/2025",
+                            DateModificationMotDePasse = "24/08/2023",
+                            IsAdmin = true,
+                            IsConnected = false,
+                            IsEditPassword = true,
+                            IsSuperAdmin = true,
+                            PasswordHash = "B70D378172857406B7B0EAB74592CBDE453C31B333C67F95D940575376F57E6B6C92109A66D02D3B4BCC758C8CE7C4BBFB05999E28C13F6FFF8EEA17102A6776",
+                            PasswordSalt = new byte[] { 167, 23, 45, 38, 53, 198, 31, 196, 30, 250, 196, 193, 236, 21, 0, 241, 54, 62, 236, 122, 49, 230, 147, 204, 90, 20, 166, 33, 232, 148, 250, 234, 135, 81, 41, 193, 70, 210, 129, 182, 187, 182, 191, 192, 193, 70, 153, 228, 30, 241, 164, 153, 25, 240, 148, 79, 215, 1, 96, 61, 126, 125, 17, 117 },
+                            ProfilId = 1,
+                            RefreshToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IkFkbWluIiwibmJmIjoxNjkyODM0NTI4LCJleHAiOjE2OTM0MzkzMjh9.owp1u48lFNZs1hyhDUFtIT8VTP6EUt8bqScKKd75520",
+                            RefreshTokenTime = "30/08/2023",
+                            Statut = 1,
+                            Username = "Admin"
+                        });
                 });
 
             modelBuilder.Entity("LoanManagement.core.Models.Loan_Management.Compte", b =>

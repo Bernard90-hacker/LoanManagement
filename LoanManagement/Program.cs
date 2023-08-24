@@ -75,10 +75,11 @@ app.Use(async (context, next) =>
 	await next(context);
 });
 
-//app.ConfigureCustomExceptionMiddleware();
+app.ConfigureCustomExceptionMiddleware();
 
 app.UseHttpsRedirection();
 app.UseResponseCaching();
+app.UseCors();
 
 app.UseRouting();
 //Routing area

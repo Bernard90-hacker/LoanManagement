@@ -24,29 +24,20 @@
 		}
 
 		[HttpGet("all")]
-		public async Task<ActionResult<IEnumerable<DepartementRessource>>> GetAll([FromQuery] DepartmentParameters parameters)
+		public async Task<ActionResult<IEnumerable<Departement>>> GetAll()
 		{
 			try
 			{
-				var departements = await _departementService.GetAll(parameters);
+				var departements = await _departementService.GetAll();
 				if (departements is null)
 				{
 					_logger.LogWarning("'Détails d'un département' : La direction n'a pas été trouvée");
 					return NotFound(new ApiResponse((int)CustomHttpCode.OBJECT_NOT_FOUND, description: "Departement(s) non trouvée(s)"));
 				}
 				var departementResults = _mapper.Map<IEnumerable<DepartementRessource>>(departements);
-				var metadata = new
-				{
-					departements.PageSize,
-					departements.CurrentPage,
-					departements.TotalCount,
-					departements.TotalPages,
-					departements.HasNext,
-					departements.HasPrevious
-				};
-				Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
-				_logger.LogInformation($"'Liste des départements ': Opération effectuée avec succès, {departements.Count} départements retournés");
-				return Ok(departementResults);
+				
+				_logger.LogInformation($"'Liste des départements ': Opération effectuée avec succès, {departements.Count()} départements retournés");
+				return Ok(departements);
 			}
 			catch (Exception ex)
 			{

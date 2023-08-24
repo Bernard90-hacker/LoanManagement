@@ -1,9 +1,4 @@
-﻿@model ClientLoginViewModel
-@{
-    Layout = "_BlankLayout";
-}
-
-@section VendorStyles {
+﻿@section VendorStyles {
     <link rel="stylesheet" href="~/vendor/libs/formvalidation/dist/css/formValidation.min.css">
     <link rel="stylesheet" href="~/dist/colored-theme.min.css">
     <link rel="stylesheet" href="~/dist/dark-theme.min.css">
@@ -33,203 +28,25 @@
 
 @section PageScripts {
     <script src="~/js/pages-auth.dist.js"></script>
-    <script src="~/dist/growl-notification.min.js">
-    </script>
     <script src="~/js/custom/home-index.js"></script>
 	<script>
 		$(function () {
-			var form = window.$('#myForm'),
-				btn = window.$('#btnSubmit'),
-				indice = $('#indice'),
-				tel = $('#tel'),
-				title = '',
-				message = '',
-				errorTitle = new DOMParser().parseFromString('Erreur', 'text/html').body.innerHTML,
-				errorTypeMessage = 'error',
-				errorMessage = new DOMParser().parseFromString('Erreur Produite', 'text/html').body.innerHTML,
-				errorDescription = '',
-				errorTimeOut = 500000,
-				errors = [];
-
-			form.on("submit",
-				function (event) {
-					event.preventDefault();
-					var data = window.$(this).serialize();
-					console.log(data);
-					var json = JSON.stringify(data);
-					var url = $(this).attr("action");
-					window.$.ajax({
-						url: url,
-						type: "POST",
-						data: data,
-						dataType: "json",
-						beforeSend: function () {
-							btn.attr('disabled', 'disabled');
-							window.$.blockUI({
-								message: '<div class="spinner-border text-primary" role="status"></div>',
-								css: {
-									backgroundColor: 'transparent',
-									border: '0'
-								},
-								overlayCSS: {
-									backgroundColor: '#fff',
-									opacity: 0.8
-								}
-							});
-						},
-						success: function (response) {
-							var strJson = JSON.parse(response.strLogin);
-							var nom = strJson.Nom;
-							var prenoms = strJson.Prenoms;
-							indice.val(strJson.Indice);
-							tel.val(strJson.Telephone);
-							message = new DOMParser().parseFromString(response.message, 'text/html').body.innerHTML;
-							window.toastr[response.typeMessage]('👋 ' + message,
-								response.title,
-								{
-									showMethod: 'slideDown',
-									hideMethod: 'slideUp',
-									closeButton: true,
-									tapToDismiss: false,
-									progressBar: true,
-									timeOut: response.timeOut,
-									rtl: window.$('html').attr('data-textdirection') === 'rtl',
-									onHidden: function () { }
-								});
-						},
-						error: function (response) {
-							try {
-								var obj = JSON.parse(JSON.stringify(response.responseJSON));
-								if (obj.length !== 0) {
-									if (response.status === 401) {
-										message = new DOMParser().parseFromString('Non autorisé', 'text/html').body.innerHTML;
-										window.toastr[errorTypeMessage]('👋 ' + message,
-											errorTitle,
-											{
-												showMethod: 'slideDown',
-												hideMethod: 'slideUp',
-												closeButton: true,
-												tapToDismiss: false,
-												progressBar: true,
-												timeOut: errorTimeOut,
-												rtl: window.$('html').attr('data-textdirection') === 'rtl'
-											});
-									}
-									else {
-										if (obj.typeMessage != null && obj.typeMessage !== undefined) {
-											if (response.status === 0) {
-											} else if (response.status === 400 || response.status === 404 || response.status === 405 || response.status === 500) {
-												errorTitle = obj.title;
-												errorTypeMessage = obj.typeMessage;
-												errorMessage = obj.message;
-												errorDescription = obj.description;
-												errorTimeOut = obj.timeOut;
-												if (obj.erreurs != null && obj.erreurs != undefined) errors = obj.erreurs;
-											}
-											if (errors !== null && errors !== undefined && errors.length > 0) {
-												var messages = '';
-												if (errors.length == 1) {
-													messages = errors;
-												}
-												else {
-													for (var i = 0; i < errors.length; i++) {
-														messages += errors[i] + "<br>";
-													}
-													messages = messages.slice(0, -4);
-												}
-												errorMessage = new DOMParser().parseFromString(messages, 'text/html').body.innerHTML;
-
-											} else if (errorDescription !== null && errorDescription !== undefined) {
-												errorMessage = new DOMParser().parseFromString(errorDescription, 'text/html').body.innerHTML;
-											} else {
-												errorMessage = new DOMParser().parseFromString(errorMessage, 'text/html').body.innerHTML;
-											}
-											window.toastr[errorTypeMessage]('👋 ' + errorMessage,
-												errorTitle,
-												{
-													showMethod: 'slideDown',
-													hideMethod: 'slideUp',
-													closeButton: true,
-													tapToDismiss: false,
-													progressBar: true,
-													timeOut: errorTimeOut,
-													rtl: window.$('html').attr('data-textdirection') === 'rtl'
-												});
-										}
-									}
-								}
-							} catch (err) {
-								window.toastr[errorTypeMessage]('👋 ' + err,
-									errorTitle,
-									{
-										showMethod: 'slideDown',
-										hideMethod: 'slideUp',
-										closeButton: true,
-										tapToDismiss: false,
-										progressBar: true,
-										timeOut: errorTimeOut,
-										rtl: window.$('html').attr('data-textdirection') === 'rtl'
-									});
-							}
-						},
-						complete: function () {
-							btn.removeAttr('disabled');
-							window.$.unblockUI();
-						}
-					});
-				});
 		});
 	</script>
 }
+@*********** Content ************** *@
 
-@* ************** Content ************** *@
-
-<div class="container-xxl">
-    <div class="authentication-wrapper authentication-basic container-p-y">
-        <div class="authentication-inner py-4">
-            <!-- Login -->
-            <div class="card">
-                <div class="card-body">
-                    <!-- Logo -->
-                    <div class="app-brand justify-content-center mb-4 mt-2">
-                        <a href="/" class="app-brand-link gap-2">
-                            <span class="app-brand-logo demo">@await Html.PartialAsync("../_Partials/_Macros")</span>
-                            <span class="app-brand-text demo text-body fw-bold ms-1">Loan Application</span>
-                        </a>
-                    </div>
-                    <!-- /Logo -->
-                    <h4 class="mb-1 pt-2">Welcome to Loan Application</h4>
-                    <p class="mb-4">Please sign-in to your account and start the adventure</p>
-
-					<form id="formAuthentication" class="mb-3" action="/" method="POST">
-						<div class="mb-3">
-							<label for="email" class="form-label">Email or Username</label>
-							<input type="text" class="form-control" id="email" name="email-username" placeholder="Enter your email or username" autofocus>
-						</div>
-						<div class="mb-3 form-password-toggle">
-							<div class="input-group input-group-merge">
-								<input type="password" id="password" class="form-control" name="password" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="password" />
-								<span class="input-group-text cursor-pointer"><i class="ti ti-eye-off"></i></span>
-							</div>
-						</div>
-						<div class="mb-3">
-							<div class="form-check">
-								<input class="form-check-input" type="checkbox" id="remember-me">
-								<label class="form-check-label" for="remember-me">
-									Remember Me
-								</label>
-							</div>
-						</div>
-						<div class="mb-3">
-							<button class="btn btn-primary d-grid w-100" type="submit">Sign in</button>
-						</div>
-					</form>
-                    
-
-            
-                </div>
-            </div>
-            <!-- /Register -->
-        </div>
-    </div>
+<h4 class="fw-bold py-3 mb-4">
+	<span class="text-muted fw-light">Accueil</span>
+</h4>
+<div class="row">
+	<div class="col-md-4">
+	</div>
+	<div class="col-md-4">
+		<div class="card mb-4">
+			<div class="card-body">
+                <h3 class="d-flex justify-content-center fw-bold">Bienvenue ! 👋</h3>
+			</div>
+		</div>
+	</div>
 </div>

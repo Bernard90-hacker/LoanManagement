@@ -118,7 +118,7 @@ namespace LoanManagement.service.Services.Users_Management
 
 		}
 
-		public async Task<Employe?> GetEmployeByMatricule(int matricule)
+		public async Task<Employe?> GetEmployeByMatricule(string matricule)
 		{
 			return await _unitOfWork.Employes.GetEmployeByMatricule(matricule);
 		}

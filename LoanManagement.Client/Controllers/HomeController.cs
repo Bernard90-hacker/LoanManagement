@@ -52,6 +52,8 @@ public class HomeController : Controller
     public IActionResult Index()
     {
         ConfigConstant.AddCurrentRouteToSession(HttpContext);
+        if (HttpContext.Session.GetString("_SESSIONID").IsNull())
+            return RedirectToAction("Index", "Home");
 
         return View();
     }
@@ -96,45 +98,56 @@ public class HomeController : Controller
             var loginResource = new ClientLoginResource() 
             { 
                 Indice = model.ClientLoginResource.Indice, 
-                Telephone = model.ClientLoginResource.Telephone 
-            };
+                Telephone = model.ClientLoginResource.Telephone
+			};
             var content = new StringContent(JsonConvert.SerializeObject(loginResource), Encoding.UTF8, "application/json");
             var result = await Client.PostAsync(URL + "/Client/login", content);
             if (result.IsSuccessStatusCode)
             {
-                TempData["IsSuccess"] = true;
+                var response = await result.Content.ReadFromJsonAsync<ClientResource>();
+                HttpContext.Session.SetString("_SESSIONID", response.Id.ToString());
                 return new JsonResult(new
                 {
-                    title = "Demande de crédit",
+                    title = "Connexion",
                     typeMessage = TypeMessage.Success.GetString(),
-                    message = "Demande de crédit effectuée avec succès",
+                    message = "Connexion effectuée avec succès",
                     description = string.Empty,
                     timeOut = 8000,
-                    strJsonDemandeCredit = JsonConvert.SerializeObject(JsonConvert.DeserializeObject<ClientResource>(
+                    strJsonLogin = JsonConvert.SerializeObject(JsonConvert.DeserializeObject<ClientResource>(
                        await result.Content.ReadAsStringAsync(), ConfigConstant.SetDateTimeConverter()))
                 }, ConfigConstant.JsonSettings())
                 {
                     StatusCode = (int)HttpStatusCode.OK
                 };
+
             }
             var jQueryViewModel = await AppConstant.GetResponseMessage(result);
             return new JsonResult(new
             {
-                title = jQueryViewModel.Title,
-                typeMessage = jQueryViewModel.TypeMessage,
-                message = jQueryViewModel.Message,
-                description = jQueryViewModel.Description,
-                erreurs = jQueryViewModel.Errors,
+                title = "Connexion",
+                typeMessage = TypeMessage.Error.GetString(),
+                message = "Identifiants incorrects",
+                description = "Vos identifiants sont incorrects",
+                strJsonLogin = JsonConvert.SerializeObject(jQueryViewModel),
                 timeOut = jQueryViewModel.TimeOut
 
             });
         }
         
-        catch (HttpRequestException e)
+        catch (Exception e)
         {
-            
-            return RedirectToAction("Index", "Home");
-        }
+			return new JsonResult(new
+			{
+				title = "Erreur",
+				typeMessage = TypeMessage.Error.GetString(),
+				message = e.Message,
+				description = e.Message,
+				timeOut = 8000
+			}, ConfigConstant.JsonSettings())
+			{
+				StatusCode = (int)HttpStatusCode.InternalServerError
+			};
+		}
     }
 
 

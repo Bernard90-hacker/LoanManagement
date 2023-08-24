@@ -1,0 +1,39 @@
+﻿
+@{
+	TempData.Keep();
+	ViewData["containerNav"] ??= "container-fluid";
+}
+
+<aside id="layout-menu" class="layout-menu-horizontal menu-horizontal menu bg-menu-theme flex-grow-0">
+	<div class='@ViewData["containerNav"] d-flex h-100'>
+		@* ! Menu-items de la version complète *@
+		<ul class="menu-inner">
+			<!-- Accueil -->
+			<li class='menu-item @Html.IsMenuActive(controllers: "Gestionnaire", actions: "Gestionnaire")'>
+				<a asp-area="" asp-controller="Home" asp-action="Index" class="menu-link">
+					<i class="menu-icon tf-icons ti ti-telescope"></i>
+					<div>Accueil</div>
+				</a>
+			</li>
+
+            <li class='menu-item @Html.IsMenuActive(controllers: "Gestionnaire", actions: "Employeur")'>
+                <a asp-area="" asp-controller="Gestionnaire" asp-action="Employeur" class="menu-link">
+                    <i class="menu-icon tf-icons ti ti-scale"></i>
+                    <div>Ajouter un employeur</div>
+                </a>
+            </li>
+            <li class='menu-item @Html.IsMenuActive(controllers: "Gestionnaire", actions: "DossierCredit")'>
+                <a asp-area="" asp-controller="Gestionnaire" asp-action="DossierCredit" class="menu-link">
+                    <i class="menu-icon tf-icons ti ti-scale"></i>
+                    <div>Monter un dossier crédit</div>
+                </a>
+            </li>
+            <li class='menu-item @Html.IsMenuActive(controllers: "Gestionnaire", actions: "ListeDossierCredit")'>
+                <a asp-area="" asp-controller="Gestionnaire" asp-action="ListeDossierCredit" class="menu-link">
+                    <i class="menu-icon tf-icons ti ti-scale"></i>
+                    <div>Liste des dossiers crédit.</div>
+                </a>
+            </li>
+		</ul>
+	</div>
+</aside>

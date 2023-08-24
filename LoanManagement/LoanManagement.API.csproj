@@ -28,7 +28,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Constants\Constants.csproj" />
     <ProjectReference Include="..\CustomApiRessource\CustomApiRessource.csproj" />
+    <ProjectReference Include="..\LoanManagement.core\LoanManagement.core.csproj" />
     <ProjectReference Include="..\LoanManagement.Data.SqlServer\LoanManagement.Data.SqlServer.csproj" />
     <ProjectReference Include="..\LoanManagement.service\LoanManagement.service.csproj" />
     <ProjectReference Include="..\LoggerService\LoggerService.csproj" />

@@ -1,0 +1,55 @@
+@{
+	TempData.Keep();
+	ViewData["containerNav"] ??= "container-fluid";
+}
+
+<!-- Menu -->
+<aside id="layout-menu" class="layout-menu-horizontal menu-horizontal menu bg-menu-theme flex-grow-0">
+	<div class='@ViewData["containerNav"] d-flex h-100'>
+		@* ! Menu-items de la version complète *@
+		<ul class="menu-inner">
+			<!-- Accueil -->
+			<li class='menu-item @Html.IsMenuActive(controllers: "Home", actions: "Index")'>
+				<a asp-area="" asp-controller="Home" asp-action="Index" class="menu-link">
+					<i class="menu-icon tf-icons ti ti-telescope"></i>
+					<div>Accueil</div>
+				</a>
+			</li>
+
+			<!-- Autres -->
+			<li class='menu-item @Html.IsMenuActive(controllers: "Home", actions: "Credit, MesDemandes")'>
+				<a href="javascript:void(0)" class="menu-link menu-toggle">
+					<i class="menu-icon tf-icons ti ti-settings"></i>
+					<div>Autres</div>
+				</a>
+				<ul class="menu-sub">
+					@*<li class='menu-item @Html.IsMenuActive(controllers: "Home", actions: "Azerty")'>
+						<a asp-area="" asp-controller="Home" asp-action="Azerty" class="menu-link">
+							<i class="menu-icon tf-icons ti ti-calendar"></i>
+							<div>Azerty</div>
+						</a>
+					</li>
+					<li class='menu-item @Html.IsMenuActive(controllers: "Home", actions: "Querty")'>
+						<a asp-area="" asp-controller="Home" asp-action="Querty" class="menu-link">
+							<i class="menu-icon tf-icons ti ti-scale"></i>
+							<div>Querty</div>
+						</a>
+					</li>*@
+					<li class='menu-item @Html.IsMenuActive(controllers: "Home", actions: "Credit")'>
+						<a asp-area="" asp-controller="Home" asp-action="Credit" class="menu-link">
+							<i class="menu-icon tf-icons ti ti-scale"></i>
+							<div>Demande de crédit.</div>
+						</a>
+					</li>
+					<li class='menu-item @Html.IsMenuActive(controllers: "Home", actions: "MesDemandes")'>
+						<a asp-area="" asp-controller="Home" asp-action="Credit" class="menu-link">
+							<i class="menu-icon tf-icons ti ti-scale"></i>
+							<div>Mes demandes de crédit</div>
+						</a>
+					</li>
+				</ul>
+			</li>
+		</ul>
+	</div>
+</aside>
+<!-- / Menu -->

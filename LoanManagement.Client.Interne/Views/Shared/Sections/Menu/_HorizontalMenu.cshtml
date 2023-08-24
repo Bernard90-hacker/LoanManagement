@@ -1,0 +1,136 @@
+@{
+	TempData.Keep();
+	TempData.Keep("Admin");
+	TempData.Keep("Gestionnaire");
+	TempData.Keep("Analyste");
+	ViewData["containerNav"] ??= "container-fluid";
+}
+
+<!-- Menu -->
+<aside id="layout-menu" class="layout-menu-horizontal menu-horizontal menu bg-menu-theme flex-grow-0">
+	<div class='@ViewData["containerNav"] d-flex h-100'>
+		@* ! Menu-items de la version complète *@
+		<ul class="menu-inner">
+			<!-- Accueil -->
+			<li class='menu-item @Html.IsMenuActive(controllers: "Home", actions: "Index")'>
+				<a asp-area="" asp-controller="Home" asp-action="Index" class="menu-link">
+					<i class="menu-icon tf-icons ti ti-telescope"></i>
+					<div>Accueil</div>
+				</a>
+			</li>
+
+			<!-- Utilisateurs -->
+			@if (!string.IsNullOrEmpty(TempData["Admin"].ToString()))
+			{
+				<li class='menu-item @Html.IsMenuActive(controllers: "Admin", actions: "AddUser, ListeUtilisateurs, Employe")'>
+					<a href="javascript:void(0)" class="menu-link menu-toggle">
+						<i class="menu-icon tf-icons ti ti-settings"></i>
+						<div>Utilisateurs</div>
+					</a>
+					<ul class="menu-sub">
+						<li class='menu-item @Html.IsMenuActive(controllers: "Admin", actions: "AddUser")'>
+							<a asp-area="" asp-controller="Admin" asp-action="AddUser" class="menu-link">
+								<i class="menu-icon tf-icons ti ti-calendar"></i>
+								<div>Ajouter un utilisateur</div>
+							</a>
+						</li>
+						<li class='menu-item @Html.IsMenuActive(controllers: "Admin", actions: "ListeUtilisateurs")'>
+							<a asp-area="" asp-controller="Admin" asp-action="ListeUtilisateurs" class="menu-link">
+								<i class="menu-icon tf-icons ti ti-scale"></i>
+								<div>Liste des utilisateurs</div>
+							</a>
+						</li>
+						<li class='menu-item @Html.IsMenuActive(controllers: "Admin", actions: "Employe")'>
+							<a asp-area="" asp-controller="Admin" asp-action="Employe" class="menu-link">
+								<i class="menu-icon tf-icons ti ti-scale"></i>
+								<div>Ajouter un employé</div>
+							</a>
+						</li>
+					</ul>
+				</li>
+				<!-- Autres -->
+				<li class='menu-item @Html.IsMenuActive(controllers: "Admin", actions: "Parametrage")'>
+					<a href="javascript:void(0)" class="menu-link menu-toggle">
+						<i class="menu-icon tf-icons ti ti-settings"></i>
+						<div>Autres</div>
+					</a>
+					<ul class="menu-sub">
+						<li class='menu-item @Html.IsMenuActive(controllers: "Admin", actions: "Parametrage")'>
+							<a asp-area="" asp-controller="Admin" asp-action="Parametrage" class="menu-link">
+								<i class="menu-icon tf-icons ti ti-calendar"></i>
+								<div>Paramétrage global</div>
+							</a>
+						</li>
+					</ul>
+				</li>
+				<li class='menu-item @Html.IsMenuActive(controllers: "Admin", actions: "OrganeDecision")'>
+					<a href="javascript:void(0)" class="menu-link menu-toggle">
+						<i class="menu-icon tf-icons ti ti-settings"></i>
+						<div>Circuit de décision</div>
+					</a>
+					<ul class="menu-sub">
+						<li class='menu-item @Html.IsMenuActive(controllers: "Admin", actions: "OrganeDecision")'>
+							<a asp-area="" asp-controller="Admin" asp-action="OrganeDecision" class="menu-link">
+								<i class="menu-icon tf-icons ti ti-calendar"></i>
+								<div>Configurer un circuit de décision</div>
+							</a>
+						</li>
+					</ul>
+				</li>
+
+				<!-- Clients -->
+				<li class='menu-item @Html.IsMenuActive(controllers: "Admin", actions: "Clients, AddClient")'>
+					<a href="javascript:void(0)" class="menu-link menu-toggle">
+						<i class="menu-icon tf-icons ti ti-settings"></i>
+						<div>Clients</div>
+					</a>
+					<ul class="menu-sub">
+						<li class='menu-item @Html.IsMenuActive(controllers: "Admin", actions: "Clients")'>
+							<a asp-area="" asp-controller="Admin" asp-action="Clients" class="menu-link">
+								<i class="menu-icon tf-icons ti ti-calendar"></i>
+								<div>Liste des clients</div>
+							</a>
+						</li>
+						<li class='menu-item @Html.IsMenuActive(controllers: "Admin", actions: "AddClient")'>
+							<a asp-area="" asp-controller="Admin" asp-action="AddClient" class="menu-link">
+								<i class="menu-icon tf-icons ti ti-scale"></i>
+								<div>Ajouter un client</div>
+							</a>
+						</li>
+
+					</ul>
+				</li>
+			}
+			@if (!string.IsNullOrEmpty(TempData["Gestionnaire"].ToString()))
+			{
+				<li class='menu-item @Html.IsMenuActive(controllers: "Gestionnaire", actions: "Gestionnaire")'>
+					<a asp-area="" asp-controller="Home" asp-action="Index" class="menu-link">
+						<i class="menu-icon tf-icons ti ti-telescope"></i>
+						<div>Accueil</div>
+					</a>
+				</li>
+
+				<li class='menu-item @Html.IsMenuActive(controllers: "Gestionnaire", actions: "Employeur")'>
+					<a asp-area="" asp-controller="Gestionnaire" asp-action="Employeur" class="menu-link">
+						<i class="menu-icon tf-icons ti ti-scale"></i>
+						<div>Ajouter un employeur</div>
+					</a>
+				</li>
+				<li class='menu-item @Html.IsMenuActive(controllers: "Gestionnaire", actions: "DossierCredit")'>
+					<a asp-area="" asp-controller="Gestionnaire" asp-action="DossierCredit" class="menu-link">
+						<i class="menu-icon tf-icons ti ti-scale"></i>
+						<div>Monter un dossier crédit</div>
+					</a>
+				</li>
+				<li class='menu-item @Html.IsMenuActive(controllers: "Gestionnaire", actions: "ListeDossierCredit")'>
+					<a asp-area="" asp-controller="Gestionnaire" asp-action="ListeDossierCredit" class="menu-link">
+						<i class="menu-icon tf-icons ti ti-scale"></i>
+						<div>Liste des dossiers crédit.</div>
+					</a>
+				</li>
+			}
+
+		</ul>
+	</div>
+</aside>
+<!-- / Menu -->

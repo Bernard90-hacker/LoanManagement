@@ -46,6 +46,7 @@ namespace LoanManagement.service.Services.Users_Management
 			paramToBeUpdated.SmtpName = p.SmtpName;
 			paramToBeUpdated.SmtpEmail = p.SmtpEmail;
 			paramToBeUpdated.SmtpClient = p.SmtpClient;
+			paramToBeUpdated.Port = p.Port;
 			paramToBeUpdated.FromPassword = p.FromPassword;
 			await _unitOfWork.CommitAsync();
 
@@ -115,5 +116,19 @@ namespace LoanManagement.service.Services.Users_Management
 
 			return param.FirstOrDefault();
 		}
-	}
+
+        public async Task<ParamGlobal> UpdatePwdParam(ParamGlobal p, ParamGlobal paramToBeUpdated)
+        {
+            paramToBeUpdated.IncludeDigits = p.IncludeDigits;
+            paramToBeUpdated.IncludeLowerCase = p.IncludeLowerCase;
+            paramToBeUpdated.IncludeUpperCase = p.IncludeUpperCase;
+            paramToBeUpdated.IncludeSpecialCharacters = p.IncludeSpecialCharacters;
+            paramToBeUpdated.ExcludeUsername = p.ExcludeUsername;
+            paramToBeUpdated.DelaiExpiration = p.DelaiExpiration;
+            paramToBeUpdated.Taille = p.Taille;
+            await _unitOfWork.CommitAsync();
+
+            return paramToBeUpdated;
+        }
+    }
 }

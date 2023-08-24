@@ -1,0 +1,144 @@
+﻿@model ClientViewModel;
+@section PageStyles {
+    <link rel="stylesheet" href="~/vendor/css/pages/page-auth.dist.css">
+}
+
+@section VendorStyles{
+    <link rel="stylesheet" href="~/vendor/libs/bs-stepper/bs-stepper.dist.css" />
+    <link rel="stylesheet" href="~/vendor/libs/bootstrap-select/bootstrap-select.dist.css" />
+    <link rel="stylesheet" href="~/vendor/libs/select2/select2.dist.css" />
+    <link rel="stylesheet" href="~/vendor/libs/formvalidation/dist/css/formValidation.min.css" />
+    <link rel="stylesheet" href="~/vendor/libs/tagify/tagify.dist.css" />
+    <link rel="stylesheet" href="~/vendor/libs/animate-css/animate.dist.css" />
+    <link rel="stylesheet" href="~/vendor/libs/spinkit/spinkit.dist.css" />
+    <link rel="stylesheet" href="~/vendor/libs/toastr/toastr.dist.css" />
+    <link rel="stylesheet" href="~/vendor/libs/sweetalert2/sweetalert2.dist.css" />
+}
+
+
+<section class="bernard">
+    <div class="col-md-12">
+        @await Html.PartialAsync("Sections/Menu/_GestionnairePartial")
+    </div>
+    <h4 class="fw-bold py-3 mb-4">
+        <span class="text-muted fw-light">Enregistrer un employeur.</span>
+    </h4>
+
+    <div>
+        <div class="col-12">
+            <h5></h5>
+        </div>
+
+        <div class="row my-4">
+            <div class="col">
+                <h6>  </h6>
+                <div class="accordion" id="collapsibleSection">
+                    <!-- Delivery Address -->
+                    <div class="card accordion-item">
+                        <h2 class="accordion-header" id="headingDeliveryAddress">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDeliveryAddress" aria-expanded="true" aria-controls="collapseDeliveryAddress">
+                                Employeur
+                            </button>
+                        </h2>
+                        <div id="collapseDeliveryAddress" class="accordion-collapse collapse show" aria-labelledby="headingDeliveryAddress" data-bs-parent="#collapsibleSection">
+                            <div class="accordion-body">
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <div class="row">
+                                            <label class="col-sm-3 col-form-label text-sm-end" for="nom">Nom</label>
+                                            <div class="col-sm-9">
+                                                <input type="text" id="nom" class="form-control" placeholder="CEET" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="row">
+                                            <label class="col-sm-3 col-form-label text-sm-end" for="bp">Boîte Postale</label>
+                                            <div class="col-sm-9">
+                                                <input type="text" id="bp" class="form-control" placeholder="99345" aria-label="99345" />
+                                            </div>
+                                        </div>
+                                    </div>                                
+                                    <div class="col-md-6">
+                                        <div class="row">
+                                            <label class="col-sm-3 col-form-label text-sm-end" for="tel">Téléphone</label>
+                                            <div class="col-sm-9">
+                                                <input type="text" id="tel" class="form-control phone-mask" placeholder="22 20 47 00" aria-label="22 20 47 00" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-4">
+                                        <div class="col-md-6">
+                                            <div class="row justify-content-end">
+                                                <div class="col-sm-9">
+                                                    <button type="submit" class="btn btn-primary me-sm-3 me-1">Submit</button>
+                                                    <button type="reset" class="btn btn-label-secondary">Cancel</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .bernard {
+        position: absolute;
+        left: 300px;
+        top: 60px;
+    }
+</style>
+
+@section VendorScripts{
+    <script src="~/vendor/libs/bs-stepper/bs-stepper.dist.js"></script>
+    <script src="~/vendor/libs/bootstrap-select/bootstrap-select.dist.js"></script>
+    <script src="~/vendor/libs/select2/select2.dist.js"></script>
+    <script src="~/vendor/libs/cleavejs/cleave.dist.js"></script>
+    <script src="~/vendor/libs/cleavejs/cleave-phone.dist.js"></script>
+    <script src="~/vendor/libs/tagify/tagify.dist.js"></script>
+    <script src="~/vendor/libs/block-ui/block-ui.dist.js"></script>
+    <script src="~/vendor/libs/toastr/toastr.dist.js"></script>
+    <script src="~/vendor/libs/sweetalert2/sweetalert2.dist.js"></script>
+}
+
+@section PageScripts {
+    @*<script src="~/js/form-wizard-numbered.js"></script>*@
+    <script src="~/bernard/assets/js/form-wizard-numbered.js"></script>
+    <script src="~/js/custom/home-index.js"></script>
+    <script>
+
+    </script>
+}
+
+
+@{
+    if (TempData["IsSuccess"] != null)
+    {
+        <script>
+
+            alert('Connexion réussie.');
+        </script>
+        TempData["IsSuccess"] = null;
+    }
+
+    //if (!ViewBag.IsLoanSuccess.IsNull())
+    //{
+    //     <script>
+    //        alert('Demande effectuée avec succès');
+    //    </script>
+    //}
+    //if (!ViewBag.IsApplyFailed.IsNull())
+    //{
+    //     <script>
+    //        alert('Une erreur a été levée.');
+    //    </script>
+    //}
+}
+
+

@@ -1,0 +1,312 @@
+﻿@model UtilisateurViewModel;
+@section PageStyles {
+    <link rel="stylesheet" href="~/vendor/css/pages/page-auth.dist.css">
+}
+@{
+    ViewData["Title"] = "Enregistrer un utilisateur";
+}
+
+@* ************** Content ************** *@
+<h4 class="fw-bold py-3 mb-4">
+    <span class="text-muted fw-light">Enregistrer un utilisateur</span>
+</h4>
+
+@section VendorStyles {
+    <link rel="stylesheet" href="~/vendor/libs/bs-stepper/bs-stepper.dist.css" />
+    <link rel="stylesheet" href="~/vendor/libs/flatpickr/flatpickr.dist.css" />
+    <link rel="stylesheet" href="~/vendor/libs/select2/select2.dist.css" />
+    <link rel="stylesheet" href="~/vendor/libs/formvalidation/dist/css/formValidation.min.css" />
+    <link rel="stylesheet" href="~/vendor/libs/tagify/tagify.dist.css" />
+    <link rel="stylesheet" href="~/vendor/libs/animate-css/animate.dist.css" />
+    <link rel="stylesheet" href="~/vendor/libs/spinkit/spinkit.dist.css" />
+    <link rel="stylesheet" href="~/vendor/libs/toastr/toastr.dist.css" />
+    <link rel="stylesheet" href="~/vendor/libs/sweetalert2/sweetalert2.dist.css" />
+}
+
+@section VendorScripts {
+    <script src="~/vendor/libs/bs-stepper/bs-stepper.dist.js"></script>
+    <script src="~/vendor/libs/select2/select2.dist.js"></script>
+    <script src="~/vendor/libs/cleavejs/cleave.dist.js"></script>
+    <script src="~/vendor/libs/cleavejs/cleave-phone.dist.js"></script>
+    <script src="~/vendor/libs/tagify/tagify.dist.js"></script>
+    <script src="~/vendor/libs/block-ui/block-ui.dist.js"></script>
+    <script src="~/vendor/libs/toastr/toastr.dist.js"></script>
+    <script src="~/vendor/libs/sweetalert2/sweetalert2.dist.js"></script>
+    <script src="~/vendor/libs/select2/select2.dist.js"></script>
+}
+
+@section PageScripts {
+    <script src="~/js/pages-account-settings-account.dist.js"></script>
+    <script>
+        $(function () {
+            var form = window.$('#myForm'),
+                btn = window.$('#submit'),
+                title = '',
+                message = '',
+                errorTitle = new DOMParser().parseFromString('Erreur', 'text/html').body.innerHTML,
+                errorTypeMessage = 'error',
+                errorMessage = new DOMParser().parseFromString('Erreur Produite', 'text/html').body.innerHTML,
+                errorDescription = '',
+                errorTimeOut = 500000,
+                errors = [];
+
+            form.on("submit",
+                function (event) {
+                    event.preventDefault();
+                    var data = window.$(this).serialize();
+                    var url = window.$(this).attr("action");
+                    console.log(data);
+                    window.$.ajax({
+                        url: url,
+                        type: "POST",
+                        dataType: "json",
+                        data: data,
+                        beforeSend: function () {
+                            btn.attr('disabled', 'disabled');
+                            window.$.blockUI({
+                                message: '<div class="spinner-border text-primary" role="status"></div>',
+                                css: {
+                                    backgroundColor: 'transparent',
+                                    border: '0'
+                                },
+                                overlayCSS: {
+                                    backgroundColor: '#fff',
+                                    opacity: 0.8
+                                }
+                            });
+                        },
+                        success: function (response) {
+                            console.log(response);
+                            if (response.typeMessage === "error") {
+                                window.toastr[response.typeMessage]('👋 ' + 'Erreur',
+                                    {
+                                        showMethod: 'slideDown',
+                                        hideMethod: 'slideUp',
+                                        closeButton: true,
+                                        tapToDismiss: false,
+                                        progressBar: true,
+                                        timeOut: response.timeOut,
+                                        rtl: window.$('html').attr('data-textdirection') === 'rtl',
+                                        onHidden: function () { }
+                                    });
+                            }
+                            //var strJson = JSON.parse(response.strJson);
+                            //var nom = strJson.Nom;
+                            //var prenoms = strJson.Prenoms;
+                            //$('#username').val(strJson.Username);
+                            message = new DOMParser().parseFromString(response.message, 'text/html').body.innerHTML;
+                            window.toastr[response.typeMessage]('👋 ' + message,
+                                response.title,
+                                {
+                                    showMethod: 'slideDown',
+                                    hideMethod: 'slideUp',
+                                    closeButton: true,
+                                    tapToDismiss: false,
+                                    progressBar: true,
+                                    timeOut: response.timeOut,
+                                    rtl: window.$('html').attr('data-textdirection') === 'rtl',
+                                    onHidden: function () { }
+                                });
+
+                        },
+                        error: function (response) {
+                            try {
+
+                                var obj = JSON.parse(JSON.stringify(response.responseJSON));
+                                if (obj.length !== 0) {
+                                    if (response.status === 401) {
+                                        message = new DOMParser().parseFromString('Non autorisé', 'text/html').body.innerHTML;
+                                        window.toastr[errorTypeMessage]('👋 ' + message,
+                                            errorTitle,
+                                            {
+                                                showMethod: 'slideDown',
+                                                hideMethod: 'slideUp',
+                                                closeButton: true,
+                                                tapToDismiss: false,
+                                                progressBar: true,
+                                                timeOut: errorTimeOut,
+                                                rtl: window.$('html').attr('data-textdirection') === 'rtl'
+                                            });
+                                    }
+                                    else {
+                                        if (obj.typeMessage != null && obj.typeMessage !== undefined) {
+                                            if (response.status === 0) {
+                                            } else if (response.status === 400 || response.status === 404 || response.status === 405 || response.status === 500) {
+                                                errorTitle = obj.title;
+                                                errorTypeMessage = obj.typeMessage;
+                                                errorMessage = obj.message;
+                                                errorDescription = obj.description;
+                                                errorTimeOut = obj.timeOut;
+                                                if (obj.erreurs != null && obj.erreurs != undefined) errors = obj.erreurs;
+                                            }
+                                            if (errors !== null && errors !== undefined && errors.length > 0) {
+                                                var messages = '';
+                                                if (errors.length == 1) {
+                                                    messages = errors;
+                                                }
+                                                else {
+                                                    for (var i = 0; i < errors.length; i++) {
+                                                        messages += errors[i] + "<br>";
+                                                    }
+                                                    messages = messages.slice(0, -4);
+                                                }
+                                                errorMessage = new DOMParser().parseFromString(messages, 'text/html').body.innerHTML;
+
+                                            } else if (errorDescription !== null && errorDescription !== undefined) {
+                                                errorMessage = new DOMParser().parseFromString(errorDescription, 'text/html').body.innerHTML;
+                                            } else {
+                                                errorMessage = new DOMParser().parseFromString(errorMessage, 'text/html').body.innerHTML;
+                                            }
+                                            window.toastr[errorTypeMessage]('👋 ' + errorMessage,
+                                                errorTitle,
+                                                {
+                                                    showMethod: 'slideDown',
+                                                    hideMethod: 'slideUp',
+                                                    closeButton: true,
+                                                    tapToDismiss: false,
+                                                    progressBar: true,
+                                                    timeOut: errorTimeOut,
+                                                    rtl: window.$('html').attr('data-textdirection') === 'rtl'
+                                                }
+                                            );
+                                        }
+                                    }
+                                }
+                            } catch (err) {
+                                window.toastr[errorTypeMessage]('👋 ' + err,
+                                    errorTitle,
+                                    {
+                                        showMethod: 'slideDown',
+                                        hideMethod: 'slideUp',
+                                        closeButton: true,
+                                        tapToDismiss: false,
+                                        progressBar: true,
+                                        timeOut: errorTimeOut,
+                                        rtl: window.$('html').attr('data-textdirection') === 'rtl'
+                                    }
+                                );
+                            }
+                        },
+                        complete: function () {
+                            btn.removeAttr('disabled');
+                            window.$.unblockUI();
+                        }
+                    });
+                });
+        });
+        var currentDate = new Date();
+
+        // Format the date as "dd/MM/yyyy"
+        var formattedDate = currentDate.getDate().toString().padStart(2, '0') + '/'
+                            + (currentDate.getMonth() + 1).toString().padStart(2, '0') + '/'
+                            + currentDate.getFullYear().toString();
+
+        // Display the formatted date on the page
+        document.getElementById("formattedDate").textContent = formattedDate;
+        document.getElementById("formattedDate1").textContent = formattedDate;
+    </script>
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="row my-4">
+                    <div class="col">
+                        <h6>Utilisateur</h6>
+                    </div>
+                    <div class="accordion" id="collapsibleSection">
+                        <form asp-action="AddUser" asp-controller="Admin" method="post" id="myForm">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <div class="card accordion-item">
+                                <h2 class="accordion-header" id="headingDeliveryAddress">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDeliveryAddress" aria-expanded="true" aria-controls="collapseDeliveryAddress">
+                                        Ajouter un utilisateur
+                                    </button>
+                                </h2>
+                                <div id="collapseDeliveryAddress" class="accordion-collapse collapse show" aria-labelledby="headingDeliveryAddress" data-bs-parent="#collapsibleSection">
+                                    <div class="accordion-body">
+                                        <div class="row g-3">
+                                            <div class="col-md-6">
+                                                <div class="row">
+                                                    <label class="col-sm-5 col-form-label text-sm-end" for="collapsible-fullname">Nom d'utilisateur</label>
+                                                    <span asp-validation-for="@Model.UtilisateurResource.Username" class="text-danger"></span>
+                                                    <div class="col-sm-9">
+                                                        <input type="text" id="collapsible-fullname" class="form-control" placeholder="username" asp-for="@Model.UtilisateurResource.Username"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="row">
+                                                    <label class="col-sm-5 col-form-label text-sm-end" for="password">Mot de passe</label>
+                                                    <span asp-validation-for="@Model.UtilisateurResource.Password" class="text-danger"></span>
+                                                    <div class="col-sm-9">
+                                                        <div class="input-group input-group-merge">
+                                                            <input type="password" id="formtabs-password" class="form-control" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="formtabs-password2" asp-for="@Model.UtilisateurResource.Password" />
+                                                            <span class="input-group-text cursor-pointer" id="formtabs-password2"><i class="ti ti-eye-off"></i></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="row">
+                                                    <label class="col-sm-5 col-form-label text-sm-end" for="dateExpiration">Date d'expiration</label>
+                                                    <span asp-validation-for="@Model.UtilisateurResource.DateExpirationCompte" class="text-danger"></span>
+                                                    <div class="col-sm-9">
+                                                        <input name="collapsible-address" class="form-control" id="formattedDate1" type="date" asp-for="@Model.UtilisateurResource.DateExpirationCompte" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">            
+                                                <div class="row">
+                                                    <label class="col-sm-5 col-form-label text-sm-end" for="collapsible-pincode">Statut</label>
+                                                    <span asp-validation-for="@Model.UtilisateurResource.Statut" class="text-danger"></span>
+                                                    <div class="col-sm-9">
+                                                        <select id="statut" class="select2 form-select">
+                                                            <option value="1">Actif</option>
+                                                            <option value="2">Inactif</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">    
+                                                <div class="row">
+                                                    <label class="col-sm-5 col-form-label text-sm-end" for="collapsible-landmark">Date de désactivation</label>
+                                                    <span asp-validation-for="@Model.UtilisateurResource.DateDesactivation" class="text-danger"></span>
+                                                    <div class="col-sm-9">
+                                                        <input type="date" id="formattedDate" class="form-control" asp-for="@Model.UtilisateurResource.DateDesactivation" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="row">
+                                                    <label class="col-sm-5 col-form-label text-sm-end" for="collapsible-state">Profil</label>
+                                                    <span asp-validation-for="@Model.UtilisateurResource.ProfilId" class="text-danger"></span>
+                                                    <div class="col-sm-9">
+                                                        <select id="profil" class="select2 form-select" data-allow-clear="true" asp-for="@Model.UtilisateurResource.ProfilId">
+                                                            <option value="1">Gestionnaire</option>
+                                                            <option value="2">Analyste</option>
+                                                            <option value="3">Directeur GGR</option>
+                                                            <option value="4">Chef Département Back-Office Engagement</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="d-flex justify-content-center">
+                                                <button type="submit" class="btn btn-primary me-sm-5 me-1" id="submit">Submit</button>
+                                                <button type="reset" class="btn btn-label-secondary">Cancel</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

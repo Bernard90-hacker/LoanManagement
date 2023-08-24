@@ -8,7 +8,6 @@ namespace LoanManagement.API.Controllers.Users_Management
 {
 	[ApiController]
 	[Route("api/users/[controller]")]
-    [EnableCors(ServiceExtensions.AllowSpecificOrigins)]
     public class UtilisateurController : Controller
 	{
 		private readonly IUtilisateurService _utilisateurService;

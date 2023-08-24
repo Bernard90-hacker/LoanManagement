@@ -1,13 +1,18 @@
 ﻿using LoanManagement.core.Models.Loan_Management;
 using LoanManagement.Data.SqlServer.Configuration.Loan_Management;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using System.Reflection.Emit;
 
 namespace LoanManagement.Data.SqlServer
 {
     public class LoanManagementDbContext : DbContext
     {
-        public LoanManagementDbContext(DbContextOptions<LoanManagementDbContext> options) : base(options) { }
+		private readonly IConfiguration _configuration;
+        public LoanManagementDbContext(DbContextOptions<LoanManagementDbContext> options, IConfiguration configuration) : base(options) 
+		{
+			_configuration = configuration;
+		}
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -176,21 +181,21 @@ namespace LoanManagement.Data.SqlServer
 					}
 				);
 
-			//builder
-			//	.Entity<ParamGlobal>().HasData(
+			builder
+				.Entity<ParamGlobal>().HasData(
 
-			//		new ParamGlobal()
-			//		{
-			//			Id = 1,
-			//			IncludeDigits = true,
-			//			IncludeLowerCase = true,
-			//			IncludeSpecialCharacters = true,
-			//			ExcludeUsername = true,
-			//			IncludeUpperCase = true,
-			//			DelaiExpiration = 6,
-			//			Taille = 8,
-			//		}
-			//	);
+					new ParamGlobal()
+					{
+						Id = 1,
+						IncludeDigits = true,
+						IncludeLowerCase = true,
+						IncludeSpecialCharacters = true,
+						ExcludeUsername = true,
+						IncludeUpperCase = true,
+						DelaiExpiration = 6,
+						Taille = 8,
+					}
+				);
 
 			builder
 				.Entity<Direction>().HasData(
@@ -216,8 +221,14 @@ namespace LoanManagement.Data.SqlServer
 					new Direction()
 					{
 						Id = 4,
+						Code = "GGR",
+						Libelle = "Direction gestion globale des risques."
+					},
+					new Direction()
+					{
+						Id = 5,
 						Code = "GAR",
-						Libelle = "Direction rédaction des garanties"
+						Libelle = "Direction rédaction des garanties."
 					}
 				);
 
@@ -374,8 +385,68 @@ namespace LoanManagement.Data.SqlServer
                     DateAjout = DateTime.Now.ToString("dd/MM/yyyy")
                 }
             );
+            UtilsConstant.HashPassword("skyrocker96S@", out byte[] passwordSalt, out string passwordHashed);
+			var token = UtilsConstant.CreateRefreshToken("Admin", _configuration.GetSection("JWT:Key").Value, out string refreshTokenTime);
+            builder.Entity<Utilisateur>().HasData(
+                new
+                {
+                    Id = 1,
+                    Username = "Admin",
+                    PasswordHash = passwordHashed,
+                    PasswordSalt = passwordSalt,
+                    IsEditPassword = true,
+                    IsSuperAdmin = true,
+                    IsAdmin = true,
+                    Statut = 1,
+                    ProfilId = 1,
+                    DateExpirationCompte = "20/08/2025",
+					DateDesactivation = "20/08/2025",
+					DateAjout = DateTime.Now.ToString("dd/MM/yyyy"),
+					DateModificationMotDePasse = DateTime.Now.ToString("dd/MM/yyyy"),
+					IsConnected = false,
+                    RefreshToken = token,
+                    RefreshTokenTime = refreshTokenTime
 
-			builder
+                });
+
+            builder.Entity<Client>().HasData
+			(
+                new
+                {
+                    Id = 1,
+                    Indice = 310,
+					Nom = "ATTIOGBE",
+					Prenoms = "Godwin",
+					Email = "attiogbegodwin2002@gmail.com",
+					DateNaissance = "07/10/2002",
+					LieuNaissance = "Lomé",
+					AdressePostale = "99",
+					Residence = "WOGLO",
+					Ville = "Lomé",
+					Quartier = "ABLOGAME",
+					Tel = "70556049",
+					Profession = "Etudiant"
+                }
+			);
+
+            builder.Entity<Employe>().HasData
+				(
+					new
+					{
+						Id = 1,
+						Matricule = "6060",
+						Nom = "KEOULA",
+						Prenoms = "Lonlon Edem",
+						Email = "ekeoula@gmail.com",
+						DateAjout = DateTime.Now.ToString("dd/MM/yyyy"),
+						DateModification = DateTime.Now.ToString("dd/MM/yyyy"),
+						UserId = 1,
+						DepartementId = 1
+
+                    }
+				);
+
+            builder
 				.Entity<NatureQuestion>()
 				.HasData
 				(

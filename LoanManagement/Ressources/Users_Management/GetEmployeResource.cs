@@ -9,5 +9,6 @@
         public string Photo { get; set; } = string.Empty;
         public string Username { get; set; } = string.Empty;
         public int DepartementId { get; set; }
+
     }
 }

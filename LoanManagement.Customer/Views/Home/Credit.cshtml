@@ -1,0 +1,1024 @@
+﻿@model SaveDossierClientResourceViewModel
+@{
+	ViewData["Title"] = "Credit";
+}
+
+@* ************** Content ************** *@
+<h4 class="fw-bold py-3 mb-4">
+	<span class="text-muted fw-light">Demande de crédit</span>
+</h4>
+
+@section VendorStyles {
+	<link rel="stylesheet" href="~/vendor/libs/bs-stepper/bs-stepper.dist.css" />
+	<link rel="stylesheet" href="~/vendor/libs/bootstrap-select/bootstrap-select.dist.css" />
+	<link rel="stylesheet" href="~/vendor/libs/select2/select2.dist.css" />
+	<link rel="stylesheet" href="~/vendor/libs/formvalidation/dist/css/formValidation.min.css" />
+	<link rel="stylesheet" href="~/vendor/libs/tagify/tagify.dist.css" />
+	<link rel="stylesheet" href="~/vendor/libs/animate-css/animate.dist.css" />
+	<link rel="stylesheet" href="~/vendor/libs/spinkit/spinkit.dist.css" />
+	<link rel="stylesheet" href="~/vendor/libs/toastr/toastr.dist.css" />
+	<link rel="stylesheet" href="~/vendor/libs/sweetalert2/sweetalert2.dist.css" />
+}
+
+@section VendorScripts {
+	<script src="~/vendor/libs/bs-stepper/bs-stepper.dist.js"></script>
+	<script src="~/vendor/libs/bootstrap-select/bootstrap-select.dist.js"></script>
+	<script src="~/vendor/libs/select2/select2.dist.js"></script>
+	<script src="~/vendor/libs/cleavejs/cleave.dist.js"></script>
+	<script src="~/vendor/libs/cleavejs/cleave-phone.dist.js"></script>
+	<script src="~/vendor/libs/tagify/tagify.dist.js"></script>
+	<script src="~/vendor/libs/block-ui/block-ui.dist.js"></script>
+	<script src="~/vendor/libs/toastr/toastr.dist.js"></script>
+	<script src="~/vendor/libs/sweetalert2/sweetalert2.dist.js"></script>
+}
+
+@section PageScripts {
+    @*<script src="~/js/form-wizard-numbered.js"></script>*@
+    <script src="~/js/custom/home-index.js"></script>
+    <script>
+        $(function () {
+            const select2 = $('.select2'),
+                selectPicker = $('.selectpicker');
+
+            // Bootstrap select
+            if (selectPicker.length) {
+                selectPicker.selectpicker();
+            }
+
+            // select2
+            if (select2.length) {
+                select2.each(function () {
+                    var $this = $(this);
+                    $this.wrap('<div class="position-relative"></div>');
+                    $this.select2({
+                        placeholder: 'Select value',
+                        dropdownParent: $this.parent()
+                    });
+                });
+            }
+        });
+        $(function () {
+            // Numbered Wizard
+            // --------------------------------------------------------------------
+            const wizardNumbered = document.querySelector('.wizard-numbered'),
+                wizardNumberedBtnNextList = [].slice.call(wizardNumbered.querySelectorAll('.btn-next')),
+                wizardNumberedBtnPrevList = [].slice.call(wizardNumbered.querySelectorAll('.btn-prev')),
+                wizardNumberedBtnSubmit = wizardNumbered.querySelector('.btn-submit');
+
+            if (typeof wizardNumbered !== undefined && wizardNumbered !== null) {
+                const numberedStepper = new Stepper(wizardNumbered, {
+                    linear: false
+                });
+                if (wizardNumberedBtnNextList) {
+                    wizardNumberedBtnNextList.forEach(wizardNumberedBtnNext => {
+                        wizardNumberedBtnNext.addEventListener('click', event => {
+                            numberedStepper.next();
+                        });
+                    });
+                }
+                if (wizardNumberedBtnPrevList) {
+                    wizardNumberedBtnPrevList.forEach(wizardNumberedBtnPrev => {
+                        wizardNumberedBtnPrev.addEventListener('click', event => {
+                            numberedStepper.previous();
+                        });
+                    });
+                }
+                if (wizardNumberedBtnSubmit) {
+                    wizardNumberedBtnSubmit.addEventListener('click', event => {
+                        alert('Submitted..!!');
+                    });
+                }
+            }
+        });
+    </script>
+	<script>
+		$(function () {
+
+            function Check(x, y, value) {
+                y.change(function(){
+                    if (y.val() === value) {
+                        x.prop('disabled', true);
+                    }
+                });
+            };
+            function Set(x, value){
+                if(x.val() === undefined){
+                    x.val() = value;
+                }
+            }
+
+            var form = window.$('#myForm'),
+                btn = window.$('#myFormSubmit'),
+                fumeur = $('#fumeur'),
+                nbrCigarettes = $('#nbrCigarettes'),
+                sport = $('#sport'),
+                categorieSport = $('#categorieSport'),
+                infirme = $('#estInfirme'),
+                dateSurvenance = $('#dateSurvenance'),
+                title = '',
+				message = '',
+				errorTitle = new DOMParser().parseFromString("Erreur", 'text/html').body.innerHTML,
+				errorTypeMessage = 'error',
+				errorMessage = new DOMParser().parseFromString("Une erreur s'est produite", 'text/html').body.innerHTML,
+				errorDescription = '',
+				errorTimeOut = 500000,
+				errors = [];
+                natureInfirmite = $('#natureInfirmite');
+                Set(nbrCigarettes, 0);
+                Set(categorieSport, 0);
+                Set(dateSurvenance, "N/A");
+                Set(natureInfirmite, "N/A");
+                Check(nbrCigarettes, fumeur, "0");
+                Check(categorieSport, sport, "0");
+                Check(dateSurvenance, infirme, "0");
+                Check(natureInfirmite, infirme, "0");
+            form.on("submit",
+                function (event) {
+                    //$('.sante').show();
+                    event.preventDefault();
+                    var data = new FormData(this);
+                    var url = window.$(this).attr("action");
+                    console.log(data);
+                    window.$.ajax({
+                        url: url,
+                        type: "POST",
+                        processData: false,
+                        contentType: false,
+                        data: data,
+                        beforeSend: function () {
+                            btn.attr('disabled', 'disabled');
+                            window.$.blockUI({
+                                message: '<div class="spinner-border text-primary" role="status"></div>',
+                                css: {
+                                    backgroundColor: 'transparent',
+                                    border: '0'
+                                },
+                                overlayCSS: {
+                                    backgroundColor: '#fff',
+                                    opacity: 0.8
+                                }
+                            });
+                        },
+                        success: function (response) {
+                            console.log(response);
+                            if (response.typeMessage === "error") {
+                                window.toastr[response.typeMessage]('👋 ' + errorMessage,
+                                    {
+                                        showMethod: 'slideDown',
+                                        hideMethod: 'slideUp',
+                                        closeButton: true,
+                                        tapToDismiss: false,
+                                        progressBar: true,
+                                        timeOut: response.timeOut,
+                                        rtl: window.$('html').attr('data-textdirection') === 'rtl',
+                                        onHidden: function () { }
+                                    });
+                            }
+                            var strJson = JSON.parse(response.strJsonDemandeCredit);
+                            //var nom = strJson.Nom;
+                            //var prenoms = strJson.Prenoms;
+                            //$('#indice').val(strJson.Indice);
+                            //$('#telephone').val(strJson.Telephone);
+                            message = new DOMParser().parseFromString(response.message, 'text/html').body.innerHTML;
+                            window.toastr[response.typeMessage]('👋 ' + message,
+                                response.title,
+                                {
+                                    showMethod: 'slideDown',
+                                    hideMethod: 'slideUp',
+                                    closeButton: true,
+                                    tapToDismiss: false,
+                                    progressBar: true,
+                                    timeOut: response.timeOut,
+                                    rtl: window.$('html').attr('data-textdirection') === 'rtl',
+                                    onHidden: function () { }
+                                });
+                            $('.sante').show();
+                        },
+                        error: function (response) {
+                            try {
+                                //window.location.href = "https://localhost:44309/DemandeCredit";
+                                var obj = JSON.parse(JSON.stringify(response.responseJSON));
+                                if (obj.length !== 0) {
+                                    if (response.status === 401) {
+                                        message = new DOMParser().parseFromString('Non autorisé', 'text/html').body.innerHTML;
+                                        window.toastr[errorTypeMessage]('👋 ' + message,
+                                            errorTitle,
+                                            {
+                                                showMethod: 'slideDown',
+                                                hideMethod: 'slideUp',
+                                                closeButton: true,
+                                                tapToDismiss: false,
+                                                progressBar: true,
+                                                timeOut: errorTimeOut,
+                                                rtl: window.$('html').attr('data-textdirection') === 'rtl'
+                                            });
+                                    }
+                                    else {
+                                        if (obj.typeMessage != null && obj.typeMessage !== undefined) {
+                                            if (response.status === 0) {
+                                            } else if (response.status === 400 || response.status === 404 || response.status === 405 || response.status === 500) {
+                                                errorTitle = obj.title;
+                                                errorTypeMessage = obj.typeMessage;
+                                                errorMessage = obj.message;
+                                                errorDescription = obj.description;
+                                                errorTimeOut = obj.timeOut;
+                                                if (obj.erreurs != null && obj.erreurs != undefined) errors = obj.erreurs;
+                                            }
+                                            if (errors !== null && errors !== undefined && errors.length > 0) {
+                                                var messages = '';
+                                                if (errors.length == 1) {
+                                                    messages = errors;
+                                                }
+                                                else {
+                                                    for (var i = 0; i < errors.length; i++) {
+                                                        messages += errors[i] + "<br>";
+                                                    }
+                                                    messages = messages.slice(0, -4);
+                                                }
+                                                errorMessage = new DOMParser().parseFromString(messages, 'text/html').body.innerHTML;
+
+                                            } else if (errorDescription !== null && errorDescription !== undefined) {
+                                                errorMessage = new DOMParser().parseFromString(errorDescription, 'text/html').body.innerHTML;
+                                            } else {
+                                                errorMessage = new DOMParser().parseFromString(errorMessage, 'text/html').body.innerHTML;
+                                            }
+                                            window.toastr[errorTypeMessage]('👋 ' + errorMessage,
+                                                errorTitle,
+                                                {
+                                                    showMethod: 'slideDown',
+                                                    hideMethod: 'slideUp',
+                                                    closeButton: true,
+                                                    tapToDismiss: false,
+                                                    progressBar: true,
+                                                    timeOut: errorTimeOut,
+                                                    rtl: window.$('html').attr('data-textdirection') === 'rtl'
+                                                }
+                                            );
+                                        }
+                                    }
+                                }
+                            } catch (err) {
+                                window.toastr[errorTypeMessage]('👋 ' + err,
+                                    errorTitle,
+                                    {
+                                        showMethod: 'slideDown',
+                                        hideMethod: 'slideUp',
+                                        closeButton: true,
+                                        tapToDismiss: false,
+                                        progressBar: true,
+                                        timeOut: errorTimeOut,
+                                        rtl: window.$('html').attr('data-textdirection') === 'rtl'
+                                    }
+                                );
+                            }
+                        },
+                        complete: function () {
+                            btn.removeAttr('disabled');
+                            window.$.unblockUI();
+                        }
+                    });
+                });
+
+		});
+	</script>
+
+}
+
+<div class="row">
+	<div class="col-md-12">
+	</div>
+	<div class="col-md-12">
+		<div class="card mb-4">
+			<div class="card-body">
+                <div class="col-12 mb-4">
+                    <small class="text-light fw-semibold"></small>
+                    <div class="bs-stepper wizard-numbered mt-2">
+                        <div class="bs-stepper-header">
+                            <div class="step" data-target="#account-details">
+                                <button type="button" class="step-trigger">
+                                    <span class="bs-stepper-circle">1</span>
+                                    <span class="bs-stepper-label">
+                                        <span class="bs-stepper-title">Informations physiques</span>
+                                        <span class="bs-stepper-subtitle">Physique</span>
+                                    </span>
+                                </button>
+                            </div>
+                            <div class="line">
+                                <i class="ti ti-chevron-right"></i>
+                            </div>
+                            <div class="step" data-target="#personal-info">
+                                <button type="button" class="step-trigger">
+                                    <span class="bs-stepper-circle">2</span>
+                                    <span class="bs-stepper-label">
+                                        <span class="bs-stepper-title">Informations personnelles</span>
+                                        <span class="bs-stepper-subtitle">Entrez vos informations personnelles.</span>
+                                    </span>
+
+                                </button>
+                            </div>
+                            <div class="line">
+                                <i class="ti ti-chevron-right"></i>
+                            </div>
+                            <div class="step" data-target="#social-links">
+                                <button type="button" class="step-trigger">
+                                    <span class="bs-stepper-circle">3</span>
+                                    <span class="bs-stepper-label">
+                                        <span class="bs-stepper-title">Autres informations</span>
+                                        <span class="bs-stepper-subtitle">Autres informations</span>
+                                    </span>
+                                </button>
+                            </div>
+                            <div class="step" data-target="#files">
+                                <button type="button" class="step-trigger">
+                                    <span class="bs-stepper-circle">4</span>
+                                    <span class="bs-stepper-label">
+                                        <span class="bs-stepper-title">Fichiers</span>
+                                        <span class="bs-stepper-subtitle">Fichiers</span>
+                                    </span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="bs-stepper-content">
+                            <form asp-action="DemandeCredit" method="post" asp-controller="Home" enctype='multipart/form-data' id="myForm">
+                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                <div id="account-details" class="content">
+                                    <div class="content-header mb-3">
+                                        <h6 class="mb-0">Informations physiques</h6>
+                                        <small>Entrez vos informations physiques.</small>
+                                    </div>
+                                    <div class="row g-3">
+                                        <div class="col-sm-6">
+                                            <label asp-for="@Model.SaveDossierClientResource.Taille" class="col-form-label">Taille en centimètres</label>
+                                            <input type="number" id="taille" class="form-control" min="100" required="required" asp-for="@Model.SaveDossierClientResource.Taille" />
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label class="form-label" asp-for="@Model.SaveDossierClientResource.Poids">Poids (Kg)</label>
+                                            <input type="number" id="poids" class="form-control" required="required" min="20" max="250" asp-for="@Model.SaveDossierClientResource.Poids" />
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label class="form-label" asp-for="@Model.SaveDossierClientResource.TensionArterielle">Tension Artérielle</label>
+                                            <div class="input-group input-group-merge">
+                                                <input type="text" id="tension" class="form-control" required="required" asp-for="@Model.SaveDossierClientResource.TensionArterielle" />
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label class="form-label" asp-for="@Model.SaveDossierClientResource.Montant">Montant</label>
+                                            <div class="input-group input-group-merge">
+                                                <input type="number" id="montant" class="form-control" required="required" min="0" asp-for="@Model.SaveDossierClientResource.Montant" />
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label class="form-label" asp-for="@Model.SaveDossierClientResource.StatutMaritalId">Statut Marital</label>
+                                            <select class="select2" id="statut" required="required" asp-for="@Model.SaveDossierClientResource.StatutMaritalId">
+                                                <option label=" "></option>
+                                                <option value="1">Célibataire</option>
+                                                <option value="2">Divorcé(e)</option>
+                                                <option value="3">Marié(e)</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-12 d-flex justify-content-between">
+                                            <button class="btn btn-label-secondary btn-prev" disabled>
+                                                <i class="ti ti-arrow-left me-sm-1 me-0"></i>
+                                                <span class="align-middle d-sm-inline-block d-none">Précédent</span>
+                                            </button>
+@*                                            <button class="btn btn-primary btn-next"> <span class="align-middle d-sm-inline-block d-none me-sm-1">Suivant</span> <i class="ti ti-arrow-right"></i></button>
+*@                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Personal Info -->
+                                <div id="personal-info" class="content">
+                                    <div class="content-header mb-3">
+                                        <h6 class="mb-0">Informations personnelles</h6>
+                                        <small>Entrez vos informations personnelles.</small>
+                                    </div>
+                                    <div class="row g-3">
+                                        <div class="col-sm-6">
+                                            <label class="form-label" asp-for="@Model.SaveDossierClientResource.Fumeur">Fumez-vous</label>
+                                            <select class="select2" id="fumeur" required="required" asp-for="@Model.SaveDossierClientResource.Fumeur">
+                                                <option label=" "></option>
+                                                <option value="1">Oui</option>
+                                                <option value="0">Non</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label class="form-label" asp-for="SaveDossierClientResource.NbrCigarettes">Si oui, combien de cigarettes par jour?</label>
+                                            <input type="number" id="nbrCigarettes" class="form-control" min="0" asp-for="SaveDossierClientResource.NbrCigarettes" />
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label class="form-label" asp-for="@Model.SaveDossierClientResource.Buveur">Buvez-vous de l'alcool ?</label>
+                                            <select class="select2" id="buveur" required="required" asp-for="@Model.SaveDossierClientResource.Buveur">
+                                                <option label=" "></option>
+                                                <option value="1">Pas du tout</option>
+                                                <option value="2">A l'occasion</option>
+                                                <option value="3">Régulièrement</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label class="form-label" asp-for="@Model.SaveDossierClientResource.Distractions">Vos distractions</label>
+                                            <select class="selectpicker w-auto" id="distractions" asp-for="@Model.SaveDossierClientResource.Distractions" data-style="btn-transparent" data-icon-base="ti" data-tick-icon="ti-check text-white" required="required" multiple>
+                                                <option>Télévision</option>
+                                                <option>Cinéma</option>
+                                                <option>Arts</option>
+                                                <option>Lecture</option>
+                                                <option>Voyage</option>
+                                                <option>Sport</option>
+                                                <option>Mangas</option>
+                                                <option>Jeux vidéo</option>
+                                                <option>Musique</option>
+                                                <option>Culture Générale</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-12 d-flex justify-content-between">
+                                            <button class="btn btn-label-secondary btn-prev">
+                                                <i class="ti ti-arrow-left me-sm-1 me-0"></i>
+                                                <span class="align-middle d-sm-inline-block d-none">Précédent</span>
+                                            </button>
+@*                                           <button class="btn btn-primary btn-next"> <span class="align-middle d-sm-inline-block d-none me-sm-1">suivant</span> <i class="ti ti-arrow-right"></i></button>
+*@                                       </div>
+                                    </div>
+                                </div>
+                                <!-- Social Links -->
+                                <div id="social-links" class="content">
+                                    <div class="content-header mb-3">
+                                        <h6 class="mb-0">Autres informations</h6>
+                                        <small>Autres informations</small>
+                                    </div>
+                                    <div class="row g-3">
+                                        <div class="col-sm-6">
+                                            <label class="form-label" asp-for="@Model.SaveDossierClientResource.EstSportif">Pratiquez-vous un sport ?</label>
+                                            <select class="selectpicker w-auto" id="sport" data-style="btn-transparent" data-icon-base="ti" data-tick-icon="ti-check text-white" required="required" asp-for="@Model.SaveDossierClientResource.EstSportif">
+                                                <option value=" "> </option>
+                                                <option value="1">Oui</option>
+                                                <option value="0">Non</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label class="form-label" asp-for="@Model.SaveDossierClientResource.CategorieSport">Si oui, à quel titre ?</label>
+                                            <select class="select2" asp-for="@Model.SaveDossierClientResource.CategorieSport" id="categorieSport" data-style="btn-transparent" data-icon-base="ti" data-tick-icon="ti-check text-white">
+                                                <option value=""> </option>
+                                                <option value="1">Amateur</option>
+                                                <option value="2">Professionnel</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label class="form-label" asp-for="@Model.SaveDossierClientResource.EstInfirme">Etes vous atteint d'une infirmité ?</label>
+                                            <select class="selectpicker w-auto" asp-for="@Model.SaveDossierClientResource.EstInfirme" id="estInfirme" data-style="btn-transparent" data-icon-base="ti" data-tick-icon="ti-check text-white" required="required">
+                                                <option value=" "> </option>
+                                                <option value="1">Oui</option>
+                                                <option value="0">Non</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <label class="form-label" asp-for="@Model.SaveDossierClientResource.NatureInfirmite">Si oui, de quelle nature ?</label>
+                                            <input type="text" asp-for="@Model.SaveDossierClientResource.NatureInfirmite" id="natureInfirmite" class="form-control" />
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <label class="form-label" asp-for="@Model.SaveDossierClientResource.DateSurvenance">Date de survenance</label>
+                                            <input type="date" asp-for="@Model.SaveDossierClientResource.DateSurvenance" id="dateSurvenance" class="form-control" />
+                                        </div>
+                                        <div class="col-12 d-flex justify-content-between">
+                                            <button class="btn btn-label-secondary btn-prev">
+                                                <i class="ti ti-arrow-left me-sm-1 me-0"></i>
+                                                <span class="align-middle d-sm-inline-block d-none">Précédent</span>
+                                            </button>
+@*                                            <button class="btn btn-primary btn-next"> <span class="align-middle d-sm-inline-block d-none me-sm-1">Suivant</span> <i class="ti ti-arrow-right"></i></button>
+*@                                        </div>
+                                    </div>
+                                </div>
+                                <div id="files" class="content">
+                                    <div class="content-header mb-3">
+                                        <h6 class="mb-0">Fichiers</h6>
+                                        <small>Fichiers</small>
+                                    </div>
+                                    <div class="row g-3">
+                                        <div class="col-sm-3">
+                                            <label class="form-label" asp-for="@Model.SaveDossierClientResource.AttestationTravail">Attestation de travail.</label>
+                                            <input type="file" id="attestationTravail" class="form-control" accept=".pdf" asp-for="@Model.SaveDossierClientResource.AttestationTravail" />
+
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <label class="form-label" asp-for="@Model.SaveDossierClientResource.ContratTravail">Contrat de travail.</label>
+                                            <input type="file" id="contratTravail" class="form-control" accept=".pdf" asp-for="@Model.SaveDossierClientResource.ContratTravail" />
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <label class="form-label" asp-for="@Model.SaveDossierClientResource.PremierBulletinSalaire">Premier Bulletin de salaire.</label>
+                                            <input type="file" id="premierBulletinSalaire" class="form-control" accept=".pdf" asp-for="@Model.SaveDossierClientResource.PremierBulletinSalaire" />
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <label class="form-label" asp-for="@Model.SaveDossierClientResource.DeuxiemeBulletinSalaire">Deuxième Bulletin de salaire.</label>
+                                            <input type="file" id="deuxiemeBulletinSalaire" class="form-control" accept=".pdf" asp-for="@Model.SaveDossierClientResource.DeuxiemeBulletinSalaire" />
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <label class="form-label" asp-for="@Model.SaveDossierClientResource.TroisiemeBulletinSalaire">Troisième Bulletin de salaire.</label>
+                                            <input type="file" id="troisiemeBulletinSalaire" class="form-control" accept=".pdf" asp-for="@Model.SaveDossierClientResource.TroisiemeBulletinSalaire" />
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <label class="form-label" asp-for="@Model.SaveDossierClientResource.FactureProFormat">Facture proforma</label>
+                                            <input type="file" id="facture" class="form-control" accept=".pdf" asp-for="@Model.SaveDossierClientResource.FactureProFormat" />
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <label class="form-label" asp-for="@Model.SaveDossierClientResource.CarteIdentite">Pièce d'identité</label>
+                                            <input type="file" id="piece" class="form-control" accept=".pdf" asp-for="@Model.SaveDossierClientResource.CarteIdentite" />
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <label class="form-label" asp-for="@Model.SaveDossierClientResource.EcheanceCarteIdentite">Echeance de la pièce</label>
+                                            <input type="date" id="echeance" class="form-control" asp-for="@Model.SaveDossierClientResource.EcheanceCarteIdentite" />
+                                        </div>
+                                        <div class="col-12 d-flex justify-content-between">
+                                            <button class="btn btn-label-secondary btn-prev">
+                                                <i class="ti ti-arrow-left me-sm-1 me-0"></i>
+                                                <span class="align-middle d-sm-inline-block d-none">Précédent</span>
+                                            </button>
+                                            <button type="submit" class="btn btn-label-primary" id="myFormSubmit">Envoyer</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 mb-4 sante" style="display:none">
+                    <small class="text-light fw-semibold">Questions liées à la santé.</small>
+                    <div class="bs-stepper wizard-vertical vertical mt-2">
+                        <div class="bs-stepper-header">
+                            <div class="step" data-target="#account-details-1">
+                                <button type="button" class="step-trigger">
+                                    <span class="bs-stepper-circle">1</span>
+                                    <span class="bs-stepper-label">
+                                        <span class="bs-stepper-title">Question 1</span>
+                                        <span class="bs-stepper-subtitle">Répondez à la question 1</span>
+                                    </span>
+                                </button>
+                            </div>
+                            <div class="line"></div>
+                            <div class="step" data-target="#personal-info-1">
+                                <button type="button" class="step-trigger">
+                                    <span class="bs-stepper-circle">2</span>
+                                    <span class="bs-stepper-label">
+                                        <span class="bs-stepper-title">Question 2</span>
+                                        <span class="bs-stepper-subtitle">Répondez à la question 2</span>
+                                    </span>
+                                </button>
+                            </div>
+                            <div class="line"></div>
+                            <div class="step" data-target="#social-links-1">
+                                <button type="button" class="step-trigger">
+                                    <span class="bs-stepper-circle">3</span>
+                                    <span class="bs-stepper-label">
+                                        <span class="bs-stepper-title">Question 3</span>
+                                        <span class="bs-stepper-subtitle">Répondez à la question 3</span>
+                                    </span>
+                                </button>
+                            </div>
+                            <div class="line"></div>
+                            <div class="step" data-target="#social-links-2">
+                                <button type="button" class="step-trigger">
+                                    <span class="bs-stepper-circle">4</span>
+                                    <span class="bs-stepper-label">
+                                        <span class="bs-stepper-title">Question 4</span>
+                                        <span class="bs-stepper-subtitle">Répondez à la question 4</span>
+                                    </span>
+                                </button>
+                            </div>
+                            <div class="line"></div>
+                            <div class="step" data-target="#social-links-3">
+                                <button type="button" class="step-trigger">
+                                    <span class="bs-stepper-circle">5</span>
+                                    <span class="bs-stepper-label">
+                                        <span class="bs-stepper-title">Question 5</span>
+                                        <span class="bs-stepper-subtitle">Répondez à la question 5</span>
+                                    </span>
+                                </button>
+                            </div>
+                            <div class="line"></div>
+                            <div class="step" data-target="#social-links-4">
+                                <button type="button" class="step-trigger">
+                                    <span class="bs-stepper-circle">6</span>
+                                    <span class="bs-stepper-label">
+                                        <span class="bs-stepper-title">Question 6</span>
+                                        <span class="bs-stepper-subtitle">Répondez à la question 6</span>
+                                    </span>
+                                </button>
+                            </div>
+                            <div class="line"></div>
+                            <div class="step" data-target="#social-links-5">
+                                <button type="button" class="step-trigger">
+                                    <span class="bs-stepper-circle">7</span>
+                                    <span class="bs-stepper-label">
+                                        <span class="bs-stepper-title">Question 7</span>
+                                        <span class="bs-stepper-subtitle">Répondez à la question 7</span>
+                                    </span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="bs-stepper-content">
+                            <form onSubmit="return false">
+                                <!-- Account Details -->
+                                <div id="account-details-1" class="content">
+                                    <div class="content-header mb-3">
+                                        <h6 class="mb-0">Questions liées à la santé.</h6>
+                                        <small></small>
+                                    </div>
+                                    <div class="row g-3">
+                                        <div class="col-sm-6">
+                                            <label class="form-label" for="malade">Avez-vous été malade lors des 6 derniers mois ?</label>
+                                            <select class="select2" id="malade"  required="required">
+                                                <option label=" "></option>
+                                                <option>Oui</option>
+                                                <option>Non</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label class="form-label" for="ouiPrecision">Si oui, précisez</label>
+                                            <input type="text" id="ouiPrecision" class="form-control" />
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label class="form-label" for="periodeTraitement1">Période de traitement.</label>
+                                            <div class="input-group input-group-merge">
+                                                <input type="text" id="periodeTraitement1" class="form-control" />
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label class="form-label" for="lieuTraitement1">Lieu de traitement.</label>
+                                            <div class="input-group input-group-merge">
+                                                <input type="text" id="lieuTraitement1" class="form-control" />
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label class="form-label" for="fatigue">Etes vous souvent fatigué ?</label>
+                                            <select class="select2" id="fatigue" required="required">
+                                                <option label=" "></option>
+                                                <option>Oui</option>
+                                                <option>Non</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label class="form-label" for="ouiPrecision1">Si oui, précisez</label>
+                                            <input type="text" id="ouiPrecision1" class="form-control" />
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label class="form-label" for="periodeTraitement2">Période de traitement.</label>
+                                            <div class="input-group input-group-merge">
+                                                <input type="text" id="periodeTraitement2" class="form-control" />
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label class="form-label" for="lieuTraitement2">Lieu de traitement.</label>
+                                            <div class="input-group input-group-merge">
+                                                <input type="text" id="lieuTraitement2" class="form-control" />
+                                            </div>
+                                        </div>
+                                        <div class="col-12 d-flex justify-content-between">
+                                            <button class="btn btn-label-secondary btn-prev" disabled>
+                                                <i class="ti ti-arrow-left me-sm-1 me-0"></i>
+                                                <span class="align-middle d-sm-inline-block d-none">Précédent</span>
+                                            </button>
+                                            <button class="btn btn-primary btn-next"> <span class="align-middle d-sm-inline-block d-none me-sm-1">Suivant</span> <i class="ti ti-arrow-right"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Personal Info -->
+                                <div id="personal-info-1" class="content">
+                                    <div class="content-header mb-3">
+                                        <h6 class="mb-0">Personal Info</h6>
+                                        <small>Enter Your Personal Info.</small>
+                                    </div>
+                                    <div class="row g-3">
+                                        <div class="col-sm-6">
+                                            <label class="form-label" for="maigrir">Avez-vous maigri les 6 derniers mois?</label>
+                                            <select class="select2" id="maigrir" required="required">
+                                                <option label=" "></option>
+                                                <option>Oui</option>
+                                                <option>Non</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label class="form-label" for="ouiPrecision3">Si oui, précisez</label>
+                                            <input type="text" id="ouiPrecision3" class="form-control" />
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label class="form-label" for="periodeTraitement3">Période de traitement</label>
+                                            <input type="text" id="periodeTraitement3" class="form-control" />
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label class="form-label" for="lieuTraitement3">Lieu de traitement</label>
+                                            <input type="text" id="lieuTraitement3" class="form-control" />
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label class="form-label" for="ganglions">Avez-vous des ganglions, des furoncles, des abcès ou des maladies de la peau ?</label>
+                                            <select class="select2" id="ganglions" required="required">
+                                                <option label=" "></option>
+                                                <option>Oui</option>
+                                                <option>Non</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label class="form-label" for="ouiPrecision4">Si oui, précisez</label>
+                                            <input type="text" id="ouiPrecision4" class="form-control" />
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label class="form-label" for="periodeTraitement4">Période de traitement</label>
+                                            <input type="text" id="periodeTraitement4" class="form-control" />
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label class="form-label" for="lieuTraitement4">Lieu de traitement</label>
+                                            <input type="text" id="lieuTraitement4" class="form-control" />
+                                        </div>
+                                        <div class="col-12 d-flex justify-content-between">
+                                            <button class="btn btn-label-secondary btn-prev">
+                                                <i class="ti ti-arrow-left me-sm-1 me-0"></i>
+                                                <span class="align-middle d-sm-inline-block d-none">Précédent</span>
+                                            </button>
+                                            <button class="btn btn-primary btn-next"> <span class="align-middle d-sm-inline-block d-none me-sm-1">Suivant</span> <i class="ti ti-arrow-right"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Social Links -->
+                                <div id="social-links-1" class="content">
+                                    <div class="content-header mb-3">
+                                        <h6 class="mb-0"></h6>
+                                        <small></small>
+                                    </div>
+                                    <div class="row g-3">
+                                        <div class="col-sm-6">
+                                            <label class="form-label" for="toux">Toussez-vous depuis quelques temps avec en plus de la fièvre?</label>
+                                            <select class="select2" id="toux" required="required">
+                                                <option label=" "></option>
+                                                <option>Oui</option>
+                                                <option>Non</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label class="form-label" for="ouiPrecision5">Si oui, précisez</label>
+                                            <input type="text" id="ouiPrecision5" class="form-control" />
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label class="form-label" for="periodeTraitement5">Période de traitement</label>
+                                            <input type="text" id="periodeTraitement5" class="form-control" />
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label class="form-label" for="lieuTraitement5">Lieu de traitement</label>
+                                            <input type="text" id="lieuTraitement5" class="form-control" />
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label class="form-label" for="plaies">Avez-vous des plaies dans la bouche ?</label>
+                                            <select class="select2" id="plaies" required="required">
+                                                <option label=" "></option>
+                                                <option>Oui</option>
+                                                <option>Non</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label class="form-label" for="ouiPrecision6">Si oui, précisez</label>
+                                            <input type="text" id="ouiPrecision6" class="form-control" />
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label class="form-label" for="periodeTraitement6">Période de traitement</label>
+                                            <input type="text" id="periodeTraitement6"  class="form-control" />
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label class="form-label" for="lieuTraitement6">Lieu de traitement</label>
+                                            <input type="text" id="lieuTraitement6" class="form-control" />
+                                        </div>
+                                        <div class="col-12 d-flex justify-content-between">
+                                            <button class="btn btn-label-secondary btn-prev">
+                                                <i class="ti ti-arrow-left me-sm-1 me-0"></i>
+                                                <span class="align-middle d-sm-inline-block d-none">Précédent</span>
+                                            </button>
+                                            <button class="btn btn-primary btn-next"> <span class="align-middle d-sm-inline-block d-none me-sm-1">Suivant</span> <i class="ti ti-arrow-right"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="social-links-2" class="content">
+                                    <div class="content-header mb-3">
+                                        <h6 class="mb-0"></h6>
+                                        <small></small>
+                                    </div>
+                                    <div class="row g-3">
+                                        <div class="col-sm-6">
+                                            <label class="form-label" for="diarrhee">Faites vous souvent la diarrhée ?</label>
+                                            <select class="select2" id="diarrhee" required="required">
+                                                <option label=""></option>
+                                                <option>Oui</option>
+                                                <option>Non</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label class="form-label" for="ouiPrecision7">Si oui, précisez</label>
+                                            <input type="text" id="ouiPrecision7" class="form-control" />
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label class="form-label" for="periodeTraitement7">Période de traitement</label>
+                                            <input type="text" id="periodeTraitement7" class="form-control" />
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label class="form-label" for="lieuTraitement7">Lieu de traitement</label>
+                                            <input type="text" id="lieuTraitement7" class="form-control" />
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label class="form-label" for="ballonnement">Etes vous souvent ballonné(e) ?</label>
+                                            <select class="select2" id="ballonnement" required="required">
+                                                <option label=" "></option>
+                                                <option>Oui</option>
+                                                <option>Non</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label class="form-label" for="ouiPrecision8">Si oui, précisez</label>
+                                            <input type="text" id="ouiPrecision8" class="form-control" />
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label class="form-label" for="periodeTraitement8">Période de traitement</label>
+                                            <input type="text" id="periodeTraitement8" class="form-control" />
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label class="form-label" for="lieuTraitement8">Lieu de traitement</label>
+                                            <input type="text" id="lieuTraitement8" class="form-control" />
+                                        </div>
+                                        <div class="col-12 d-flex justify-content-between">
+                                            <button class="btn btn-label-secondary btn-prev">
+                                                <i class="ti ti-arrow-left me-sm-1 me-0"></i>
+                                                <span class="align-middle d-sm-inline-block d-none">Précédent</span>
+                                            </button>
+                                            <button class="btn btn-primary btn-next"> <span class="align-middle d-sm-inline-block d-none me-sm-1">Suivant</span> <i class="ti ti-arrow-right"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="social-links-3" class="content">
+                                    <div class="content-header mb-3">
+                                        <h6 class="mb-0"></h6>
+                                        <small></small>
+                                    </div>
+                                    <div class="row g-3">
+                                        <div class="col-sm-6">
+                                            <label class="form-label" for="omi">Avez-vous des OEdèmes de Membres Inférieurs (O.M.I) ?</label>
+                                            <select class="select2" id="omi" required="required">
+                                                <option label=""></option>
+                                                <option>Oui</option>
+                                                <option>Non</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label class="form-label" for="ouiPrecision9">Si oui, précisez</label>
+                                            <input type="text" id="ouiPrecision9" class="form-control" />
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label class="form-label" for="periodeTraitement9">Période de traitement</label>
+                                            <input type="text" id="periodeTraitement9" class="form-control" />
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label class="form-label" for="lieuTraitement9">Lieu de traitement</label>
+                                            <input type="text" id="lieuTraitement9" class="form-control" />
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label class="form-label" for="essoufflement">Etes vous essoufflé(e) au moindre effort ?</label>
+                                            <select class="select2" id="essoufflement" required="required">
+                                                <option label=" "></option>
+                                                <option>Oui</option>
+                                                <option>Non</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label class="form-label" for="ouiPrecision10">Si oui, précisez</label>
+                                            <input type="text" id="ouiPrecision10" class="form-control" />
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label class="form-label" for="periodeTraitement10">Période de traitement</label>
+                                            <input type="text" id="periodeTraitement10" class="form-control" />
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label class="form-label" for="lieuTraitement10">Lieu de traitement</label>
+                                            <input type="text" id="lieuTraitement10" class="form-control" />
+                                        </div>
+                                        <div class="col-12 d-flex justify-content-between">
+                                            <button class="btn btn-label-secondary btn-prev">
+                                                <i class="ti ti-arrow-left me-sm-1 me-0"></i>
+                                                <span class="align-middle d-sm-inline-block d-none">Précédent</span>
+                                            </button>
+                                            <button class="btn btn-primary btn-next"> <span class="align-middle d-sm-inline-block d-none me-sm-1">Suivant</span> <i class="ti ti-arrow-right"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="social-links-4" class="content">
+                                    <div class="content-header mb-3">
+                                        <h6 class="mb-0"></h6>
+                                        <small></small>
+                                    </div>
+                                    <div class="row g-3">
+                                        <div class="col-sm-6">
+                                            <label class="form-label" for="perf">Avez-vous déjà reçu une perfusion?</label>
+                                            <select class="select2" id="perf" required="required">
+                                                <option label=""></option>
+                                                <option>Oui</option>
+                                                <option>Non</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label class="form-label" for="ouiPrecision11">Si oui, précisez</label>
+                                            <input type="text" id="ouiPrecision11" class="form-control" />
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label class="form-label" for="periodeTraitement11">Période de traitement</label>
+                                            <input type="text" id="periodeTraitement11" class="form-control" />
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label class="form-label" for="lieuTraitement11">Lieu de traitement</label>
+                                            <input type="text" id="lieuTraitement11" class="form-control" />
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label class="form-label" for="transf">Avez-vous déjà reçu une transfusion de sang ?</label>
+                                            <select class="select2" id="transf" required="required">
+                                                <option label=" "></option>
+                                                <option>Oui</option>
+                                                <option>Non</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label class="form-label" for="ouiPrecision12">Si oui, précisez</label>
+                                            <input type="text" id="ouiPrecision12" class="form-control" />
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label class="form-label" for="periodeTraitement12">Période de traitement</label>
+                                            <input type="text" id="periodeTraitement12" class="form-control" />
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label class="form-label" for="lieuTraitement12">Lieu de traitement</label>
+                                            <input type="text" id="lieuTraitement12" class="form-control" />
+                                        </div>
+                                        <div class="col-12 d-flex justify-content-between">
+                                            <button class="btn btn-label-secondary btn-prev">
+                                                <i class="ti ti-arrow-left me-sm-1 me-0"></i>
+                                                <span class="align-middle d-sm-inline-block d-none">Précédent</span>
+                                            </button>
+                                            <button class="btn btn-primary btn-next"> <span class="align-middle d-sm-inline-block d-none me-sm-1">Suivant</span> <i class="ti ti-arrow-right"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="social-links-5" class="content">
+                                    <div class="content-header mb-3">
+                                        <h6 class="mb-0"></h6>
+                                        <small></small>
+                                    </div>
+                                    <div class="row g-3">
+                                        <div class="col-sm-6">
+                                            <label class="form-label" for="operation">Avez-vous déjà subi une opération?</label>
+                                            <select class="select2" id="operation" required="required">
+                                                <option label=""></option>
+                                                <option>Oui</option>
+                                                <option>Non</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label class="form-label" for="ouiPrecision13">Si oui, précisez</label>
+                                            <input type="text" id="ouiPrecision13" class="form-control" />
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label class="form-label" for="periodeTraitement13">Période de traitement</label>
+                                            <input type="text" id="periodeTraitement13"  class="form-control" />
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label class="form-label" for="lieuTraitement13">Lieu de traitement</label>
+                                            <input type="text" id="lieuTraitement13" class="form-control" />
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label class="form-label" for="complement">
+                                                Avez-vous des informations complémentaires sur votre état de santé
+                                                susceptibles de renseigner l'Assureur ?
+                                            </label>
+                                            <select class="select2" id="complement" required="required">
+                                                <option label=" "></option>
+                                                <option>Oui</option>
+                                                <option>Non</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label class="form-label" for="ouiPrecision14">Si oui, précisez</label>
+                                            <input type="text" id="ouiPrecision14" class="form-control" />
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label class="form-label" for="periodeTraitement14">Période de traitement</label>
+                                            <input type="text" id="periodeTraitement14" class="form-control" />
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label class="form-label" for="lieuTraitement14">Lieu de traitement</label>
+                                            <input type="text" id="lieuTraitement14" class="form-control" />
+                                        </div>
+                                        <div class="col-12 d-flex justify-content-between">
+                                            <button class="btn btn-label-secondary btn-prev">
+                                                <i class="ti ti-arrow-left me-sm-1 me-0"></i>
+                                                <span class="align-middle d-sm-inline-block d-none">Précédent</span>
+                                            </button>
+                                            <button type="submit" class="btn btn-success" value="Submit">Submit</button>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+			</div>
+		</div>
+	</div>
+</div>

@@ -4,7 +4,8 @@
 	{
         public int Id { get; set; }
         public string NumeroDossier { get; set; } = string.Empty;
-		public double Taille { get; set; }
+        public double Montant { get; set; }
+        public double Taille { get; set; }
 		public double Poids { get; set; }
 		public string TensionArterielle { get; set; } = string.Empty;
 		public bool Fumeur { get; set; }

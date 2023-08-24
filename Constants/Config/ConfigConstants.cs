@@ -212,7 +212,7 @@ namespace Constants.Config
             return nomFichier;
         }
 
-        public static async Task<string?> UploadPdfFile(IHostEnvironment env, IFormFile file, string path)
+        public static async Task<string?> UploadPdfFile(IHostEnvironment env, IFormFile? file, string path, string nomClient, int i)
         {
             if (file is not { Length: > 0 }) return null;
 
@@ -222,7 +222,33 @@ namespace Constants.Config
                 var extension = Path.GetExtension(file.FileName);
                 if (!extension.ToLower().In(".pdf"))
                     return "NotAccepted";
-                nomFichier = UtilsConstant.RandomString(6) + DateTime.Now.ToString("yyyymmddssfff") + extension;
+				switch (i)
+				{
+					case 1: //Attestation de travail
+						nomFichier = $"{nomClient}_ATTESTATION_TRAVAIL";
+						break;
+					case 2: //CONTRAT TRAVAIL
+						nomFichier = $"{nomClient}_CONTRAT_TRAVAIL";
+						break;
+					case 3: //PREMIER_BULLETIN_SALAIRE
+						nomFichier = $"{ nomClient}_PREMIER_BULLETIN_SALAIRE";
+						break;
+					case 4: //DEUXIEME BULLETIN SALAIRE
+						nomFichier = $"{nomClient}_DEUXIEME_BULLETIN_SALAIRE";
+						break;
+					case 5: //TROISIEME_BULLETIN_SALAIRE
+						nomFichier = $"{nomClient}_TROISIEME_BULLETIN_SALAIRE";
+						break;
+					case 6: //FACTURE PROFORMAT
+						nomFichier = $"{nomClient}_FACTURE_PROFORMA";
+						break;
+					case 7: //CARTE_IDENTITE
+						nomFichier = $"{nomClient}_CARTE_IDENTITE";
+						break;
+					default:
+						break;
+				}
+				nomFichier = UtilsConstant.RandomString(6) + DateTime.Now.ToString("yyyymmddssfff") + extension;
                 var repertoireServeur = Path.Combine(env.ContentRootPath, path);
                 if (!Directory.Exists(repertoireServeur)) Directory.CreateDirectory(repertoireServeur);
                 using FileStream fileStream = new(Path.Combine(repertoireServeur, nomFichier), FileMode.OpenOrCreate);

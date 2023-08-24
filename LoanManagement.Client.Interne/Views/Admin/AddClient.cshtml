@@ -1,0 +1,345 @@
+﻿@model ClientViewModel;
+@section PageStyles {
+    <link rel="stylesheet" href="~/vendor/css/pages/page-auth.dist.css">
+}
+
+@{
+    ViewData["Title"] = "Ajouter un client";
+}
+
+@* ************** Content ************** *@
+<h4 class="fw-bold py-3 mb-4">
+    <span class="text-muted fw-light">Ajouter un client</span>
+</h4>
+
+@section VendorStyles {
+    <link rel="stylesheet" href="~/vendor/libs/bs-stepper/bs-stepper.dist.css" />
+    <link rel="stylesheet" href="~/vendor/libs/bootstrap-select/bootstrap-select.dist.css" />
+    <link rel="stylesheet" href="~/vendor/libs/select2/select2.dist.css" />
+    <link rel="stylesheet" href="~/vendor/libs/formvalidation/dist/css/formValidation.min.css" />
+    <link rel="stylesheet" href="~/vendor/libs/tagify/tagify.dist.css" />
+    <link rel="stylesheet" href="~/vendor/libs/animate-css/animate.dist.css" />
+    <link rel="stylesheet" href="~/vendor/libs/spinkit/spinkit.dist.css" />
+    <link rel="stylesheet" href="~/vendor/libs/toastr/toastr.dist.css" />
+    <link rel="stylesheet" href="~/vendor/libs/sweetalert2/sweetalert2.dist.css" />
+}
+
+@section VendorScripts {
+    <script src="~/vendor/libs/bs-stepper/bs-stepper.dist.js"></script>
+    <script src="~/vendor/libs/bootstrap-select/bootstrap-select.dist.js"></script>
+    <script src="~/vendor/libs/select2/select2.dist.js"></script>
+    <script src="~/vendor/libs/cleavejs/cleave.dist.js"></script>
+    <script src="~/vendor/libs/cleavejs/cleave-phone.dist.js"></script>
+    <script src="~/vendor/libs/tagify/tagify.dist.js"></script>
+    <script src="~/vendor/libs/block-ui/block-ui.dist.js"></script>
+    <script src="~/vendor/libs/toastr/toastr.dist.js"></script>
+    <script src="~/vendor/libs/sweetalert2/sweetalert2.dist.js"></script>
+}
+
+@section PageScripts {
+    <script src="~/js/custom/home-index.js"></script>
+     <script>
+        $(function () {
+            var form = window.$('#myForm'),
+                btn = window.$('#submit'),
+                title = '',
+                message = '',
+                errorTitle = new DOMParser().parseFromString('Erreur', 'text/html').body.innerHTML,
+                errorTypeMessage = 'error',
+                errorMessage = new DOMParser().parseFromString('Erreur Produite', 'text/html').body.innerHTML,
+                errorDescription = '',
+                errorTimeOut = 500000,
+                errors = [];
+
+            form.on("submit",
+                function (event) {
+                    event.preventDefault();
+                    var data = window.$(this).serialize();
+                    var url = window.$(this).attr("action");
+                    console.log(data);
+                    window.$.ajax({
+                        url: url,
+                        type: "POST",
+                        dataType: "json",
+                        data: data,
+                        beforeSend: function () {
+                            btn.attr('disabled', 'disabled');
+                            window.$.blockUI({
+                                message: '<div class="spinner-border text-primary" role="status"></div>',
+                                css: {
+                                    backgroundColor: 'transparent',
+                                    border: '0'
+                                },
+                                overlayCSS: {
+                                    backgroundColor: '#fff',
+                                    opacity: 0.8
+                                }
+                            });
+                        },
+                        success: function (response) {
+                            console.log(response);
+                            if (response.typeMessage === "error") {
+                                window.toastr[response.typeMessage]('👋 ' + 'Erreur',
+                                    {
+                                        showMethod: 'slideDown',
+                                        hideMethod: 'slideUp',
+                                        closeButton: true,
+                                        tapToDismiss: false,
+                                        progressBar: true,
+                                        timeOut: response.timeOut,
+                                        rtl: window.$('html').attr('data-textdirection') === 'rtl',
+                                        onHidden: function () { }
+                                    });
+                            }
+                            //var strJson = JSON.parse(response.strJson);
+                            //var nom = strJson.Nom;
+                            //var prenoms = strJson.Prenoms;
+                            //$('#username').val(strJson.Username);
+                            message = new DOMParser().parseFromString(response.message, 'text/html').body.innerHTML;
+                            window.toastr[response.typeMessage]('👋 ' + message,
+                                response.title,
+                                {
+                                    showMethod: 'slideDown',
+                                    hideMethod: 'slideUp',
+                                    closeButton: true,
+                                    tapToDismiss: false,
+                                    progressBar: true,
+                                    timeOut: response.timeOut,
+                                    rtl: window.$('html').attr('data-textdirection') === 'rtl',
+                                    onHidden: function () { }
+                                });
+                            
+                        },
+                        error: function (response) {
+                            try {
+
+                                var obj = JSON.parse(JSON.stringify(response.responseJSON));
+                                if (obj.length !== 0) {
+                                    if (response.status === 401) {
+                                        message = new DOMParser().parseFromString('Non autorisé', 'text/html').body.innerHTML;
+                                        window.toastr[errorTypeMessage]('👋 ' + message,
+                                            errorTitle,
+                                            {
+                                                showMethod: 'slideDown',
+                                                hideMethod: 'slideUp',
+                                                closeButton: true,
+                                                tapToDismiss: false,
+                                                progressBar: true,
+                                                timeOut: errorTimeOut,
+                                                rtl: window.$('html').attr('data-textdirection') === 'rtl'
+                                            });
+                                    }
+                                    else {
+                                        if (obj.typeMessage != null && obj.typeMessage !== undefined) {
+                                            if (response.status === 0) {
+                                            } else if (response.status === 400 || response.status === 404 || response.status === 405 || response.status === 500) {
+                                                errorTitle = obj.title;
+                                                errorTypeMessage = obj.typeMessage;
+                                                errorMessage = obj.message;
+                                                errorDescription = obj.description;
+                                                errorTimeOut = obj.timeOut;
+                                                if (obj.erreurs != null && obj.erreurs != undefined) errors = obj.erreurs;
+                                            }
+                                            if (errors !== null && errors !== undefined && errors.length > 0) {
+                                                var messages = '';
+                                                if (errors.length == 1) {
+                                                    messages = errors;
+                                                }
+                                                else {
+                                                    for (var i = 0; i < errors.length; i++) {
+                                                        messages += errors[i] + "<br>";
+                                                    }
+                                                    messages = messages.slice(0, -4);
+                                                }
+                                                errorMessage = new DOMParser().parseFromString(messages, 'text/html').body.innerHTML;
+
+                                            } else if (errorDescription !== null && errorDescription !== undefined) {
+                                                errorMessage = new DOMParser().parseFromString(errorDescription, 'text/html').body.innerHTML;
+                                            } else {
+                                                errorMessage = new DOMParser().parseFromString(errorMessage, 'text/html').body.innerHTML;
+                                            }
+                                            window.toastr[errorTypeMessage]('👋 ' + errorMessage,
+                                                errorTitle,
+                                                {
+                                                    showMethod: 'slideDown',
+                                                    hideMethod: 'slideUp',
+                                                    closeButton: true,
+                                                    tapToDismiss: false,
+                                                    progressBar: true,
+                                                    timeOut: errorTimeOut,
+                                                    rtl: window.$('html').attr('data-textdirection') === 'rtl'
+                                                }
+                                            );
+                                        }
+                                    }
+                                }
+                            } catch (err) {
+                                window.toastr[errorTypeMessage]('👋 ' + err,
+                                    errorTitle,
+                                    {
+                                        showMethod: 'slideDown',
+                                        hideMethod: 'slideUp',
+                                        closeButton: true,
+                                        tapToDismiss: false,
+                                        progressBar: true,
+                                        timeOut: errorTimeOut,
+                                        rtl: window.$('html').attr('data-textdirection') === 'rtl'
+                                    }
+                                );
+                            }
+                        },
+                        complete: function () {
+                            btn.removeAttr('disabled');
+                            window.$.unblockUI();
+                        }
+                    });
+                });
+        });
+    </script>
+}
+<div class="row">
+    <div class="col-md-12">
+    </div>
+    <div class="col-md-12">
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="row my-4">
+                    <div class="col">
+                        <h6>  </h6>
+                        <div class="accordion" id="collapsibleSection">
+                            <!-- Delivery Address -->
+                            <div class="card accordion-item">
+                                <h2 class="accordion-header" id="headingDeliveryAddress">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDeliveryAddress" aria-expanded="true" aria-controls="collapseDeliveryAddress">
+                                        Client
+                                    </button>
+                                </h2>
+                                <div class="col-12 col-sm-6 col-lg-4 mb-4 d-flex justify-content-center">
+                                    <div class="card d-flex justify-content-center">
+                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createApp"> Ajouter un compte </button>
+                                        
+                                    </div>
+                                </div>
+                                <div id="collapseDeliveryAddress" class="accordion-collapse collapse show" aria-labelledby="headingDeliveryAddress" data-bs-parent="#collapsibleSection">
+                                    <div class="accordion-body">
+                                        <form asp-action="Client" asp-controller="Admin" method="post" id="myForm">
+                                            <div class="row g-3">
+                                                <div class="col-md-6">
+                                                    <div class="row">
+                                                        <label class="col-sm-3 col-form-label text-sm-end" asp-for="@Model.Client.Nom">Nom</label>
+                                                        <div class="col-sm-9">
+                                                            <input type="text" id="nom" class="form-control" placeholder="JOHNSON" asp-for="@Model.Client.Nom"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="row">
+                                                        <label class="col-sm-3 col-form-label text-sm-end" asp-for="@Model.Client.Prenoms">Prenoms</label>
+                                                        <div class="col-sm-9">
+                                                            <input type="text" id="prenoms" class="form-control" placeholder="Akouavi" aria-label="Akouavi"  asp-for="@Model.Client.Prenoms" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="row">
+                                                        <label class="col-sm-3 col-form-label text-sm-end" asp-for="@Model.Client.Residence">Residence</label>
+                                                        <div class="col-sm-9">
+                                                            <input type="text" class="form-control" id="residence" rows="4" placeholder="KOFFI JOHNSON" asp-for="@Model.Client.Residence"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="row">
+                                                        <label class="col-sm-3 col-form-label text-sm-end" asp-for="@Model.Client.AdressePostale">Adresse Postale</label>
+                                                        <div class="col-sm-9">
+                                                            <input type="text" class="form-control" id="addressePostale" rows="4" placeholder="99" asp-for="@Model.Client.AdressePostale" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="row">
+                                                        <label class="col-sm-3 col-form-label text-sm-end" asp-for="@Model.Client.LieuNaissance">Lieu de naissance</label>
+                                                        <div class="col-sm-9">
+                                                            <input type="text" class="form-control" id="lieuNaissance" rows="4" placeholder="Lomé" asp-for="@Model.Client.LieuNaissance" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="row">
+                                                        <label class="col-sm-3 col-form-label text-sm-end" asp-for="@Model.Client.Ville">Ville</label>
+                                                        <div class="col-sm-9">
+                                                            <input type="text" id="ville" class="form-control" placeholder="Lomé" asp-for="@Model.Client.Ville"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="row">
+                                                        <label class="col-sm-3 col-form-label text-sm-end" asp-for="@Model.Client.Quartier">Quartier</label>
+                                                        <div class="col-sm-9">
+                                                            <input type="text" id="collapsible-landmark" class="form-control" placeholder="Dabadakondji" asp-for="@Model.Client.Quartier" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="row">
+                                                        <label class="col-sm-3 col-form-label text-sm-end" asp-for="@Model.Client.Indice">Indice</label>
+                                                        <div class="col-sm-9">
+                                                            <input type="number" id="indice" class="form-control" placeholder="225" asp-for="@Model.Client.Indice"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="row">
+                                                        <label class="col-sm-3 col-form-label text-sm-end" asp-for="@Model.Client.Tel">Téléphone</label>
+                                                        <div class="col-sm-9">
+                                                            <input type="text" id="tel" class="form-control phone-mask" placeholder="96 88 72 16" aria-label="96 88 72 16" asp-for="@Model.Client.Tel"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="row">
+                                                        <label class="col-sm-3 col-form-label text-sm-end" asp-for="@Model.Client.Profession">Profession</label>
+                                                        <div class="col-sm-9">
+                                                            <input type="text" id="profession" class="form-control" placeholder="Banquier" aria-label="Banquier" asp-for="@Model.Client.Profession"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="row">
+                                                        <label asp-for="@Model.Client.DateNaissance" class="form-label">Date de naissance</label>
+                                                        <div class="col-sm-9">
+                                                            <input type="date" class="form-control" placeholder="DD-MM-YYYY" id="dateNaissance" asp-for="@Model.Client.DateNaissance"/>
+                                                        </div>     
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="row">
+                                                        <label asp-for="@Model.Client.Email" class="form-label">Email</label>
+                                                        <div class="col-sm-9">
+                                                            <input type="email" class="form-control" placeholder="j@outlook.com" id="email"  asp-for="@Model.Client.Email"/>
+                                                        </div>     
+                                                    </div>
+                                                </div>
+                                                <div class="row mt-4">
+                                                    <div class="col-md-6">
+                                                        <div class="row justify-content-end">
+                                                            <div class="col-sm-9">
+                                                                <button type="submit" class="btn btn-primary me-sm-3 me-1" id="submit">Submit</button>
+                                                                <button type="reset" class="btn btn-label-secondary">Cancel</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @await Html.PartialAsync("Compte")
+</div>

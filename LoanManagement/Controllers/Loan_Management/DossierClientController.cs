@@ -1,4 +1,5 @@
-﻿using Constants.Config;
+﻿using AutoMapper;
+using Constants.Config;
 using FluentValidation;
 using LoanManagement.API.Ressources.Loan_Management;
 using LoanManagement.core.Models.Users_Management;
@@ -170,7 +171,7 @@ namespace LoanManagement.API.Controllers.Loan_Management
 						journal.Niveau = 3;
 						await _journalisationService.Journalize(journal);
 						_logger.LogInformation("Détails d'un dossier crédit : Opération effectuée avec succès");
-						var result = _mapper.Map<DossierClientRessource>(dossier);
+						var result = _mapper.Map<IEnumerable<DossierClientRessource>>(dossier);
 
 						return Ok(result);
 					}
@@ -186,9 +187,9 @@ namespace LoanManagement.API.Controllers.Loan_Management
 		}
 
 		[HttpPost("add")]
-		public async Task<ActionResult> Add([FromForm] SaveDossierClientResource ressource)
+		public async Task<ActionResult> Add(SaveDossierClientResource ressource)
 		{
-			using (var connection = new SqlConnection(_configuration.GetConnectionString("Default")))
+            using (var connection = new SqlConnection(_configuration.GetConnectionString("Default")))
 			{
 				connection.Open();
 				using (var transaction = connection.BeginTransaction())
@@ -229,64 +230,15 @@ namespace LoanManagement.API.Controllers.Loan_Management
 								description: "Statut marital ou client sélectionné invalide (s)"));
 						}
 						var dossier = _mapper.Map<DossierClient>(ressource);
-						dossier.ClientId = ressource.ClientId;
-						dossier.Cloturer = false;
+                        var dossiers = (await _dossierClientService.GetAll());
+                        string reference = string.Empty;
+                        if (dossiers.Count() == 0)
+                            reference = "000";
+                        else
+                            reference = dossiers.LastOrDefault().NumeroDossier.Substring(10);
+                        dossier.NumeroDossier = "DEMANDE - " + Constants.Utils.UtilsConstant.IncrementStringWithNumbers(reference);
 						dossier.DateSoumission = DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss");
-                        dossier.NumeroDossier = DateTime.Now.ToString("ddMMyyyyhh:mm:ss");
-                        if (!ressource.ContratTravail.IsNull())
-                        {
-                            dossier.ContratTravail = await ConfigConstants.UploadPdfFile(_webHostEnvironment, ressource.ContratTravail, GlobalConstants.DossierCredit);
-                            if (dossier.ContratTravail.Equals("NotAccepted"))
-                            {
-                                _logger.LogWarning("'Enregistrement d'un dossier crédit' : format du contrat de travail non valide.");
-                                return NotFound(new ApiResponse((int)CustomHttpCode.ERROR, description: "Format du contrat de travail invalide !! Seuls sont autorisés les formats png, jpeg ou jpg."));
-                            }
-                        }
-                        if (!ressource.AttestationTravail.IsNull())
-                        {
-                            dossier.AttestationTravail = await ConfigConstants.UploadPdfFile(_webHostEnvironment, ressource.ContratTravail, GlobalConstants.DossierCredit);
-                            if (dossier.AttestationTravail.Equals("NotAccepted"))
-                            {
-                                _logger.LogWarning("'Enregistrement d'un dossier crédit' : format de l'attestation de travail non valide.");
-                                return NotFound(new ApiResponse((int)CustomHttpCode.ERROR, description: "Format de l'attestation de travail invalide !! Seuls sont autorisés les formats pdf."));
-                            }
-                        }
-                        if (!ressource.PremierBulletinSalaire.IsNull())
-                        {
-                            dossier.PremierBulletinSalaire = await ConfigConstants.UploadPdfFile(_webHostEnvironment, ressource.ContratTravail, GlobalConstants.DossierCredit);
-                            if (dossier.PremierBulletinSalaire.Equals("NotAccepted"))
-                            {
-                                _logger.LogWarning("'Enregistrement d'un dossier crédit' : format des bulletins de salaire non valide.");
-                                return NotFound(new ApiResponse((int)CustomHttpCode.ERROR, description: "Format des bulletins de salaire de travail invalide !! Seuls sont autorisés les formats pdf."));
-                            }
-                        }
-                        if (!ressource.DeuxiemeBulletinSalaire.IsNull())
-                        {
-                            dossier.DeuxiemeBulletinSalaire = await ConfigConstants.UploadPdfFile(_webHostEnvironment, ressource.ContratTravail, GlobalConstants.DossierCredit);
-                            if (dossier.PremierBulletinSalaire.Equals("NotAccepted"))
-                            {
-                                _logger.LogWarning("'Enregistrement d'un dossier crédit' : format des bulletins de salaire non valide.");
-                                return NotFound(new ApiResponse((int)CustomHttpCode.ERROR, description: "Format des bulletins de salaire de travail invalide !! Seuls sont autorisés les formats pdf."));
-                            }
-                        }
-                        if (!ressource.TroisiemeBulletinSalaire.IsNull())
-                        {
-                            dossier.TroisiemeBulletinSalaire = await ConfigConstants.UploadPdfFile(_webHostEnvironment, ressource.ContratTravail, GlobalConstants.DossierCredit);
-                            if (dossier.PremierBulletinSalaire.Equals("NotAccepted"))
-                            {
-                                _logger.LogWarning("'Enregistrement d'un dossier crédit' : format des bulletins de salaire non valide.");
-                                return NotFound(new ApiResponse((int)CustomHttpCode.ERROR, description: "Format des bulletins de salaire de travail invalide !! Seuls sont autorisés les formats pdf."));
-                            }
-                        }
-                        if (!ressource.FactureProFormat.IsNull())
-                        {
-                            dossier.FactureProFormat = await ConfigConstants.UploadPdfFile(_webHostEnvironment, ressource.ContratTravail, GlobalConstants.DossierCredit);
-                            if (dossier.FactureProFormat.Equals("NotAccepted"))
-                            {
-                                _logger.LogWarning("'Enregistrement d'un dossier crédit' : format de la facture proformat non valide.");
-                                return NotFound(new ApiResponse((int)CustomHttpCode.ERROR, description: "Format des bulletins de salaire de travail invalide !! Seuls sont autorisés les formats png, jpeg ou jpg."));
-                            }
-                        }
+
                         var dossierCreated = await _dossierClientService.Create(dossier);
 						var dossierCreatedSuccessFully = _mapper.Map<DossierClientRessource>(dossierCreated);
 						_logger.LogInformation("Enregistrement d'une demande de prêt : Opération effectuée avec succès");
@@ -331,16 +283,16 @@ namespace LoanManagement.API.Controllers.Loan_Management
 							return NotFound(new ApiResponse((int)CustomHttpCode.OBJECT_NOT_FOUND,
 								description: "Dossier sélectionné invalide."));
 						}
-                        if (!ressource.Couverture.IsNull())
-                        {
-                            string couverture = await ConfigConstants.UploadPdfFile(_webHostEnvironment, ressource.Couverture, GlobalConstants.PhotoUtilisateur);
-                            if (couverture.Equals("NotAccepted"))
-                            {
-                                _logger.LogWarning("'Enregistrement d'un dossier crédit' : format de fichier non valide.");
-                                return NotFound(new ApiResponse((int)CustomHttpCode.ERROR, description: "Format de fichier invalide !! Seuls sont autorisés les formats pdf."));
-                            }
-                            await _dossierClientService.AddCouverture(dossier, couverture);
-                        }
+                        //if (!ressource.Couverture.IsNull())
+                        //{
+                        //    string couverture = await ConfigConstants.UploadPdfFile(_webHostEnvironment, ressource.Couverture, GlobalConstants.PhotoUtilisateur);
+                        //    if (couverture.Equals("NotAccepted"))
+                        //    {
+                        //        _logger.LogWarning("'Enregistrement d'un dossier crédit' : format de fichier non valide.");
+                        //        return NotFound(new ApiResponse((int)CustomHttpCode.ERROR, description: "Format de fichier invalide !! Seuls sont autorisés les formats pdf."));
+                        //    }
+                        //    await _dossierClientService.AddCouverture(dossier, couverture);
+                        //}
 						Journal.Niveau = 2; //SUCCES
 						await _journalisationService.Journalize(Journal);
 						_logger.LogInformation("Ajout de la couverture d'emprunteur : Opération effectuée avec succès.");
@@ -394,6 +346,8 @@ namespace LoanManagement.API.Controllers.Loan_Management
 				}
 			}
 		}
+
+
 		[HttpPost("addInfoSanteClient")]
 		public async Task<ActionResult> Add(List<InfoSanteClientRessource> ressource)
 		{
@@ -456,6 +410,8 @@ namespace LoanManagement.API.Controllers.Loan_Management
 				}
 			}
 		}
+
+		
 
     }
 }

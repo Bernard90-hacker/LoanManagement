@@ -24,6 +24,7 @@ namespace LoanManagement.API.Mapping
 			CreateMap<HabilitationProfil, HabilitationProfilRessource>();
 			CreateMap<HabilitationProfilRessource, HabilitationProfil>();
 			CreateMap<ParamGlobalRessource, ParamGlobal>();
+			CreateMap<UpdateParamMotDePasseRessource, ParamGlobal>();
 			CreateMap<ParamGlobal, ParamGlobalRessource>();
 			CreateMap<Employe, GetEmployeResource>();
 			CreateMap<EmployeRessource, Employe>();

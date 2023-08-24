@@ -1,0 +1,744 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Accueil" xml:space="preserve">
+    <value>Home</value>
+  </data>
+  <data name="Actions" xml:space="preserve">
+    <value>Actions</value>
+  </data>
+  <data name="Actualiser" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
+  <data name="AddCleRibVirement" xml:space="preserve">
+    <value>Enter the RIB code</value>
+  </data>
+  <data name="AddCodeAgenceVirement" xml:space="preserve">
+    <value>Enter the counter</value>
+  </data>
+  <data name="AddCodeBanqueVirement" xml:space="preserve">
+    <value>Enter the institution code</value>
+  </data>
+  <data name="AddDateTraitement" xml:space="preserve">
+    <value>Enter the treatment date</value>
+  </data>
+  <data name="AddMotifVirement" xml:space="preserve">
+    <value>Enter the reason for the transfer</value>
+  </data>
+  <data name="AddNumeroCompteVirement" xml:space="preserve">
+    <value>Enter the account number</value>
+  </data>
+  <data name="AddSignesPonctuation" xml:space="preserve">
+    <value>Fill in the punctuation marks</value>
+  </data>
+  <data name="AffichageEntrées" xml:space="preserve">
+    <value>Display from _START_ to _END_ entries on _TOTAL_</value>
+  </data>
+  <data name="AffichageZéroEntrée" xml:space="preserve">
+    <value>Display from 0 to 0 on 0 entries</value>
+  </data>
+  <data name="AfficherEntrées" xml:space="preserve">
+    <value>Show entries _MENU_</value>
+  </data>
+  <data name="Aide" xml:space="preserve">
+    <value>Help</value>
+  </data>
+  <data name="Ajouter" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="Allemand" xml:space="preserve">
+    <value>German</value>
+  </data>
+  <data name="Anglais" xml:space="preserve">
+    <value>English</value>
+  </data>
+  <data name="Annuler" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Aoû" xml:space="preserve">
+    <value>Aug</value>
+  </data>
+  <data name="Août" xml:space="preserve">
+    <value>August</value>
+  </data>
+  <data name="Appliquer" xml:space="preserve">
+    <value>Apply</value>
+  </data>
+  <data name="APropos" xml:space="preserve">
+    <value>About us</value>
+  </data>
+  <data name="Attention" xml:space="preserve">
+    <value>Attention !!</value>
+  </data>
+  <data name="AucuneDonnéeDispo" xml:space="preserve">
+    <value>No data available</value>
+  </data>
+  <data name="AucunEnregTrouvé" xml:space="preserve">
+    <value>No matching records found</value>
+  </data>
+  <data name="AucunRésultat" xml:space="preserve">
+    <value>No results</value>
+  </data>
+  <data name="Avr" xml:space="preserve">
+    <value>Apr</value>
+  </data>
+  <data name="Avril" xml:space="preserve">
+    <value>April</value>
+  </data>
+  <data name="BientôtDisponible" xml:space="preserve">
+    <value>Coming soon</value>
+  </data>
+  <data name="Calculer" xml:space="preserve">
+    <value>Calculate</value>
+  </data>
+  <data name="Chargement" xml:space="preserve">
+    <value>Loading...</value>
+  </data>
+  <data name="ChargementGénérationFichiers" xml:space="preserve">
+    <value>Loading and generating files</value>
+  </data>
+  <data name="ChargerFichier" xml:space="preserve">
+    <value>You must upload at least one file</value>
+  </data>
+  <data name="Chercher" xml:space="preserve">
+    <value>Search for :</value>
+  </data>
+  <data name="ChoisirDate" xml:space="preserve">
+    <value>Select date</value>
+  </data>
+  <data name="CleRibVirement" xml:space="preserve">
+    <value>RIB code</value>
+  </data>
+  <data name="Code" xml:space="preserve">
+    <value>Code</value>
+  </data>
+  <data name="CodeAgenceVirement" xml:space="preserve">
+    <value>Counter</value>
+  </data>
+  <data name="CodeBanqueVirement" xml:space="preserve">
+    <value>Institution code</value>
+  </data>
+  <data name="ConditionsChargement" xml:space="preserve">
+    <value>Loading conditions</value>
+  </data>
+  <data name="Courant" xml:space="preserve">
+    <value>Current</value>
+  </data>
+  <data name="DateAjout" xml:space="preserve">
+    <value>Date of creation</value>
+  </data>
+  <data name="DateHeureChargement" xml:space="preserve">
+    <value>Upload Date/Time</value>
+  </data>
+  <data name="DateHeureGeneration" xml:space="preserve">
+    <value>Generation Date/Time</value>
+  </data>
+  <data name="DateModification" xml:space="preserve">
+    <value>Date of update</value>
+  </data>
+  <data name="DateTraitement" xml:space="preserve">
+    <value>Treatment date</value>
+  </data>
+  <data name="DemandeMajNavigateur" xml:space="preserve">
+    <value>Your browser does not support this feature. Please update it</value>
+  </data>
+  <data name="Dernier" xml:space="preserve">
+    <value>Last</value>
+  </data>
+  <data name="Di" xml:space="preserve">
+    <value>Sun</value>
+  </data>
+  <data name="Dim" xml:space="preserve">
+    <value>Sun</value>
+  </data>
+  <data name="Dimanche" xml:space="preserve">
+    <value>Sunday</value>
+  </data>
+  <data name="Documentation" xml:space="preserve">
+    <value>Documentation</value>
+  </data>
+  <data name="Déc" xml:space="preserve">
+    <value>Dec</value>
+  </data>
+  <data name="Décembre" xml:space="preserve">
+    <value>December</value>
+  </data>
+  <data name="Déconnexion" xml:space="preserve">
+    <value>Log out</value>
+  </data>
+  <data name="Détails" xml:space="preserve">
+    <value>Details</value>
+  </data>
+  <data name="EditéPar" xml:space="preserve">
+    <value>published by</value>
+  </data>
+  <data name="Effacer" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="Enregistrer" xml:space="preserve">
+    <value>Register</value>
+  </data>
+  <data name="EntréesFiltrées" xml:space="preserve">
+    <value>(filtered from _MAX_ total entries)</value>
+  </data>
+  <data name="Envoyer" xml:space="preserve">
+    <value>Send</value>
+  </data>
+  <data name="Eo" xml:space="preserve">
+    <value>Eb</value>
+  </data>
+  <data name="Erreur" xml:space="preserve">
+    <value>Error!!</value>
+  </data>
+  <data name="ErreurNonIdentifiée" xml:space="preserve">
+    <value>An unidentified detected error, please contact the administrator</value>
+  </data>
+  <data name="ErreurProduite" xml:space="preserve">
+    <value>An error has occurred! Please try again later</value>
+  </data>
+  <data name="EtatFichierChargé" xml:space="preserve">
+    <value>Loaded files status</value>
+  </data>
+  <data name="Exporter" xml:space="preserve">
+    <value>Export</value>
+  </data>
+  <data name="Facturation" xml:space="preserve">
+    <value>Billing</value>
+  </data>
+  <data name="Faq" xml:space="preserve">
+    <value>FAQ</value>
+  </data>
+  <data name="Fermer" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="FermerSansModifier" xml:space="preserve">
+    <value>Close without editing</value>
+  </data>
+  <data name="FichiersChargésEtGénérés" xml:space="preserve">
+    <value>Loaded and generated files</value>
+  </data>
+  <data name="FormatAccentuation" xml:space="preserve">
+    <value>Format accented characters ?</value>
+  </data>
+  <data name="FormatPonctuation" xml:space="preserve">
+    <value>Format punctuation marks ?</value>
+  </data>
+  <data name="FormatPonctuationInfos" xml:space="preserve">
+    <value>The set punctuation marks, identified in the account titles, will be replaced by a space in the destination file(s)</value>
+  </data>
+  <data name="Français" xml:space="preserve">
+    <value>French</value>
+  </data>
+  <data name="Fév" xml:space="preserve">
+    <value>Feb</value>
+  </data>
+  <data name="Février" xml:space="preserve">
+    <value>February</value>
+  </data>
+  <data name="Go" xml:space="preserve">
+    <value>Gb</value>
+  </data>
+  <data name="GénérationDeFichieEnCours" xml:space="preserve">
+    <value>Generation of file(s) in progress...</value>
+  </data>
+  <data name="Générer" xml:space="preserve">
+    <value>Generate</value>
+  </data>
+  <data name="Information" xml:space="preserve">
+    <value>Information</value>
+  </data>
+  <data name="InformationsVirement" xml:space="preserve">
+    <value>Transfer information</value>
+  </data>
+  <data name="Jan" xml:space="preserve">
+    <value>Jan</value>
+  </data>
+  <data name="Janvier" xml:space="preserve">
+    <value>January</value>
+  </data>
+  <data name="Je" xml:space="preserve">
+    <value>Th</value>
+  </data>
+  <data name="Jeu" xml:space="preserve">
+    <value>Thu</value>
+  </data>
+  <data name="Jeudi" xml:space="preserve">
+    <value>Thursday</value>
+  </data>
+  <data name="Juillet" xml:space="preserve">
+    <value>Juily</value>
+  </data>
+  <data name="Juin" xml:space="preserve">
+    <value>June</value>
+  </data>
+  <data name="Jul" xml:space="preserve">
+    <value>Jul</value>
+  </data>
+  <data name="Jun" xml:space="preserve">
+    <value>Jun</value>
+  </data>
+  <data name="Ko" xml:space="preserve">
+    <value>Kb</value>
+  </data>
+  <data name="Libellé" xml:space="preserve">
+    <value>Label</value>
+  </data>
+  <data name="LibelléAbrégé" xml:space="preserve">
+    <value>Abbreviated label</value>
+  </data>
+  <data name="Licence" xml:space="preserve">
+    <value>License</value>
+  </data>
+  <data name="Lu" xml:space="preserve">
+    <value>Mon</value>
+  </data>
+  <data name="Lun" xml:space="preserve">
+    <value>Mon</value>
+  </data>
+  <data name="Lundi" xml:space="preserve">
+    <value>Monday</value>
+  </data>
+  <data name="Ma" xml:space="preserve">
+    <value>Tue</value>
+  </data>
+  <data name="Mai" xml:space="preserve">
+    <value>May</value>
+  </data>
+  <data name="Maintenance" xml:space="preserve">
+    <value>Maintenance</value>
+  </data>
+  <data name="Mar" xml:space="preserve">
+    <value>Mar</value>
+  </data>
+  <data name="Mardi" xml:space="preserve">
+    <value>Tuesday</value>
+  </data>
+  <data name="Mars" xml:space="preserve">
+    <value>March</value>
+  </data>
+  <data name="Me" xml:space="preserve">
+    <value>Me</value>
+  </data>
+  <data name="Mer" xml:space="preserve">
+    <value>Wed</value>
+  </data>
+  <data name="Mercredi" xml:space="preserve">
+    <value>Wednesday</value>
+  </data>
+  <data name="MettreJour" xml:space="preserve">
+    <value>Update</value>
+  </data>
+  <data name="MiseJour" xml:space="preserve">
+    <value>Upgrade</value>
+  </data>
+  <data name="Mo" xml:space="preserve">
+    <value>Mb</value>
+  </data>
+  <data name="Modifier" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="MonProfil" xml:space="preserve">
+    <value>My profile</value>
+  </data>
+  <data name="MotifVirement" xml:space="preserve">
+    <value>Reason for transfer</value>
+  </data>
+  <data name="MéthodeNonAutorisée" xml:space="preserve">
+    <value>Unauthorized method</value>
+  </data>
+  <data name="NbreJour" xml:space="preserve">
+    <value>Number of days</value>
+  </data>
+  <data name="Nom" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="NombreMaxFichierDépassé" xml:space="preserve">
+    <value>You have exceeded the total number of files to upload</value>
+  </data>
+  <data name="NomComplet" xml:space="preserve">
+    <value>Full name</value>
+  </data>
+  <data name="NomFichier" xml:space="preserve">
+    <value>File name</value>
+  </data>
+  <data name="NomFichierChargé" xml:space="preserve">
+    <value>Loaded file</value>
+  </data>
+  <data name="NomFichierGénéré" xml:space="preserve">
+    <value>Generated file</value>
+  </data>
+  <data name="Nov" xml:space="preserve">
+    <value>Nov</value>
+  </data>
+  <data name="Novembre" xml:space="preserve">
+    <value>November</value>
+  </data>
+  <data name="NumeroCompteVirement" xml:space="preserve">
+    <value>Account number</value>
+  </data>
+  <data name="NuméroTelephone" xml:space="preserve">
+    <value>Phone number</value>
+  </data>
+  <data name="Oct" xml:space="preserve">
+    <value>Oct</value>
+  </data>
+  <data name="Octobre" xml:space="preserve">
+    <value>October</value>
+  </data>
+  <data name="PageNonAutorisée" xml:space="preserve">
+    <value>Page not authorized</value>
+  </data>
+  <data name="Paramètres" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="ParamétrageInfosVirement" xml:space="preserve">
+    <value>Setting up transfer information</value>
+  </data>
+  <data name="ParamétrageVariables" xml:space="preserve">
+    <value>Configuration of variables</value>
+  </data>
+  <data name="PasAutorisé" xml:space="preserve">
+    <value>Not authorized</value>
+  </data>
+  <data name="PlusDeRésultats" xml:space="preserve">
+    <value>Loading more results...</value>
+  </data>
+  <data name="Po" xml:space="preserve">
+    <value>Pb</value>
+  </data>
+  <data name="Portugais" xml:space="preserve">
+    <value>Portuguese</value>
+  </data>
+  <data name="Premier" xml:space="preserve">
+    <value>First</value>
+  </data>
+  <data name="Précédent" xml:space="preserve">
+    <value>Previous</value>
+  </data>
+  <data name="Prénom" xml:space="preserve">
+    <value>First name</value>
+  </data>
+  <data name="Qo" xml:space="preserve">
+    <value>Qb</value>
+  </data>
+  <data name="Quitter" xml:space="preserve">
+    <value>Exit</value>
+  </data>
+  <data name="RechercheEnCours" xml:space="preserve">
+    <value>Search in progress...</value>
+  </data>
+  <data name="Rechercher" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="ReqCleRibVirement" xml:space="preserve">
+    <value>Please enter the RIB code</value>
+  </data>
+  <data name="ReqCodeAgenceVirement" xml:space="preserve">
+    <value>Please fill in the counter</value>
+  </data>
+  <data name="ReqCodeBanqueVirement" xml:space="preserve">
+    <value>Please fill in the institution code</value>
+  </data>
+  <data name="ReqDateTraitement" xml:space="preserve">
+    <value>Please enter the treatment date</value>
+  </data>
+  <data name="ReqMotifVirement" xml:space="preserve">
+    <value>Please enter the reason for the transfer</value>
+  </data>
+  <data name="ReqNumeroCompteVirement" xml:space="preserve">
+    <value>Please enter the account number</value>
+  </data>
+  <data name="ReqSignesPonctuation" xml:space="preserve">
+    <value>Please fill in the punctuation mark(s)</value>
+  </data>
+  <data name="RessourceNonAutorisée" xml:space="preserve">
+    <value>Unauthorized resource. Invalid authentication information for the searched resource</value>
+  </data>
+  <data name="Restauration" xml:space="preserve">
+    <value>Recovery</value>
+  </data>
+  <data name="Restaurer" xml:space="preserve">
+    <value>Restore</value>
+  </data>
+  <data name="Ro" xml:space="preserve">
+    <value>Rb</value>
+  </data>
+  <data name="Réinitialiser" xml:space="preserve">
+    <value>Reset</value>
+  </data>
+  <data name="RésultatsNonChargés" xml:space="preserve">
+    <value>The results could not be loaded</value>
+  </data>
+  <data name="Sa" xml:space="preserve">
+    <value>Sa</value>
+  </data>
+  <data name="Sam" xml:space="preserve">
+    <value>Sat</value>
+  </data>
+  <data name="Samedi" xml:space="preserve">
+    <value>Saturday</value>
+  </data>
+  <data name="Sauvegarde" xml:space="preserve">
+    <value>Backup</value>
+  </data>
+  <data name="Sauvegarder" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="Sep" xml:space="preserve">
+    <value>Sep</value>
+  </data>
+  <data name="Septembre" xml:space="preserve">
+    <value>September</value>
+  </data>
+  <data name="Sexe" xml:space="preserve">
+    <value>Gender</value>
+  </data>
+  <data name="SignesPonctuation" xml:space="preserve">
+    <value>Punctuation marks</value>
+  </data>
+  <data name="Sm" xml:space="preserve">
+    <value>Sm</value>
+  </data>
+  <data name="SourceIntrouvable" xml:space="preserve">
+    <value>The source you are looking for cannot be found</value>
+  </data>
+  <data name="Succès" xml:space="preserve">
+    <value>Success</value>
+  </data>
+  <data name="SuccèsDeRemiseOrdre" xml:space="preserve">
+    <value>File(s) generation successfully completed</value>
+  </data>
+  <data name="SuccèsMajParamGlobal" xml:space="preserve">
+    <value>Variable configuration successfully completed</value>
+  </data>
+  <data name="SuccèsMajParamInfosVirement" xml:space="preserve">
+    <value>Transfer information size configuration successfully completed</value>
+  </data>
+  <data name="Suivant" xml:space="preserve">
+    <value>Next</value>
+  </data>
+  <data name="Supports" xml:space="preserve">
+    <value>Supports</value>
+  </data>
+  <data name="Supprimer" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="SupprimerLesEléments" xml:space="preserve">
+    <value>Delete all items</value>
+  </data>
+  <data name="Sélectionner" xml:space="preserve">
+    <value>Select</value>
+  </data>
+  <data name="SélectionnerSignesPonctuation" xml:space="preserve">
+    <value>Select marks</value>
+  </data>
+  <data name="TailleCleRib" xml:space="preserve">
+    <value>RIB key size</value>
+  </data>
+  <data name="TailleCleRibVirement" xml:space="preserve">
+    <value>RIB key size</value>
+  </data>
+  <data name="TailleCodeAgence" xml:space="preserve">
+    <value>Agency code size</value>
+  </data>
+  <data name="TailleCodeAgenceVirement" xml:space="preserve">
+    <value>Agency code size</value>
+  </data>
+  <data name="TailleCodeBanque" xml:space="preserve">
+    <value>Bank code size</value>
+  </data>
+  <data name="TailleCodeBanqueVirement" xml:space="preserve">
+    <value>Bank code size</value>
+  </data>
+  <data name="TailleMaxFichierDépassé" xml:space="preserve">
+    <value>You have exceeded the maximum size allowed</value>
+  </data>
+  <data name="TailleNumeroCompte" xml:space="preserve">
+    <value>Account number size</value>
+  </data>
+  <data name="TailleNumeroCompteVirement" xml:space="preserve">
+    <value>Account number size</value>
+  </data>
+  <data name="Tarification" xml:space="preserve">
+    <value>Pricing</value>
+  </data>
+  <data name="To" xml:space="preserve">
+    <value>Tb</value>
+  </data>
+  <data name="ToutTélécharger" xml:space="preserve">
+    <value>Download all</value>
+  </data>
+  <data name="Traitement" xml:space="preserve">
+    <value>Processing...</value>
+  </data>
+  <data name="TraitementFichiers" xml:space="preserve">
+    <value>Processing of files</value>
+  </data>
+  <data name="TraitementFichiersBIANET" xml:space="preserve">
+    <value>Processing of files (multiple BIANET transfers)</value>
+  </data>
+  <data name="Télécharger" xml:space="preserve">
+    <value>Download</value>
+  </data>
+  <data name="TéléchargerFichier" xml:space="preserve">
+    <value>Upload your files here or click to download them</value>
+  </data>
+  <data name="Utilisateur" xml:space="preserve">
+    <value>User</value>
+  </data>
+  <data name="Valider" xml:space="preserve">
+    <value>Validate</value>
+  </data>
+  <data name="VariablesContrôle" xml:space="preserve">
+    <value>Control variables</value>
+  </data>
+  <data name="Ve" xml:space="preserve">
+    <value>Fri</value>
+  </data>
+  <data name="Ven" xml:space="preserve">
+    <value>Fri</value>
+  </data>
+  <data name="Vendredi" xml:space="preserve">
+    <value>Friday</value>
+  </data>
+  <data name="VoirAutreAnnée" xml:space="preserve">
+    <value>See another year</value>
+  </data>
+  <data name="VoirAutreMois" xml:space="preserve">
+    <value>See another month</value>
+  </data>
+  <data name="VoirMoisCourant" xml:space="preserve">
+    <value>See the current month</value>
+  </data>
+  <data name="VoirMoisPrécédent" xml:space="preserve">
+    <value>View previous month</value>
+  </data>
+  <data name="VoirMoisSuivant" xml:space="preserve">
+    <value>View next month</value>
+  </data>
+  <data name="Yo" xml:space="preserve">
+    <value>Yb</value>
+  </data>
+  <data name="Zo" xml:space="preserve">
+    <value>Zb</value>
+  </data>
+  <data name="ZoneDeDémonstrationFichier" xml:space="preserve">
+    <value>(This is a demonstration area. The selected files &lt;strong&gt;are not&lt;/strong&gt; actually downloaded)</value>
+  </data>
+</root>

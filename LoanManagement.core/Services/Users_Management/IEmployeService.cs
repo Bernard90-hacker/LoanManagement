@@ -15,6 +15,6 @@
 		Task<Employe> UpdateEmployePhoto(Employe emp, string photo);
 		Task Delete(Employe employe);
 		Task<Employe?> GetEmployeeByFullName(string FullName);
-		Task<Employe?> GetEmployeByMatricule(int matricule);
+		Task<Employe?> GetEmployeByMatricule(string matricule);
 	}
 }

@@ -853,11 +853,6 @@
                             tension.val(strJson.TensionArterielle);
                             statut.val(strJson.StatutMaritalId);
                             fumeur.val(strJson.Fumeur);
-                            codeBanqueVirement.val(strJson.CodeBanqueVirement);
-                            codeAgenceVirement.val(strJson.CodeAgenceVirement);
-                            numeroCompteVirement.val(strJson.NumeroCompteVirement);
-                            cleRibVirement.val(strJson.CleRibVirement);
-                            motifVirement.val(strJson.MotifVirement);
                             message = new DOMParser().parseFromString(response.message, 'text/html').body.innerHTML;
                             window.toastr[response.typeMessage]('👋 ' + message,
                                 response.title,
@@ -959,27 +954,3 @@
     </script>
 }
 
-
-@{
-    if (TempData["IsSuccess"] != null)
-    {
-        <script>
-
-            alert('Connexion réussie.');
-        </script>
-        TempData["IsSuccess"] = null;
-    }
-
-    //if (!ViewBag.IsLoanSuccess.IsNull())
-    //{
-    //     <script>
-    //        alert('Demande effectuée avec succès');
-    //    </script>
-    //}
-    //if (!ViewBag.IsApplyFailed.IsNull())
-    //{
-    //     <script>
-    //        alert('Une erreur a été levée.');
-    //    </script>
-    //}
-}

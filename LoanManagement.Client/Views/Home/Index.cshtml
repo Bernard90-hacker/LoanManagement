@@ -40,8 +40,8 @@
 		$(function () {
 			var form = window.$('#myForm'),
 				btn = window.$('#btnSubmit'),
-				indice = $('#indice'),
-				tel = $('#tel'),
+				//indice = $('#indice'),
+				//tel = $('#tel'),
 				title = '',
 				message = '',
 				errorTitle = new DOMParser().parseFromString('Erreur', 'text/html').body.innerHTML,
@@ -55,14 +55,13 @@
 				function (event) {
 					event.preventDefault();
 					var data = window.$(this).serialize();
+					var url = window.$(this).attr("action");
 					console.log(data);
-					var json = JSON.stringify(data);
-					var url = $(this).attr("action");
 					window.$.ajax({
 						url: url,
 						type: "POST",
-						data: data,
 						dataType: "json",
+						data: data,
 						beforeSend: function () {
 							btn.attr('disabled', 'disabled');
 							window.$.blockUI({
@@ -78,7 +77,21 @@
 							});
 						},
 						success: function (response) {
-							var strJson = JSON.parse(response.strLogin);
+							console.log(response);
+							if(response.typeMessage === "error"){
+								window.toastr[response.typeMessage]('👋 ' + 'Erreur, Identifiants incorrects.',
+									{
+										showMethod: 'slideDown',
+										hideMethod: 'slideUp',
+										closeButton: true,
+										tapToDismiss: false,
+										progressBar: true,
+										timeOut: response.timeOut,
+										rtl: window.$('html').attr('data-textdirection') === 'rtl',
+										onHidden: function () { }
+									});
+							}
+							var strJson = JSON.parse(response.strJsonLogin);
 							var nom = strJson.Nom;
 							var prenoms = strJson.Prenoms;
 							indice.val(strJson.Indice);
@@ -96,9 +109,11 @@
 									rtl: window.$('html').attr('data-textdirection') === 'rtl',
 									onHidden: function () { }
 								});
+							window.location.href = "https://localhost:44309/DemandeCredit";
 						},
 						error: function (response) {
 							try {
+								//window.location.href = "https://localhost:44309/DemandeCredit";
 								var obj = JSON.parse(JSON.stringify(response.responseJSON));
 								if (obj.length !== 0) {
 									if (response.status === 401) {
@@ -204,26 +219,26 @@
                     <form id="myForm" class="mb-3" method="post" asp-action="Login" asp-controller="Home">				
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                         <div class="mb-3">
-                            <label for="indice" class="form-label" asp-for="ClientLoginResource.Indice">Indice</label>
-                            <input type="text" class="form-control" id="indice" name="indice" placeholder="Entrez votre indice" autofocus>
+                            <label for="indice" class="form-label" asp-for="@Model.ClientLoginResource.Indice">Indice</label>
+							<input type="text" class="form-control" id="indice" placeholder="Entrez votre indice" autofocus asp-for="@Model.ClientLoginResource.Indice">
                         </div>
                         <div class="mb-3 form-password-toggle">
                             <div class="d-flex justify-content-between">
                                 <label class="form-label" for="tel">Téléphone</label>
                             </div>
                             <div class="input-group input-group-merge">
-                                <input type="tel" id="tel" class="form-control" asp-for="ClientLoginResource.Telephone" name="tel" aria-describedby="tel" />
+                                <input type="tel" id="tel" class="form-control" asp-for="@Model.ClientLoginResource.Telephone" aria-describedby="tel" />
                                 <span class="input-group-text cursor-pointer"><i class="ti ti-eye-off"></i></span>
                             </div>
                         </div>
-                        <div class="mb-3">
+                        @*<div class="mb-3">
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" id="remember-me">
                                 <label class="form-check-label" for="remember-me">
                                     Remember Me
                                 </label>
                             </div>
-                        </div>
+                        </div>*@
                         <div class="mb-3">
                             <button class="btn btn-primary d-grid w-100" type="submit" id="btnSubmit">Sign in</button>
                         </div>

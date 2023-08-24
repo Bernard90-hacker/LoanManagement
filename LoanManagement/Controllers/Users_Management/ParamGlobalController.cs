@@ -78,7 +78,40 @@
 				return ValidationProblem(statusCode: (int)HttpCode.INTERNAL_SERVER_ERROR, title: "Erreur interne du serveur", detail: ex.Message);
 			}
 		}
-		[HttpPut("smtp")]
+        [HttpPut("update")]
+        public async Task<ActionResult<ParamGlobalRessource>> Update(UpdateParamMotDePasseRessource ressource)
+        {
+            try
+            {
+				var validation = new UpdateParamMotDePasseValidator();
+				var validationResult = await validation.ValidateAsync(ressource);
+				if (!validationResult.IsValid)
+				{
+					_logger.LogWarning("Mise à des paramètres des mots de passe : Champs Obligatoires");
+					return BadRequest();
+				}
+				var paramToBeUpdated = await _paramGlobalService.GetById(ressource.Id);
+                if (paramToBeUpdated is null)
+                {
+                    _logger.LogWarning("Paramètre global : aucun paramètre existant");
+                    return NotFound(new ApiResponse((int)CustomHttpCode.OBJECT_NOT_FOUND, description: "Aucun paramètre existant"));
+                }
+
+                var param = _mapper.Map<ParamGlobal>(ressource);
+                var paramUpdated = await _paramGlobalService.UpdatePwdParam(param, paramToBeUpdated);
+                _logger.LogInformation("Mise à jour des paramètres : Opération effectuée avec succès");
+
+                return Ok(paramUpdated);
+            }
+            catch (Exception ex)
+            {
+
+                _logger.LogError("Une erreur est survenue pendant le traitement de la requête");
+                return ValidationProblem(statusCode: (int)HttpCode.INTERNAL_SERVER_ERROR, title: "Erreur interne du serveur", detail: ex.Message);
+            }
+        }
+
+        [HttpPut("smtp")]
 		public async Task<ActionResult> Update(SmtpRessource ressource)
 		{
 			try
@@ -93,7 +126,7 @@
 				var paramUpdated = await _paramGlobalService.Update(param, paramToBeUpdated);
 				_logger.LogInformation("Mise à jour des paramètres : Opération effectuée avec succès");
 
-				return Ok();
+				return Ok(paramUpdated);
 			}
 			catch (Exception ex)
 			{
@@ -102,7 +135,7 @@
             }
 		}
 
-		[HttpPut("update")]
+		[HttpPut("updateFrequency")]
 		public async Task<ActionResult<ParamGlobalRessource>> UpdatePasswordsExpiryFrequency(ParamMotDePasseUpdateExpiryDateRessource ressource)
 		{
 			try

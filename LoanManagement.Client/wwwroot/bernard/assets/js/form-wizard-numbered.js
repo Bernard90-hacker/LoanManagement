@@ -68,6 +68,7 @@ $(function () {
       }
   }
 
+
   // Vertical Wizard
   // --------------------------------------------------------------------
   const wizardVertical = document.querySelector('.wizard-vertical'),
