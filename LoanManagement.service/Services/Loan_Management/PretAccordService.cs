@@ -32,7 +32,18 @@
 			return await _unitOfWork.PretAccords.GetById(id);
 		}
 
-		public async Task<PretAccord> GetPretAccordForDossier(int dossierId)
+		public async Task<PretAccord> GetPretAccord(int dossierId)
+		{
+			var dossier = await _unitOfWork.DossierClients.GetById(dossierId);
+			var res =  await _unitOfWork.PretAccords.GetAllAsync();
+			var x = (from a in res
+					where a.DossierClientId == dossier.Id
+					select a).First();
+
+			return x;
+		}
+
+		public async Task<DossierClient> GetPretAccordForDossier(int dossierId)
 		{
 			return await _unitOfWork.PretAccords.GetPretAccordForDossier(dossierId);
 		}

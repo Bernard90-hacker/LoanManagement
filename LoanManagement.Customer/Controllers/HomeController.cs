@@ -1,6 +1,8 @@
 ﻿using LoanManagement.Customer.Resources;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using System.Reflection;
+using System.Runtime.Intrinsics.Arm;
 
 namespace LoanManagement.Customer.Controllers;
 
@@ -88,7 +90,7 @@ public class HomeController : Controller
             title = "Liste des demandes",
             typeMessage = TypeMessage.Error.GetString(),
             message = "Une erreur s'est produite",
-            description = "Vos identifiants sont incorrects",
+            description = "Une erreur est survenue pendant le traitement de la requête",
             strJsonLogin = JsonConvert.SerializeObject(jQueryViewModel),
             timeOut = jQueryViewModel.TimeOut
 
@@ -182,6 +184,111 @@ public class HomeController : Controller
     }
 
     [HttpPost]
+    [Route("InfoSante")]
+    public async Task<ActionResult> InfoSante(string d)
+    {
+        TempData.Keep("Credit");
+        if (ModelState.HasReachedMaxErrors)
+            return new JsonResult(new   
+            { }, ConfigConstant.JsonSettings())
+            {
+                StatusCode = (int)HttpStatusCode.BadRequest
+            };
+        try
+        {
+            try
+            {
+                if (TempData["Credit"].ToString() is null)
+                {
+                    return new JsonResult(new
+                    {
+                        title = "Veuillez lancer une demande de crédit d'abord",
+                        typeMessage = TypeMessage.Error.GetString(),
+                        message = "Veuillez lancer une demande de crédit d'abord",
+                        description = "",
+                        timeOut = 8000
+                    }, ConfigConstant.JsonSettings())
+                    {
+                        StatusCode = (int)HttpStatusCode.InternalServerError
+                    };
+                }
+            }
+            catch (Exception)
+            {
+                return new JsonResult(new
+                {
+                    title = "Veuillez lancer une demande de crédit d'abord",
+                    typeMessage = TypeMessage.Error.GetString(),
+                    message = "Veuillez lancer une demande de crédit d'abord",
+                    description = "",
+                    timeOut = 8000
+                }, ConfigConstant.JsonSettings())
+                {
+                    StatusCode = (int)HttpStatusCode.InternalServerError
+                };
+            }
+            string credit = TempData["Credit"].ToString();
+            var contentData = new MultipartFormDataContent();
+            var resource = JsonConvert.DeserializeObject<List<InfoSanteClient>>(d);
+            var k = new List<InfoSanteClientResource>();
+            foreach (var item in resource)
+            {
+                var x = new InfoSanteClientResource();
+                k.Add(ajouter(item, x, int.Parse(credit))); //TROP COMPLIQUE TU NE PEUX PAS COMPRENDRE 
+            }
+            
+
+            var content = new StringContent(JsonConvert.SerializeObject(k), Encoding.UTF8, "application/json");
+
+            Client.Timeout = TimeSpan.FromMilliseconds(Timeout.Infinite);
+            var result = await Client.PostAsync(URL + "/DossierClient/addInfoSanteClient", content);
+
+            if (result.IsSuccessStatusCode)
+            {
+                var response = await result.Content.ReadFromJsonAsync<IEnumerable<InfoSanteClient>>();
+                return new JsonResult(new
+                {
+                    title = "Demande de crédit",
+                    typeMessage = TypeMessage.Success.GetString(),
+                    message = "Demande de crédit effectuée avec succès",
+                    description = string.Empty,
+                    timeOut = 8000,
+                    strJsonInfoSante = JsonConvert.SerializeObject(JsonConvert.DeserializeObject<IEnumerable<InfoSanteClientResource>>(
+                       await result.Content.ReadAsStringAsync(), ConfigConstant.SetDateTimeConverter()))
+                }, ConfigConstant.JsonSettings())
+                {
+                    StatusCode = (int)HttpStatusCode.OK
+                };
+            }
+            var jQueryViewModel = await AppConstant.GetResponseMessage(result);
+            return new JsonResult(new
+            {
+                title = "Demande de crédit",
+                typeMessage = TypeMessage.Error.GetString(),
+                message = "Une erreur est survenue",
+                description = "Vos informations sont incorrectes, réessayez à nouveau",
+                strJsonDemandeCredit = JsonConvert.SerializeObject(jQueryViewModel),
+                timeOut = jQueryViewModel.TimeOut
+
+            });
+        }
+        catch (Exception ex)
+        {
+            return new JsonResult(new
+            {
+                title = "Erreur",
+                typeMessage = TypeMessage.Error.GetString(),
+                message = ex.Message,
+                description = ex.Message,
+                timeOut = 8000
+            }, ConfigConstant.JsonSettings())
+            {
+                StatusCode = (int)HttpStatusCode.InternalServerError
+            };
+        }
+    }
+
+    [HttpPost]
     [Route("DemandeCredit")]
     public async Task<IActionResult> DemandeCredit(SaveDossierClientResourceViewModel model)
     {
@@ -253,6 +360,7 @@ public class HomeController : Controller
             {
                 var response = await result.Content.ReadFromJsonAsync<DossierClientResource>();
                 TempData["Credit"] = response.Id;
+                ViewBag.Credit = response.Id;
                 return new JsonResult(new
                 {
                     title = "Demande de crédit",
@@ -425,4 +533,16 @@ public class HomeController : Controller
         return nomFichier;
     }
 
+    static InfoSanteClientResource ajouter(InfoSanteClient i, InfoSanteClientResource resource, int dossierClientId)
+    {
+        resource.DureeTraitement = i.DureeTraitement;
+        resource.PeriodeTraitement = i.PeriodeTraitement;
+        resource.LieuTraitement = i.LieuTraitement;
+        resource.ReponseBoolenne = i.ReponseBoolenne;
+        resource.ReponsePrecision = i.ReponsePrecision;
+        resource.DossierClientId = dossierClientId;
+
+        return resource;
+
+    }
 }

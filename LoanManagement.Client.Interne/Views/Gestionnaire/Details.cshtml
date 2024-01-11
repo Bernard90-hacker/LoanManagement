@@ -1,0 +1,128 @@
+﻿@section VendorStyles {
+    <link rel="stylesheet" href="~/vendor/libs/formvalidation/dist/css/formValidation.min.css">
+    <link rel="stylesheet" href="~/dist/colored-theme.min.css">
+    <link rel="stylesheet" href="~/dist/dark-theme.min.css">
+    <link rel="stylesheet" href="~/dist/light-theme.min.css">
+    <link rel="stylesheet" href="~/vendor/libs/tagify/tagify.dist.css" />
+    <link rel="stylesheet" href="~/vendor/libs/animate-css/animate.dist.css" />
+    <link rel="stylesheet" href="~/vendor/libs/spinkit/spinkit.dist.css" />
+    <link rel="stylesheet" href="~/vendor/libs/toastr/toastr.dist.css" />
+    <link rel="stylesheet" href="~/vendor/libs/sweetalert2/sweetalert2.dist.css" />
+}
+@{
+    var demande = ViewBag.Demande as GetDossierClientResource;
+    var client = ViewBag.Client as ClientResource;
+    var customer = ViewBag.Customer as string;
+    string Data()
+    {
+        string solutiondir = Directory.GetParent(
+        Directory.GetCurrentDirectory()).Parent.FullName;
+        // may need to go one directory higher for solution directory
+        return solutiondir + "\\" + "LoanManagement.Customer" + $"\\{client}";
+    }
+
+}
+
+@section VendorScripts {
+    <script src="~/vendor/libs/formvalidation/dist/js/FormValidation.min.js"></script>
+    <script src="~/vendor/libs/formvalidation/dist/js/plugins/Bootstrap5.min.js"></script>
+    <script src="~/vendor/libs/formvalidation/dist/js/plugins/AutoFocus.min.js"></script>
+    <script src="~/vendor/libs/cleavejs/cleave.dist.js"></script>
+    <script src="~/vendor/libs/cleavejs/cleave-phone.dist.js"></script>
+    <script src="~/vendor/libs/tagify/tagify.dist.js"></script>
+    <script src="~/vendor/libs/block-ui/block-ui.dist.js"></script>
+    <script src="~/vendor/libs/toastr/toastr.dist.js"></script>
+    <script src="~/vendor/libs/sweetalert2/sweetalert2.dist.js"></script>
+}
+
+@section PageStyles {
+    <link rel="stylesheet" href="~/vendor/css/pages/page-auth.dist.css">
+}
+
+@section PageScripts {
+    <script src="~/js/pages-auth.dist.js"></script>
+    <script src="~/js/custom/home-index.js"></script>
+    <script>
+        $(function () {
+            var btn = $('#btnSubmit');
+            var $id = $('#demandeId').val();
+            btn.on("click", function () {
+                window.location.href = '@Url.Action("DossierCredit")/'+encodeURIComponent($id);
+            });
+        });
+    </script>
+
+}
+
+@*********** Content ************** *@
+
+<h4 class="fw-bold py-3 mb-4">
+    <span class="text-muted fw-light">Accueil</span>
+</h4>
+<div class="row">
+    <div class="col-md-4">
+    </div>
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-body">
+                <h3 class="d-flex justify-content-center fw-bold">Détails</h3>
+                <div class="container">
+                    <div class="row">
+                        <div class="col">
+                            <p class="mb-0">Poids : @demande.Poids</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <p class="mb-0">Taille : @demande.Taille</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <p class="mb-0">
+                               
+                                @if (demande.Fumeur)
+                                {
+                                    <h6> Fumeur :Oui</h6>
+                                }
+                                else
+                                {
+                                    <h6> Fumeur :Non</h6>
+                                }
+                            </p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <p class="mb-0">
+                                Tension artérielle : @demande.TensionArterielle
+                            </p>
+                        </div>
+                        
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <p class="mb-0">
+                                Tension artérielle : @demande.Montant
+                            </p>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <p class="mb-0">
+                                Client : @customer
+                            </p>
+                        </div>
+
+                    </div>
+                    <input type="hidden" value="@demande.Id" id="demandeId" />
+                    <button class="btn btn-primary d-grid w-100" id="btnSubmit">
+                       Instruire ce dossier
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

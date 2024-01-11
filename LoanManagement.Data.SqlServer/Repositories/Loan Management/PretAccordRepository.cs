@@ -19,14 +19,14 @@
 				.FirstOrDefaultAsync();
 		}
 
-		public async Task<PretAccord?> GetPretAccordForDossier(int dossierId)
+		public async Task<DossierClient?> GetPretAccordForDossier(int dossierId)
 		{
-			var dossier = await _context.DossierClients.Where(x => x.Id == dossierId)
+			var pret = await _context.PretAccords.Where(x => x.Id == dossierId)
 				.FirstOrDefaultAsync();
-			if (dossier is null) throw new Exception("Dossier non trouvé");
+			if (pret is null) throw new Exception("Dossier non trouvé");
 
-			var result = (from x in (await _context.PretAccords.ToListAsync())
-						 where dossier.Id == x.DossierClientId
+			var result = (from x in (await _context.DossierClients.ToListAsync())
+						 where pret.DossierClientId == x.Id
 						 select x).FirstOrDefault();
 
 			return result;

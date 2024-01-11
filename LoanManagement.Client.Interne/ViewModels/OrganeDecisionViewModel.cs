@@ -2,6 +2,6 @@
 {
     public class OrganeDecisionViewModel
     {
-        public OrganeDecisionRessource Resource { get; set; }
+        public OrganeDecisionResource Resource { get; set; }
     }
 }

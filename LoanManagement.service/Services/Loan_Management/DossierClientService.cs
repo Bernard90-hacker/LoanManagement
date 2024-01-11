@@ -33,6 +33,16 @@
 			return await _unitOfWork.DossierClients.GetAll(parameters);
 		}
 
+		public async Task<IEnumerable<DossierClient>> GetDossiersNonMontes()
+		{
+			var dossiers = await _unitOfWork.DossierClients.GetAllAsync();
+			var prets = await _unitOfWork.PretAccords.GetAllAsync();
+			var result = from x in dossiers
+						 from y in prets
+						 where x.Id == y.DossierClientId
+						 select x;
+			return dossiers.Except(result);
+		}
 		public async Task<DossierClient?> GetById(int Id)
 		{
 			return await _unitOfWork.DossierClients.GetById(Id);

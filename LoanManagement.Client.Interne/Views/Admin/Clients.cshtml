@@ -36,16 +36,12 @@
                                 <table class="table clients">
                                     <thead>
                                         <tr>
-                                            <th></th>
                                             <th>Indice</th>
                                             <th>Nom</th>
-                                            <th>Prenoms</th>
-                                            <th>DateNaissance</th>
-                                            <th>Résidence</th>
-                                            <th>Ville</th>
-                                            <th>Quartier</th>
+                                            <th>Prénoms</th>
                                             <th>Téléphone</th>
-                                            <th>Profession</th>
+                                            <th>Email</th>
+                                            <th>Actions</th>
                                         </tr>
                                     </thead>
                                 </table>
@@ -77,312 +73,224 @@
 @section PageScripts {
     <script src="~/js/custom/home-index.js"></script>
     <script>
-        var clients = $('.clients'),
-            data = 
-        $(".div-datable").show();
-        clients.DataTable({
-            processing: true,
-            destroy: true,
-            data: data,
-            columns: [
-                { data: 'Indice' },
-                { data: 'Nom' },
-                { data: 'Prenoms' },
-                { data: 'DateNaissance' },
-                { data: 'Résidence' },
-                { data: 'Ville' },
-                { data: 'Quartier' },
-                { data: 'Tel' },
-                { data: 'Profession' }
-            ],
-            columnDefs: [
-                {
-                    className: 'control',
-                    orderable: false,
-                    searchable: false,
-                    responsivePriority: 2,
-                    targets: 0,
-                    render: function (data, type, full, meta) {
-                        return '';
-                    }
-                },
-                {
-                   //Données
-                    targets: 1,
-                    responsivePriority: 1,
-                    width: '160px',
-                    render: function (data, type, full, meta) {
-                        var $Indice = full['Indice'];
-                        var $output = '<img src="' + assetsPath + 'img/icons/misc/xls.png" alt="xls-file" class="me-3" width="20">';
-                        var $row_output =
-                            '<div class="d-flex justify-content-start align-items-center user-name">' +
-                            '<div class="avatar-wrapper">' +
-                            '<div class="avatar me-2">' +
-                            $output +
-                            '</div>' +
-                            '</div>' +
-                            '<div class="d-flex flex-column">' +
-                            '<span class="emp_name text-truncate fs-6">' +
-                            $Indice +
-                            '</span>' +
-                            '</div>' +
-                            '</div>';
+       
+        $(function () {
+            var clients = $('.clients');
+            window.$.ajax({
+                url: '@Url.Action("AllCustomers", "Admin")',
+                type: "GET",
+                processData: false,
+                contentType: false,
+                dataType: 'json',
+                success: function (response) {
+                    console.log(response.strJson.total);
 
-                        return $row_output;
-                    }
-                },
-                {
-                    targets: 2,
-                    responsivePriority: 1,
-                    width: '160px',
-                    render: function (data, type, full, meta) {
-                        var $Nom = full['Nom'];
-                        var $output = '<img src="' + assetsPath + 'img/icons/misc/xls.png" alt="xls-file" class="me-3" width="20">';
-                        var $row_output =
-                            '<div class="d-flex justify-content-start align-items-center user-name">' +
-                            '<div class="avatar-wrapper">' +
-                            '<div class="avatar me-2">' +
-                            $output +
-                            '</div>' +
-                            '</div>' +
-                            '<div class="d-flex flex-column">' +
-                            '<span class="emp_name text-truncate fs-6">' +
-                            $Nom +
-                            '</span>' +
-                            '</div>' +
-                            '</div>';
+                    bindDataTable(clients, JSON.parse(response.strJson));
+                }
+            })
+        });
 
-                        return $row_output;
-                    }
-                },
-                {
-                    targets: 3,
-                    responsivePriority: 1,
-                    width: '160px',
-                    render: function (data, type, full, meta) {
-                        var $Nom = full['Nom'];
-                        var $output = '<img src="' + assetsPath + 'img/icons/misc/xls.png" alt="xls-file" class="me-3" width="20">';
-                        var $row_output =
-                            '<div class="d-flex justify-content-start align-items-center user-name">' +
-                            '<div class="avatar-wrapper">' +
-                            '<div class="avatar me-2">' +
-                            $output +
-                            '</div>' +
-                            '</div>' +
-                            '<div class="d-flex flex-column">' +
-                            '<span class="emp_name text-truncate fs-6">' +
-                            $Nom +
-                            '</span>' +
-                            '</div>' +
-                            '</div>';
 
-                        return $row_output;
-                    }
-                },
-                {
-                    targets: 4,
-                    responsivePriority: 1,
-                    width: '160px',
-                    render: function (data, type, full, meta) {
-                        var $Nom = full['Nom'];
-                        var $output = '<img src="' + assetsPath + 'img/icons/misc/xls.png" alt="xls-file" class="me-3" width="20">';
-                        var $row_output =
-                            '<div class="d-flex justify-content-start align-items-center user-name">' +
-                            '<div class="avatar-wrapper">' +
-                            '<div class="avatar me-2">' +
-                            $output +
-                            '</div>' +
-                            '</div>' +
-                            '<div class="d-flex flex-column">' +
-                            '<span class="emp_name text-truncate fs-6">' +
-                            $Nom +
-                            '</span>' +
-                            '</div>' +
-                            '</div>';
-
-                        return $row_output;
-                    }
-                },
-                {
-                    targets: 5,
-                    responsivePriority: 1,
-                    width: '160px',
-                    render: function (data, type, full, meta) {
-                        var $Nom = full['Nom'];
-                        var $output = '<img src="' + assetsPath + 'img/icons/misc/xls.png" alt="xls-file" class="me-3" width="20">';
-                        var $row_output =
-                            '<div class="d-flex justify-content-start align-items-center user-name">' +
-                            '<div class="avatar-wrapper">' +
-                            '<div class="avatar me-2">' +
-                            $output +
-                            '</div>' +
-                            '</div>' +
-                            '<div class="d-flex flex-column">' +
-                            '<span class="emp_name text-truncate fs-6">' +
-                            $Nom +
-                            '</span>' +
-                            '</div>' +
-                            '</div>';
-
-                        return $row_output;
-                    }
-                },
-                {
-                    targets: 6,
-                    responsivePriority: 1,
-                    width: '160px',
-                    render: function (data, type, full, meta) {
-                        var $Nom = full['Nom'];
-                        var $output = '<img src="' + assetsPath + 'img/icons/misc/xls.png" alt="xls-file" class="me-3" width="20">';
-                        var $row_output =
-                            '<div class="d-flex justify-content-start align-items-center user-name">' +
-                            '<div class="avatar-wrapper">' +
-                            '<div class="avatar me-2">' +
-                            $output +
-                            '</div>' +
-                            '</div>' +
-                            '<div class="d-flex flex-column">' +
-                            '<span class="emp_name text-truncate fs-6">' +
-                            $Nom +
-                            '</span>' +
-                            '</div>' +
-                            '</div>';
-
-                        return $row_output;
-                    }
-                },
-                {
-                    targets: 7,
-                    responsivePriority: 1,
-                    width: '160px',
-                    render: function (data, type, full, meta) {
-                        var $Nom = full['Nom'];
-                        var $output = '<img src="' + assetsPath + 'img/icons/misc/xls.png" alt="xls-file" class="me-3" width="20">';
-                        var $row_output =
-                            '<div class="d-flex justify-content-start align-items-center user-name">' +
-                            '<div class="avatar-wrapper">' +
-                            '<div class="avatar me-2">' +
-                            $output +
-                            '</div>' +
-                            '</div>' +
-                            '<div class="d-flex flex-column">' +
-                            '<span class="emp_name text-truncate fs-6">' +
-                            $Nom +
-                            '</span>' +
-                            '</div>' +
-                            '</div>';
-
-                        return $row_output;
-                    }
-                },
-                {
-                    targets: 8,
-                    responsivePriority: 1,
-                    width: '160px',
-                    render: function (data, type, full, meta) {
-                        var $Nom = full['Nom'];
-                        var $output = '<img src="' + assetsPath + 'img/icons/misc/xls.png" alt="xls-file" class="me-3" width="20">';
-                        var $row_output =
-                            '<div class="d-flex justify-content-start align-items-center user-name">' +
-                            '<div class="avatar-wrapper">' +
-                            '<div class="avatar me-2">' +
-                            $output +
-                            '</div>' +
-                            '</div>' +
-                            '<div class="d-flex flex-column">' +
-                            '<span class="emp_name text-truncate fs-6">' +
-                            $Nom +
-                            '</span>' +
-                            '</div>' +
-                            '</div>';
-
-                        return $row_output;
-                    }
-                },
-                {
-                    targets: 9,
-                    responsivePriority: 1,
-                    width: '160px',
-                    render: function (data, type, full, meta) {
-                        var $Nom = full['Nom'];
-                        var $output = '<img src="' + assetsPath + 'img/icons/misc/xls.png" alt="xls-file" class="me-3" width="20">';
-                        var $row_output =
-                            '<div class="d-flex justify-content-start align-items-center user-name">' +
-                            '<div class="avatar-wrapper">' +
-                            '<div class="avatar me-2">' +
-                            $output +
-                            '</div>' +
-                            '</div>' +
-                            '<div class="d-flex flex-column">' +
-                            '<span class="emp_name text-truncate fs-6">' +
-                            $Nom +
-                            '</span>' +
-                            '</div>' +
-                            '</div>';
-
-                        return $row_output;
-                    }
-                },
-            ],
-            order: [[2, 'desc']],
-            dom: '<"card-header flex-column flex-md-row"<"head-label text-center"><"dt-action-buttons text-end pt-3 pt-md-0"B>><"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6 d-flex justify-content-center justify-content-md-end"f>>t<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
-            displayLength: 3,
-            lengthMenu: [3, 7, 10],
-            language: {
-                paginate: {
-                    //Supprimer le texte précédent et suivant de la pagination
-                    previous: new DOMParser().parseFromString("Précédent", 'text/html').body.innerHTML,
-                    next: new DOMParser().parseFromString("Suivant", 'text/html').body.innerHTML,
-                    last: new DOMParser().parseFromString("Dernier", 'text/html').body.innerHTML,
-                    first: new DOMParser().parseFromString("Premier", 'text/html').body.innerHTML
-                },
-                processing: new DOMParser().parseFromString("Traitement", 'text/html').body.innerHTML,
-                lengthMenu: new DOMParser().parseFromString("AfficherEntrées", 'text/html').body.innerHTML,
-                loadingRecords: new DOMParser().parseFromString("Chargement", 'text/html').body.innerHTML,
-                search: new DOMParser().parseFromString("Chercher", 'text/html').body.innerHTML,
-                zeroRecords: new DOMParser().parseFromString("AucunEnregTrouvé", 'text/html').body.innerHTML,
-                emptyTable: '<div class="text-center">' +
-                    '<img class="mt-2 mb-2" src="' + assetsPath + 'img/illustrations/no-records.png" alt="pas-de-données" width="160" height="160" />' +
-                    '<h6>' + new DOMParser().parseFromString("AucuneDonnéeDispo", 'text/html').body.innerHTML + '</h6>' +
-                    '</div>',
-                info: new DOMParser().parseFromString("AffichageEntrées", 'text/html').body.innerHTML,
-                infoEmpty: new DOMParser().parseFromString("AffichageZéroEntrée", 'text/html').body.innerHTML,
-                infoFiltered: new DOMParser().parseFromString("EntréesFiltrées", 'text/html').body.innerHTML
-            },
-            responsive: {
-                details: {
-                    display: $.fn.dataTable.Responsive.display.modal({
-                        header: function (row) {
-                            var data = row.data();
-
-                            return new DOMParser().parseFromString("Détails", 'text/html').body.innerHTML;
+        function bindDataTable(clients, asArray){
+            $(".div-datable").show();
+            var data = asArray;
+            clients.DataTable({
+                processing: true,
+                destroy: true,
+                data: data,
+                columns: [
+                    { data: 'Indice', title:'Indice' },
+                    { data: 'Nom', title: 'Nom' },
+                    { data: 'Prenoms', title:'Prénoms' },
+                    { data: 'Tel', title:'Téléphone' },
+                    { data: 'Email', title:'Email' },
+                    { data: '' }
+                ],
+                columnDefs: [
+                    {
+                        responsivePriority: 1,
+                        targets: 0,
+                        render: function (data, type, full, meta) {
+                            return full['Indice'];
                         }
-                    }),
-                    type: 'column',
-                    renderer: function (api, rowIdx, columns) {
-                        var data = $.map(columns, function (col, i) {
-                            return col.title !== '' // ? Ne pas afficher la ligne dans la fenêtre popup modale si le titre est vide (pour les cases à cocher)
-                                ? '<tr data-dt-row="' +
-                                col.rowIndex +
-                                '" data-dt-column="' +
-                                col.columnIndex +
-                                '">' +
-                                '<td>' +
-                                col.title +
-                                ' :' +
-                                '</td> ' +
-                                '<td>' +
-                                col.data +
-                                '</td>' +
-                                '</tr>'
-                                : '';
-                        }).join('');
+                    },
+                    {
+                        //Données
+                        targets: 1,
+                        responsivePriority: 1,
+                        width: '160px',
+                        render: function (data, type, full, meta) {
+                            var $Indice = full['Nom'];
+                            var $output = '<img src="' + assetsPath + 'img/icons/misc/name.png" alt="xls-file" class="me-3" width="20">';
+                            var $row_output =
+                                '<div class="d-flex justify-content-start align-items-center user-name">' +
+                                '<div class="avatar-wrapper">' +
+                                '<div class="avatar me-2">' +
+                                $output +
+                                '</div>' +
+                                '</div>' +
+                                '<div class="d-flex flex-column">' +
+                                '<span class="emp_name text-truncate fs-6">' +
+                                $Indice +
+                                '</span>' +
+                                '</div>' +
+                                '</div>';
 
-                        return data ? $('<table class="table"/><tbody />').append(data) : false;
+                            return $row_output;
+                        }
+                    },
+                    {
+                        //Données
+                        targets: 2,
+                        responsivePriority: 1,
+                        width: '160px',
+                        render: function (data, type, full, meta) {
+                            var $Indice = full['Prenoms'];
+                            var $output = '<img src="' + assetsPath + 'img/icons/misc/name.png" alt="xls-file" class="me-3" width="20">';
+                            var $row_output =
+                                '<div class="d-flex justify-content-start align-items-center user-name">' +
+                                '<div class="avatar-wrapper">' +
+                                '<div class="avatar me-2">' +
+                                $output +
+                                '</div>' +
+                                '</div>' +
+                                '<div class="d-flex flex-column">' +
+                                '<span class="emp_name text-truncate fs-6">' +
+                                $Indice +
+                                '</span>' +
+                                '</div>' +
+                                '</div>';
+
+                            return $row_output;
+                        }
+                    },
+                    {
+                        targets: 3,
+                        responsivePriority: 1,
+                        width: '160px',
+                        render: function (data, type, full, meta) {
+                            var $Nom = full['Tel'];
+                            var $output = '<img src="' + assetsPath + 'img/icons/misc/phone.png" alt="xls-file" class="me-3" width="20">';
+                            var $row_output =
+                                '<div class="d-flex justify-content-start align-items-center user-name">' +
+                                '<div class="avatar-wrapper">' +
+                                '<div class="avatar me-2">' +
+                                $output +
+                                '</div>' +
+                                '</div>' +
+                                '<div class="d-flex flex-column">' +
+                                '<span class="emp_name text-truncate fs-6">' +
+                                $Nom +
+                                '</span>' +
+                                '</div>' +
+                                '</div>';
+
+                            return $row_output;
+                        }
+                    },
+                    {
+                        targets: 4,
+                        responsivePriority: 1,
+                        width: '160px',
+                        render: function (data, type, full, meta) {
+                            var $Nom = full['Email'];
+                            var $output = '<img src="' + assetsPath + 'img/icons/misc/email.png" alt="xls-file" class="me-3" width="20">';
+                            var $row_output =
+                                '<div class="d-flex justify-content-start align-items-center user-name">' +
+                                '<div class="avatar-wrapper">' +
+                                '<div class="avatar me-2">' +
+                                $output +
+                                '</div>' +
+                                '</div>' +
+                                '<div class="d-flex flex-column">' +
+                                '<span class="emp_name text-truncate fs-6">' +
+                                $Nom +
+                                '</span>' +
+                                '</div>' +
+                                '</div>';
+
+                            return $row_output;
+                        }
+                    },
+                    {
+                        targets: -1,
+                        title: 'Actions',
+                        orderable: false,
+                        searchable: false,
+                        render: function (data, type, full, meta) {
+                            return (
+                                '<div class="d-inline-block">' +
+                                '<a href="javascript:;" class="btn btn-sm btn-icon dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="text-primary ti ti-dots-vertical"></i></a>' +
+                                '<ul class="dropdown-menu dropdown-menu-end m-0">' +
+                                '<li><a href="javascript:;" class="dropdown-item">Details</a></li>' +
+                                '</ul>' +
+                                '</div>' +
+                                '<a href="javascript:;" class="btn btn-sm btn-icon item-edit"><i class="text-primary ti ti-pencil"></i></a>'
+                            );
+                        }
+                    },
+                ],
+                order: [[1, 'desc']],
+                dom: '<"card-header flex-column flex-md-row"<"head-label text-center"><"dt-action-buttons text-end pt-3 pt-md-0"B>><"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6 d-flex justify-content-center justify-content-md-end"f>>t<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
+                displayLength: 3,
+                lengthMenu: [3, 7, 10],
+                language: {
+                    paginate: {
+                        //Supprimer le texte précédent et suivant de la pagination
+                        previous: new DOMParser().parseFromString("Précédent", 'text/html').body.innerHTML,
+                        next: new DOMParser().parseFromString("Suivant", 'text/html').body.innerHTML,
+                        last: new DOMParser().parseFromString("Dernier", 'text/html').body.innerHTML,
+                        first: new DOMParser().parseFromString("Premier", 'text/html').body.innerHTML
+                    },
+                    processing: new DOMParser().parseFromString("Traitement", 'text/html').body.innerHTML,
+                    lengthMenu: new DOMParser().parseFromString("Afficher les entrées", 'text/html').body.innerHTML,
+                    loadingRecords: new DOMParser().parseFromString("Chargement", 'text/html').body.innerHTML,
+                    search: new DOMParser().parseFromString("Chercher", 'text/html').body.innerHTML,
+                    zeroRecords: new DOMParser().parseFromString("Aucun enregistrement trouvé", 'text/html').body.innerHTML,
+                    emptyTable: '<div class="text-center">' +
+                        '<img class="mt-2 mb-2" src="' + assetsPath + 'img/illustrations/no-records.png" alt="pas-de-données" width="160" height="160" />' +
+                        '<h6>' + new DOMParser().parseFromString("Aucune donnée disponible", 'text/html').body.innerHTML + '</h6>' +
+                        '</div>',
+                    info: new DOMParser().parseFromString("Affichage des entrées", 'text/html').body.innerHTML,
+                    infoEmpty: new DOMParser().parseFromString("Aucune entrée", 'text/html').body.innerHTML,
+                    infoFiltered: new DOMParser().parseFromString("Entrées filtrées", 'text/html').body.innerHTML
+                },
+                responsive: {
+                    details: {
+                        display: $.fn.dataTable.Responsive.display.modal({
+                            header: function (row) {
+                                var data = row.data();
+
+                                return new DOMParser().parseFromString("Détails", 'text/html').body.innerHTML;
+                            }
+                        }),
+                        type: 'column',
+                        renderer: function (api, rowIdx, columns) {
+                            var data = $.map(columns, function (col, i) {
+                                return col.title !== '' // ? Ne pas afficher la ligne dans la fenêtre popup modale si le titre est vide (pour les cases à cocher)
+                                    ? '<tr data-dt-row="' +
+                                    col.rowIndex +
+                                    '" data-dt-column="' +
+                                    col.columnIndex +
+                                    '">' +
+                                    '<td>' +
+                                    col.title +
+                                    ' :' +
+                                    '</td> ' +
+                                    '<td>' +
+                                    col.data +
+                                    '</td>' +
+                                    '</tr>'
+                                    : '';
+                            }).join('');
+
+                            return data ? $('<table class="table"/><tbody />').append(data) : false;
+                        }
                     }
                 }
-            }
-        });
+            });
+        }
+        
 
 
 

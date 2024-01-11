@@ -50,6 +50,7 @@
                 errorTimeOut = 500000,
                 errors = [];
 
+
             form.on("submit",
                 function (event) {
                     event.preventDefault();
@@ -89,6 +90,7 @@
                                         rtl: window.$('html').attr('data-textdirection') === 'rtl',
                                         onHidden: function () { }
                                     });
+                                
                             }
                             //var strJson = JSON.parse(response.strJson);
                             //var nom = strJson.Nom;
@@ -193,17 +195,9 @@
                         }
                     });
                 });
+
+            
         });
-        var currentDate = new Date();
-
-        // Format the date as "dd/MM/yyyy"
-        var formattedDate = currentDate.getDate().toString().padStart(2, '0') + '/'
-                            + (currentDate.getMonth() + 1).toString().padStart(2, '0') + '/'
-                            + currentDate.getFullYear().toString();
-
-        // Display the formatted date on the page
-        document.getElementById("formattedDate").textContent = formattedDate;
-        document.getElementById("formattedDate1").textContent = formattedDate;
     </script>
 }
 
@@ -232,19 +226,7 @@
                                                     <label class="col-sm-5 col-form-label text-sm-end" for="collapsible-fullname">Nom d'utilisateur</label>
                                                     <span asp-validation-for="@Model.UtilisateurResource.Username" class="text-danger"></span>
                                                     <div class="col-sm-9">
-                                                        <input type="text" id="collapsible-fullname" class="form-control" placeholder="username" asp-for="@Model.UtilisateurResource.Username"/>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="row">
-                                                    <label class="col-sm-5 col-form-label text-sm-end" for="password">Mot de passe</label>
-                                                    <span asp-validation-for="@Model.UtilisateurResource.Password" class="text-danger"></span>
-                                                    <div class="col-sm-9">
-                                                        <div class="input-group input-group-merge">
-                                                            <input type="password" id="formtabs-password" class="form-control" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="formtabs-password2" asp-for="@Model.UtilisateurResource.Password" />
-                                                            <span class="input-group-text cursor-pointer" id="formtabs-password2"><i class="ti ti-eye-off"></i></span>
-                                                        </div>
+                                                        <input type="text" id="username" class="form-control" placeholder="username" asp-for="@Model.UtilisateurResource.Username"/>
                                                     </div>
                                                 </div>
                                             </div>
@@ -253,28 +235,26 @@
                                                     <label class="col-sm-5 col-form-label text-sm-end" for="dateExpiration">Date d'expiration</label>
                                                     <span asp-validation-for="@Model.UtilisateurResource.DateExpirationCompte" class="text-danger"></span>
                                                     <div class="col-sm-9">
-                                                        <input name="collapsible-address" class="form-control" id="formattedDate1" type="date" asp-for="@Model.UtilisateurResource.DateExpirationCompte" />
+                                                        <input class="form-control" id="expiration" type="date" asp-for="@Model.UtilisateurResource.DateExpirationCompte" />
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-md-6">            
-                                                <div class="row">
-                                                    <label class="col-sm-5 col-form-label text-sm-end" for="collapsible-pincode">Statut</label>
-                                                    <span asp-validation-for="@Model.UtilisateurResource.Statut" class="text-danger"></span>
-                                                    <div class="col-sm-9">
-                                                        <select id="statut" class="select2 form-select">
-                                                            <option value="1">Actif</option>
-                                                            <option value="2">Inactif</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                            
                                             <div class="col-md-6">    
                                                 <div class="row">
                                                     <label class="col-sm-5 col-form-label text-sm-end" for="collapsible-landmark">Date de désactivation</label>
                                                     <span asp-validation-for="@Model.UtilisateurResource.DateDesactivation" class="text-danger"></span>
                                                     <div class="col-sm-9">
-                                                        <input type="date" id="formattedDate" class="form-control" asp-for="@Model.UtilisateurResource.DateDesactivation" />
+                                                        <input type="date" id="desactivation" class="form-control" asp-for="@Model.UtilisateurResource.DateDesactivation" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="row">
+                                                    <label class="col-sm-5 col-form-label text-sm-end" for="collapsible-landmark">Adresse mail</label>
+                                                    <span asp-validation-for="@Model.UtilisateurResource.Email" class="text-danger"></span>
+                                                    <div class="col-sm-9">
+                                                        <input type="text" id="email" class="form-control" asp-for="@Model.UtilisateurResource.Email" />
                                                     </div>
                                                 </div>
                                             </div>
@@ -284,17 +264,17 @@
                                                     <span asp-validation-for="@Model.UtilisateurResource.ProfilId" class="text-danger"></span>
                                                     <div class="col-sm-9">
                                                         <select id="profil" class="select2 form-select" data-allow-clear="true" asp-for="@Model.UtilisateurResource.ProfilId">
-                                                            <option value="1">Gestionnaire</option>
-                                                            <option value="2">Analyste</option>
-                                                            <option value="3">Directeur GGR</option>
-                                                            <option value="4">Chef Département Back-Office Engagement</option>
+                                                            <option value="2">Gestionnaire</option>
+                                                            <option value="3">Analyste</option>
+                                                            <option value="4">Directeur GGR</option>
+                                                            <option value="5">Chef Département Back-Office Engagement</option>
                                                         </select>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="d-flex justify-content-center">
-                                                <button type="submit" class="btn btn-primary me-sm-5 me-1" id="submit">Submit</button>
-                                                <button type="reset" class="btn btn-label-secondary">Cancel</button>
+                                                <button type="submit" class="btn btn-primary me-sm-5 me-1" id="submit">Envoyer</button>
+                                                <button type="reset" class="btn btn-label-secondary">Annuler</button>
                                             </div>
                                         </div>
                                     </div>

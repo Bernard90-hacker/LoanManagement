@@ -17,7 +17,9 @@
 		Task<IEnumerable<DossierClient>> GetClosed();
 		Task AddCouverture(DossierClient dossierClient, string couverture);
 		Task<IEnumerable<DossierClient?>> GetByClientId(int Id);
+		Task<IEnumerable<DossierClient>> GetDossiersNonMontes();
 
 
-	}
+
+    }
 }

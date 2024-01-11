@@ -1,12 +1,28 @@
 ﻿@model DeroulementViewModel
 @section VendorStyles{
 
-    <link rel="stylesheet" href="~/vendor/libs/flatpickr/flatpickr.dist.css" />
     <link rel="stylesheet" href="~/vendor/libs/select2/select2.dist.css" />
+    <link rel="stylesheet" href="~/vendor/libs/formvalidation/dist/css/formValidation.min.css" />
+    <link rel="stylesheet" href="~/vendor/libs/tagify/tagify.dist.css" />
+    <link rel="stylesheet" href="~/vendor/libs/animate-css/animate.dist.css" />
+    <link rel="stylesheet" href="~/vendor/libs/spinkit/spinkit.dist.css" />
+    <link rel="stylesheet" href="~/vendor/libs/toastr/toastr.dist.css" />
+    <link rel="stylesheet" href="~/vendor/libs/sweetalert2/sweetalert2.dist.css" />
+    <link rel="stylesheet" href="~/vendor/libs/flatpickr/flatpickr.dist.css" />
 }
 @section VendorScripts {
     <script src="~/vendor/libs/cleavejs/cleave.dist.js"></script>
     <script src="~/vendor/libs/cleavejs/cleave-phone.dist.js"></script>
+    <script src="~/vendor/libs/moment/moment.dist.js"></script>
+    <script src="~/vendor/libs/flatpickr/flatpickr.dist.js"></script>
+    <script src="~/vendor/libs/select2/select2.dist.js"></script>
+    <script src="~/vendor/libs/select2/select2.dist.js"></script>
+    <script src="~/vendor/libs/cleavejs/cleave-phone.dist.js"></script>
+    <script src="~/vendor/libs/tagify/tagify.dist.js"></script>
+    <script src="~/vendor/libs/block-ui/block-ui.dist.js"></script>
+    <script src="~/vendor/libs/toastr/toastr.dist.js"></script>
+    <script src="~/vendor/libs/sweetalert2/sweetalert2.dist.js"></script>
+    <script src="~/vendor/libs/cleavejs/cleave.dist.js"></script>
     <script src="~/vendor/libs/moment/moment.dist.js"></script>
     <script src="~/vendor/libs/flatpickr/flatpickr.dist.js"></script>
     <script src="~/vendor/libs/select2/select2.dist.js"></script>
@@ -18,34 +34,34 @@
     <div class="col-md-12">
         <div class="card mb-4">
             <div class="card-body">
-                <form class="card-body" id="myForm" asp-action="AddDeroulement" asp-controller="Admin" method="post">
+                <form class="card-body" id="form" asp-action="AddDeroulement" asp-controller="Admin" method="post">
                     <h6 class="mb-b fw-semibold">1. Montants</h6>
                     <div class="row mb-3">
-                        <label class="col-sm-3 col-form-label text-sm-end" for="plafond">Plafond</label>
+                        <label class="col-sm-3 col-form-label text-sm-end" asp-for="@Model.Deroulement.Plafond">Plafond</label>
                         <div class="col-sm-9">
                             <input type="number" class="form-control" id="plafond" asp-for="@Model.Deroulement.Plafond" />
                         </div>
                     </div>
                     <div class="row mb-3">
-                        <label class="col-sm-3 col-form-label text-sm-end" for="plancher">Plancher</label>
+                        <label class="col-sm-3 col-form-label text-sm-end" asp-for="@Model.Deroulement.Plancher">Plancher</label>
                         <div class="col-sm-9">
                             <input type="text" class="form-control" id="plancher" asp-for="@Model.Deroulement.Plancher" />
                         </div>
                     </div>
                     <div class="row mb-3">
-                        <label class="col-sm-3 col-form-label text-sm-end" for="libelle">Libelle</label>
+                        <label class="col-sm-3 col-form-label text-sm-end" asp-for="@Model.Deroulement.Libelle">Libelle</label>
                         <div class="col-sm-9">
-                            <input type="number" class="form-control" id="libelle" asp-for="@Model.Deroulement.Libelle" />
+                            <input type="text" class="form-control" id="libelle" asp-for="@Model.Deroulement.Libelle" />
                         </div>
                     </div>
                     <div class="row mb-3">
-                        <label class="col-sm-3 col-form-label text-sm-end" for="description">Description</label>
+                        <label class="col-sm-3 col-form-label text-sm-end" asp-for="@Model.Deroulement.Description">Description</label>
                         <div class="col-sm-9">
                             <textarea type="text" class="form-control" id="description" asp-for="@Model.Deroulement.Description"></textarea>
                         </div>
                     </div>
                     <div class="row mb-3">
-                        <label class="col-sm-3 col-form-label text-sm-end" for="nbrInstances">Nombre d'instances</label>
+                        <label class="col-sm-3 col-form-label text-sm-end" asp-for="@Model.Deroulement.NiveauInstance">Nombre d'instances</label>
                         <div class="col-sm-9">
                             <input type="number" class="form-control" id="nbrInstances" min="0" asp-for="@Model.Deroulement.NiveauInstance" />
                         </div>
@@ -53,7 +69,7 @@
                     <hr class="my-4 mx-n4" />
                     <h6 class="mb-3 fw-semibold">2. Type de prêt</h6>
                     <div class="row mb-3">
-                        <label class="col-sm-3 col-form-label text-sm-end" for="typePret">Type de prêt</label>
+                        <label class="col-sm-3 col-form-label text-sm-end" asp-for="@Model.Deroulement.TypePretId">Type de prêt</label>
                         <div class="col-sm-9">
                             <select id="typePret" class="select2 form-select" data-allow-clear="true" asp-for="@Model.Deroulement.TypePretId">
                                 <option value="">Select</option>
@@ -69,7 +85,7 @@
                     <div class="pt-4">
                         <div class="row justify-content-end">
                             <div class="col-sm-9">
-                                <button type="submit" class="btn btn-primary me-sm-2 me-1" id="submit">Submit</button>
+                                <button type="submit" class="btn btn-primary me-sm-2 me-1" id="btnSubmit">Submit</button>
                                 <button type="reset" class="btn btn-label-secondary">Cancel</button>
                             </div>
                         </div>
@@ -81,168 +97,181 @@
 </div>
 
 @section PageScripts {
-    @*<script src="~/js/form-wizard-numbered.js"></script>*@
-    @* <script src="~/bernard/assets/js/form-wizard-numbered.js"></script>
-    <script src="~/js/custom/home-index.js"></script>*@
+    <script src="~/js/form-layouts.dist.js"></script>
+    <script src="~/js/custom/home-index.js"></script>
     <script src="~/js/form-layouts.dist.js"></script>
     <script>
-        $(function () {
-            var form = window.$('#myForm'),
-                btn = window.$('#submit'),
-                //indice = $('#indice'),
-                //tel = $('#tel'),
-                title = '',
-                message = '',
-                errorTitle = new DOMParser().parseFromString('Erreur', 'text/html').body.innerHTML,
-                errorTypeMessage = 'error',
-                errorMessage = new DOMParser().parseFromString('Erreur Produite', 'text/html').body.innerHTML,
-                errorDescription = '',
-                errorTimeOut = 500000,
-                errors = [];
+		$(function () {
+			var form = window.$('#form'),
+				btn = window.$('#btnSubmit'),
+				//indice = $('#indice'),
+				//tel = $('#tel'),
+				plancher = $('#plancher').val(),
+				plafond = $('#plafond').val(),
+				title = '',
+				message = '',
+				errorTitle = new DOMParser().parseFromString('Erreur', 'text/html').body.innerHTML,
+				errorTypeMessage = 'error',
+				errorMessage = new DOMParser().parseFromString('Erreur Produite', 'text/html').body.innerHTML,
+				errorDescription = '',
+				errorTimeOut = 500000,
+				errors = [];
 
-            form.on("submit",
-                function (event) {
-                    event.preventDefault();
-                    var data = window.$(this).serialize();
-                    var url = window.$(this).attr("action");
-                    console.log(data);
-                    window.$.ajax({
-                        url: url,
-                        type: "POST",
-                        dataType: "json",
-                        data: data,
-                        beforeSend: function () {
-                            btn.attr('disabled', 'disabled');
-                            window.$.blockUI({
-                                message: '<div class="spinner-border text-primary" role="status"></div>',
-                                css: {
-                                    backgroundColor: 'transparent',
-                                    border: '0'
-                                },
-                                overlayCSS: {
-                                    backgroundColor: '#fff',
-                                    opacity: 0.8
-                                }
-                            });
-                        },
-                        success: function (response) {
-                            console.log(response);
-                            if (response.typeMessage === "error") {
-                                window.toastr[response.typeMessage]('👋 ' + 'Erreur',
-                                    {
-                                        showMethod: 'slideDown',
-                                        hideMethod: 'slideUp',
-                                        closeButton: true,
-                                        tapToDismiss: false,
-                                        progressBar: true,
-                                        timeOut: response.timeOut,
-                                        rtl: window.$('html').attr('data-textdirection') === 'rtl',
-                                        onHidden: function () { }
-                                    });
-                            }
-                            //var strJson = JSON.parse(response.strJson);
-                            //var nom = strJson.Nom;
-                            //var prenoms = strJson.Prenoms;
-                            //$('#username').val(strJson.Username);
-                            message = new DOMParser().parseFromString(response.message, 'text/html').body.innerHTML;
-                            window.toastr[response.typeMessage]('👋 ' + message,
-                                response.title,
-                                {
-                                    showMethod: 'slideDown',
-                                    hideMethod: 'slideUp',
-                                    closeButton: true,
-                                    tapToDismiss: false,
-                                    progressBar: true,
-                                    timeOut: response.timeOut,
-                                    rtl: window.$('html').attr('data-textdirection') === 'rtl',
-                                    onHidden: function () { }
-                                });
+			form.on("submit",
+				function (event) {
+					event.preventDefault();
+					var data = window.$(this).serialize();
+					var url = window.$(this).attr("action");
+					console.log(data);
+					if(plancher > plafond)
+					{
+						window.toastr['Le plancher doit être inférieur au plafond']('👋 ' + 'Erreur',
+							{
+								showMethod: 'slideDown',
+								hideMethod: 'slideUp',
+								closeButton: true,
+								tapToDismiss: false,
+								progressBar: true,
+								timeOut: response.timeOut,
+								rtl: window.$('html').attr('data-textdirection') === 'rtl',
+								onHidden: function () { }
+							});
+					}
+					window.$.ajax({
+						url: url,
+						type: "POST",
+						dataType: "json",
+						data: data,
+						beforeSend: function () {
+							btn.attr('disabled', 'disabled');
+							window.$.blockUI({
+								message: '<div class="spinner-border text-primary" role="status"></div>',
+								css: {
+									backgroundColor: 'transparent',
+									border: '0'
+								},
+								overlayCSS: {
+									backgroundColor: '#fff',
+									opacity: 0.8
+								}
+							});
+						},
+						success: function (response) {
+							console.log(response);
+							if (response.typeMessage === "error") {
+								window.toastr[response.typeMessage]('👋 ' + 'Erreur',
+									{
+										showMethod: 'slideDown',
+										hideMethod: 'slideUp',
+										closeButton: true,
+										tapToDismiss: false,
+										progressBar: true,
+										timeOut: response.timeOut,
+										rtl: window.$('html').attr('data-textdirection') === 'rtl',
+										onHidden: function () { }
+									});
+							}
+							
 
-                        },
-                        error: function (response) {
-                            try {
+							message = new DOMParser().parseFromString(response.message, 'text/html').body.innerHTML;
+							window.toastr[response.typeMessage]('👋 ' + message,
+								response.title,
+								{
+									showMethod: 'slideDown',
+									hideMethod: 'slideUp',
+									closeButton: true,
+									tapToDismiss: false,
+									progressBar: true,
+									timeOut: response.timeOut,
+									rtl: window.$('html').attr('data-textdirection') === 'rtl',
+									onHidden: function () { }
+								});
 
-                                var obj = JSON.parse(JSON.stringify(response.responseJSON));
-                                if (obj.length !== 0) {
-                                    if (response.status === 401) {
-                                        message = new DOMParser().parseFromString('Non autorisé', 'text/html').body.innerHTML;
-                                        window.toastr[errorTypeMessage]('👋 ' + message,
-                                            errorTitle,
-                                            {
-                                                showMethod: 'slideDown',
-                                                hideMethod: 'slideUp',
-                                                closeButton: true,
-                                                tapToDismiss: false,
-                                                progressBar: true,
-                                                timeOut: errorTimeOut,
-                                                rtl: window.$('html').attr('data-textdirection') === 'rtl'
-                                            });
-                                    }
-                                    else {
-                                        if (obj.typeMessage != null && obj.typeMessage !== undefined) {
-                                            if (response.status === 0) {
-                                            } else if (response.status === 400 || response.status === 404 || response.status === 405 || response.status === 500) {
-                                                errorTitle = obj.title;
-                                                errorTypeMessage = obj.typeMessage;
-                                                errorMessage = obj.message;
-                                                errorDescription = obj.description;
-                                                errorTimeOut = obj.timeOut;
-                                                if (obj.erreurs != null && obj.erreurs != undefined) errors = obj.erreurs;
-                                            }
-                                            if (errors !== null && errors !== undefined && errors.length > 0) {
-                                                var messages = '';
-                                                if (errors.length == 1) {
-                                                    messages = errors;
-                                                }
-                                                else {
-                                                    for (var i = 0; i < errors.length; i++) {
-                                                        messages += errors[i] + "<br>";
-                                                    }
-                                                    messages = messages.slice(0, -4);
-                                                }
-                                                errorMessage = new DOMParser().parseFromString(messages, 'text/html').body.innerHTML;
+						},
+						error: function (response) {
+							try {
 
-                                            } else if (errorDescription !== null && errorDescription !== undefined) {
-                                                errorMessage = new DOMParser().parseFromString(errorDescription, 'text/html').body.innerHTML;
-                                            } else {
-                                                errorMessage = new DOMParser().parseFromString(errorMessage, 'text/html').body.innerHTML;
-                                            }
-                                            window.toastr[errorTypeMessage]('👋 ' + errorMessage,
-                                                errorTitle,
-                                                {
-                                                    showMethod: 'slideDown',
-                                                    hideMethod: 'slideUp',
-                                                    closeButton: true,
-                                                    tapToDismiss: false,
-                                                    progressBar: true,
-                                                    timeOut: errorTimeOut,
-                                                    rtl: window.$('html').attr('data-textdirection') === 'rtl'
-                                                }
-                                            );
-                                        }
-                                    }
-                                }
-                            } catch (err) {
-                                window.toastr[errorTypeMessage]('👋 ' + err,
-                                    errorTitle,
-                                    {
-                                        showMethod: 'slideDown',
-                                        hideMethod: 'slideUp',
-                                        closeButton: true,
-                                        tapToDismiss: false,
-                                        progressBar: true,
-                                        timeOut: errorTimeOut,
-                                        rtl: window.$('html').attr('data-textdirection') === 'rtl'
-                                    }
-                                );
-                            }
-                        },
-                        complete: function () {
-                            btn.removeAttr('disabled');
-                            window.$.unblockUI();
-                        }
-                    });
-                });
-        });
+								var obj = JSON.parse(JSON.stringify(response.responseJSON));
+								if (obj.length !== 0) {
+									if (response.status === 401) {
+										message = new DOMParser().parseFromString('Non autorisé', 'text/html').body.innerHTML;
+										window.toastr[errorTypeMessage]('👋 ' + message,
+											errorTitle,
+											{
+												showMethod: 'slideDown',
+												hideMethod: 'slideUp',
+												closeButton: true,
+												tapToDismiss: false,
+												progressBar: true,
+												timeOut: errorTimeOut,
+												rtl: window.$('html').attr('data-textdirection') === 'rtl'
+											});
+									}
+									else {
+										if (obj.typeMessage != null && obj.typeMessage !== undefined) {
+											if (response.status === 0) {
+											} else if (response.status === 400 || response.status === 404 || response.status === 405 || response.status === 500) {
+												errorTitle = obj.title;
+												errorTypeMessage = obj.typeMessage;
+												errorMessage = obj.message;
+												errorDescription = obj.description;
+												errorTimeOut = obj.timeOut;
+												if (obj.erreurs != null && obj.erreurs != undefined) errors = obj.erreurs;
+											}
+											if (errors !== null && errors !== undefined && errors.length > 0) {
+												var messages = '';
+												if (errors.length == 1) {
+													messages = errors;
+												}
+												else {
+													for (var i = 0; i < errors.length; i++) {
+														messages += errors[i] + "<br>";
+													}
+													messages = messages.slice(0, -4);
+												}
+												errorMessage = new DOMParser().parseFromString(messages, 'text/html').body.innerHTML;
+
+											} else if (errorDescription !== null && errorDescription !== undefined) {
+												errorMessage = new DOMParser().parseFromString(errorDescription, 'text/html').body.innerHTML;
+											} else {
+												errorMessage = new DOMParser().parseFromString(errorMessage, 'text/html').body.innerHTML;
+											}
+											window.toastr[errorTypeMessage]('👋 ' + errorMessage,
+												errorTitle,
+												{
+													showMethod: 'slideDown',
+													hideMethod: 'slideUp',
+													closeButton: true,
+													tapToDismiss: false,
+													progressBar: true,
+													timeOut: errorTimeOut,
+													rtl: window.$('html').attr('data-textdirection') === 'rtl'
+												}
+											);
+										}
+									}
+								}
+							} catch (err) {
+								window.toastr[errorTypeMessage]('👋 ' + err,
+									errorTitle,
+									{
+										showMethod: 'slideDown',
+										hideMethod: 'slideUp',
+										closeButton: true,
+										tapToDismiss: false,
+										progressBar: true,
+										timeOut: errorTimeOut,
+										rtl: window.$('html').attr('data-textdirection') === 'rtl'
+									}
+								);
+							}
+						},
+						complete: function () {
+							btn.removeAttr('disabled');
+							window.$.unblockUI();
+						}
+					});
+				});
+		});
     </script>
 }

@@ -7,6 +7,7 @@ namespace LoanManagement.API.Controllers.Loan_Management
 	public class PretAccordController : Controller
 	{
 		private readonly IDossierClientService _dossierClientService;
+		private readonly IEtapeDeroulementService _etapeDeroulementService;
 		private readonly IEmployeurService _employeurService;
 		private readonly IClientService _clientService;
 		private readonly ICompteService _compteService;
@@ -19,6 +20,7 @@ namespace LoanManagement.API.Controllers.Loan_Management
 		private readonly ILoggerManager _logger;
 		private readonly JournalisationService _journalisationService;
 		private readonly IConfiguration _configuration;
+		private readonly EmailService _mailService;
 		
 
         public PretAccordController(IDossierClientService dossierClientService, IEmployeurService employeurService,
@@ -27,7 +29,7 @@ namespace LoanManagement.API.Controllers.Loan_Management
 			IConfiguration config, IPeriodicitePaiementService periodicitePaiementService,
 			ITypePretService typePretService, IDeroulementService deroulementService, 
 			IStatutDossierClientService statutDossierClientService, IClientService clientService, 
-			ICompteService compteService)
+			ICompteService compteService, IEtapeDeroulementService service, EmailService mailService)
         {
 			_dossierClientService = dossierClientService;
 			_pretAccordService = pretAccordService;
@@ -42,6 +44,8 @@ namespace LoanManagement.API.Controllers.Loan_Management
 			_clientService = clientService;
 			_employeurService = employeurService;
 			_compteService = compteService;
+			_etapeDeroulementService = service;
+			_mailService = mailService;
         }
 
 		[HttpPost("add")]
@@ -113,7 +117,7 @@ namespace LoanManagement.API.Controllers.Loan_Management
                             await _journalisationService.Journalize(Journal);
                             await transaction.CommitAsync();
                             _logger.LogWarning("Montage d'un dossier crédit : Aucune configuration initiale existante ne correspond au prêt en cours");
-                            return NotFound(new ApiResponse((int)CustomHttpCode.OBJECT_NOT_FOUND, description: "Aucue configuration ne correspond au prêt en cours"));
+                            return NotFound(new ApiResponse((int)CustomHttpCode.OBJECT_NOT_FOUND, description: "Aucune configuration ne correspond au prêt en cours"));
                         }
                         var dossierCredit = _mapper.Map<PretAccord>(ressource);
 						dossierCredit.QuotiteCessible = dossierCredit.Mensualite / 3;
@@ -126,6 +130,7 @@ namespace LoanManagement.API.Controllers.Loan_Management
 						var status = new StatutDossierClient()
 						{
 							Date = DateTime.Now.ToString("dd/MM/yyyyy HH:mm:ss"),
+							DateReception = DateTime.Now.ToString("dd/MM/yyyyy HH:mm:ss"),
 							EtapeDeroulementId = etapeDeroulements.First().Id,
 							DossierClientId = dossierClient.Id
 						};
@@ -244,7 +249,15 @@ namespace LoanManagement.API.Controllers.Loan_Management
 					{
 						var all = await _pretAccordService.GetAll();
 						var result = _mapper.Map<IEnumerable<PretAccordRessource>>(all);
-						Journal.Niveau = 3; //INFORMATION
+						var client = new Client();
+						var dossier = new DossierClient();
+                        foreach (var item in result)
+                        {
+							dossier = await _dossierClientService.GetById(item.DossierClientId);
+							client = await _clientService.GetById(dossier.ClientId);
+							item.NomClient = $"{client.Nom} {client.Prenoms}";
+                        }
+                        Journal.Niveau = 3; //INFORMATION
 						await _journalisationService.Journalize(Journal);
 						_logger.LogInformation("Liste des demandes de prêts : Opération effectuée avec succès");
 
@@ -273,8 +286,11 @@ namespace LoanManagement.API.Controllers.Loan_Management
 					var Journal = new Journal() { Libelle = "Traitement d'un dossier crédit", TypeJournalId = 5, Entite = "User" };
 					try
 					{
-						var dossierClient = await _dossierClientService.GetById(ressource.Id);
-						if(dossierClient is null)
+						//var dossierClient = await _dossierClientService.GetById(ressource.Id);
+						
+						var dossierClient = await _pretAccordService.GetPretAccordForDossier(ressource.Id);
+						var client = await _clientService.GetById(dossierClient.ClientId);
+						if (dossierClient is null)
 						{
 							Journal.Niveau = 1;
 							await _journalisationService.Journalize(Journal);
@@ -283,11 +299,11 @@ namespace LoanManagement.API.Controllers.Loan_Management
 							return NotFound(new ApiResponse((int)CustomHttpCode.OBJECT_NOT_FOUND,
 								description: "Dossier crédit sélectionné invalide"));
 						}
-						var pretAccord = await _pretAccordService.GetPretAccordForDossier(dossierClient.Id);
+						var pretAccord = await _pretAccordService.GetPretAccord(dossierClient.Id);
 						var deroulement = await _dossierClientService.GetDossierDeroulement(pretAccord.TypePretId,
 							pretAccord.MontantPret);
 						var statut = await _dossierClientService.GetStatut(dossierClient.Id);
-						if(pretAccord is null)
+						if(dossierClient is null)
 						{
 							Journal.Niveau = 1;
 							await _journalisationService.Journalize(Journal);
@@ -321,10 +337,20 @@ namespace LoanManagement.API.Controllers.Loan_Management
 							await transaction.CommitAsync();
 							_logger.LogWarning("Traitement d'un dossier crédit : Le dossier a été clôturé");
 
-							return BadRequest(new ApiResponse((int)CustomHttpCode.OBJECT_NOT_FOUND,
+							return BadRequest(new ApiResponse((int)CustomHttpCode.WARNING,
 								description : "Le dossier a été clôturé"));
 						}
-						if(deroulement.NiveauInstance  > statut.EtapeDeroulementId + 1)
+						if (dossierClient.DossierTraite)
+						{
+							Journal.Niveau = 3; //INFORMATION : Le dossier	a été déjà traité;
+							await _journalisationService.Journalize(Journal);
+							await transaction.CommitAsync();
+							_logger.LogWarning("Traitement d'un dossier crédit : Le dossier a été déjà traité");
+
+							return BadRequest(new ApiResponse((int)CustomHttpCode.WARNING,
+								description: "Le dossier a été traité préalablement"));
+						}
+						if (deroulement.NiveauInstance  > statut.EtapeDeroulementId + 1)
 						{
 							if(ressource.Response == false)
 							{
@@ -344,11 +370,14 @@ namespace LoanManagement.API.Controllers.Loan_Management
 								return Ok();
 							}
 						}
-						if(deroulement.NiveauInstance == statut.EtapeDeroulementId + 1)
+						var etape = await _etapeDeroulementService.GetById(statut.EtapeDeroulementId);
+						if(deroulement.NiveauInstance == etape.Etape)
 						{
 							if (ressource.Response == true)
 							{
 								await _statutDossierClientService.Assign(statut);
+								await _mailService.NotifyClient(true, client.Email, dossierClient.Montant);
+								await _dossierClientService.Cloturer(dossierClient);
 								Journal.Niveau = 2; //SUCCES
 								await _journalisationService.Journalize(Journal);
 								await transaction.CommitAsync();
@@ -359,6 +388,8 @@ namespace LoanManagement.API.Controllers.Loan_Management
 							else
 							{
 								await _statutDossierClientService.Reject(statut, ressource.Motif);
+								await _mailService.NotifyClient(false, client.Email, dossierClient.Montant);
+								await _dossierClientService.Cloturer(dossierClient);
 								Journal.Niveau = 2; //SUCCES
 								await _journalisationService.Journalize(Journal);
 								await transaction.CommitAsync();
@@ -428,7 +459,7 @@ namespace LoanManagement.API.Controllers.Loan_Management
 						var client = await _clientService.GetById(dossier.ClientId);
 						var compte = await _clientService.GetCompte(client.Id);
 						var compteUpdated = await _compteService.IncreaseAmount(compte, 
-							dossierCredit.MontantPret); //On effectue la mise en place sur le compte du client.
+							dossierCredit.Montant); //On effectue la mise en place sur le compte du client.
 						await _dossierClientService.Cloturer(dossier); // On cloture le dossier;
 						Journal.Niveau = 2; //SUCCES
 						await transaction.CommitAsync();

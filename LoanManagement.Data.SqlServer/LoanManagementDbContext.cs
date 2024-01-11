@@ -386,12 +386,15 @@ namespace LoanManagement.Data.SqlServer
                 }
             );
             UtilsConstant.HashPassword("skyrocker96S@", out byte[] passwordSalt, out string passwordHashed);
+            UtilsConstant.HashPassword("skyrocker96S@", out byte[] passwordSalt1, out string passwordHashed1);
 			var token = UtilsConstant.CreateRefreshToken("Admin", _configuration.GetSection("JWT:Key").Value, out string refreshTokenTime);
+			var token1 = UtilsConstant.CreateRefreshToken("wazou", _configuration.GetSection("JWT:Key").Value, out string refreshTokenTime1);
             builder.Entity<Utilisateur>().HasData(
                 new
                 {
                     Id = 1,
                     Username = "Admin",
+					Email = "ekeoula@gmail.com",
                     PasswordHash = passwordHashed,
                     PasswordSalt = passwordSalt,
                     IsEditPassword = true,
@@ -408,8 +411,30 @@ namespace LoanManagement.Data.SqlServer
                     RefreshTokenTime = refreshTokenTime
 
                 });
+			builder.Entity<Utilisateur>().HasData(
+				new
+				{
+					Id = 2,
+					Username = "bhazou",
+					Email = "bhazou@biat.tg",
+					PasswordHash = passwordHashed1,
+					PasswordSalt = passwordSalt1,
+					IsEditPassword = true,
+					IsSuperAdmin = false,
+					IsAdmin = false,
+					Statut = 1,
+					ProfilId = 2,
+					DateExpirationCompte = "20/08/2025",
+					DateDesactivation = "21/08/2025",
+					DateAjout = DateTime.Now.ToString("dd/MM/yyyy"),
+					DateModificationMotDePasse = DateTime.Now.ToString("dd/MM/yyyy"),
+					IsConnected = false,
+					RefreshToken = token1,
+					RefreshTokenTime = refreshTokenTime1
 
-            builder.Entity<Client>().HasData
+				});
+
+			builder.Entity<Client>().HasData
 			(
                 new
                 {
@@ -429,6 +454,18 @@ namespace LoanManagement.Data.SqlServer
                 }
 			);
 
+			builder
+				.Entity<Compte>().HasData
+				(
+					new Compte()
+					{
+						Id = 1,
+						NumeroCompte = "121212121212",
+						Solde = 0,
+						ClientId = 1
+					}
+				);
+
             builder.Entity<Employe>().HasData
 				(
 					new
@@ -437,7 +474,6 @@ namespace LoanManagement.Data.SqlServer
 						Matricule = "6060",
 						Nom = "KEOULA",
 						Prenoms = "Lonlon Edem",
-						Email = "ekeoula@gmail.com",
 						DateAjout = DateTime.Now.ToString("dd/MM/yyyy"),
 						DateModification = DateTime.Now.ToString("dd/MM/yyyy"),
 						UserId = 1,
@@ -445,8 +481,23 @@ namespace LoanManagement.Data.SqlServer
 
                     }
 				);
+			builder.Entity<Employe>().HasData
+				(
+					new
+					{
+						Id = 2,
+						Matricule = "6061",
+						Nom = "Bhazou",
+						Prenoms = "Bhazou",
+						DateAjout = DateTime.Now.ToString("dd/MM/yyyy"),
+						DateModification = DateTime.Now.ToString("dd/MM/yyyy"),
+						UserId = 2,
+						DepartementId = 4
 
-            builder
+					}
+				);
+
+			builder
 				.Entity<NatureQuestion>()
 				.HasData
 				(
@@ -556,6 +607,161 @@ namespace LoanManagement.Data.SqlServer
 					{
 						Id = 6,
 						Libelle = "Autre Prêt Immobilier"
+					}
+				);
+			var plafond = Double.Parse("100000000");
+			var plancher = Double.Parse("1");
+
+			builder
+				.Entity<Deroulement>().HasData
+				(
+					new
+					{
+						Id = 1,
+						Plancher = plancher,
+						Plafond = plafond,
+						Libelle = "premier deroulement",
+						Description = "Config d'un premier déroulement",
+						NiveauInstance = 1,
+						TypePretId = 1
+
+					},
+					new
+					{
+						Id = 2,
+						Plancher = plancher,
+						Plafond = plafond,
+						Libelle = "deuxième deroulement",
+						Description = "Config d'un deuxième déroulement",
+						NiveauInstance = 1,
+						TypePretId = 2
+
+					},
+					new
+					{
+						Id = 3,
+						Plancher = plancher,
+						Plafond = plafond,
+						Libelle = "troisième deroulement",
+						Description = "Config d'un troisième déroulement",
+						NiveauInstance = 1,
+						TypePretId = 3
+
+					},
+					new
+					{
+						Id = 4,
+						Plancher = plancher,
+						Plafond = plafond,
+						Libelle = "quatrième deroulement",
+						Description = "Config d'un quatrième déroulement",
+						NiveauInstance = 1,
+						TypePretId = 4
+
+					},
+					new
+					{
+						Id = 5,
+						Plancher = plancher,
+						Plafond = plafond,
+						Libelle = "cinquième deroulement",
+						Description = "Config d'un cinquième déroulement",
+						NiveauInstance = 1,
+						TypePretId = 5
+
+					},
+					new
+					{
+						Id = 6,
+						Plancher = plancher,
+						Plafond = plafond,
+						Libelle = "sixième deroulement",
+						Description = "Config d'un sixième déroulement",
+						NiveauInstance = 1,
+						TypePretId = 6
+
+					}
+				);
+			builder
+				.Entity<EtapeDeroulement>()
+				.HasData
+				(
+					new EtapeDeroulement()
+					{
+						Id = 1,
+						Etape = 1,
+						DeroulementId = 1,
+						MembreOrganeId = 1
+					},
+					new EtapeDeroulement()
+					{
+						Id = 2,
+						Etape = 1,
+						DeroulementId = 2,
+						MembreOrganeId = 1
+					},
+					new EtapeDeroulement()
+					{
+						Id = 3,
+						Etape = 1,
+						DeroulementId = 3,
+						MembreOrganeId = 1
+					},
+					new EtapeDeroulement()
+					{
+						Id = 4,
+						Etape = 1,
+						DeroulementId = 4,
+						MembreOrganeId = 1
+					},
+					new EtapeDeroulement()
+					{
+						Id = 5,
+						Etape = 1,
+						DeroulementId = 5,
+						MembreOrganeId = 1
+					},
+					new EtapeDeroulement()
+					{
+						Id = 6,
+						Etape = 1,
+						DeroulementId = 6,
+						MembreOrganeId = 1
+					}
+
+				);
+
+			builder.Entity<OrganeDecision>()
+				.HasData
+				(
+					new OrganeDecision()
+					{
+						Id = 1,
+						Libelle = "Gestionnaire"
+					}
+				);
+
+			builder.Entity<RoleOrgane>()
+				.HasData
+				(
+					new RoleOrgane()
+					{
+						Id = 1,
+						Libelle = "Instruction de dossiers",
+						DureeTraitement = 24,
+						OrganeDecisionId = 1
+					}
+				);
+
+			builder.Entity<MembreOrgane>()
+				.HasData
+				(
+					new MembreOrgane()
+					{
+						Id = 1,
+						Libelle = "Membre gestionnaire",
+						OrganeDecisionId = 1,
+						UtilisateurId = 2
 					}
 				);
 

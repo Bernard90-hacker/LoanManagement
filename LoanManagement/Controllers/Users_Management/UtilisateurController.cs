@@ -11,6 +11,7 @@ namespace LoanManagement.API.Controllers.Users_Management
     public class UtilisateurController : Controller
 	{
 		private readonly IUtilisateurService _utilisateurService;
+		private readonly EmailService _emailService;
 		private readonly IMotDePasseService _motDePasseService;
 		private readonly IParamGlobalService _paramMotDePasseService;
 		private readonly IJournalService _journalService;
@@ -21,9 +22,9 @@ namespace LoanManagement.API.Controllers.Users_Management
 		private readonly IMapper _mapper;
 		private readonly IConfiguration _config;
 		public UtilisateurController(UtilisateurService utilisateurService, ILoggerManager logger,
-			IMapper mapper, IMotDePasseService motDePasseService, IConfiguration config, 
-			IProfilService profilService, IParamGlobalService param, 
-			IEmployeService employeService, IJournalService journalService)
+			IMapper mapper, IMotDePasseService motDePasseService, IConfiguration config,
+			IProfilService profilService, IParamGlobalService param,
+			IEmployeService employeService, IJournalService journalService, EmailService mailService)
 		{
 			_utilisateurService = utilisateurService;
 			_logger = logger;
@@ -34,6 +35,7 @@ namespace LoanManagement.API.Controllers.Users_Management
 			_paramMotDePasseService = param;
 			_employeService = employeService;
 			_journalService = journalService;
+			_emailService = mailService;
 		}
 
 		[HttpPost("register")]
@@ -66,16 +68,12 @@ namespace LoanManagement.API.Controllers.Users_Management
 					_logger.LogWarning("Enregistrement d'un utilisateur : Profil sélectionné non valable");
 					return NotFound(new ApiResponse((int)CustomHttpCode.OBJECT_NOT_FOUND, description: "Profil sélectionné invalide"));
 				}
-                var doesPasswordMatchAllRequirements = await _utilisateurService.DidUserInformationsMatchAllRequirements(param, ressource.Password, ressource.Username);
-				if (!doesPasswordMatchAllRequirements)
-				{
-					_logger.LogWarning("Enregistrement d'un utilisateur : Le mot de passe entré ne suit pas la convention fixée par l'administrateur");
-					return BadRequest("Le mot de passe ne suit pas la convention fixée par l'administrateur");
-				}
-				var utilisateur = _mapper.Map<Utilisateur>(ressource);
+                var utilisateur = _mapper.Map<Utilisateur>(ressource);
+				
 				string hash = string.Empty;
 				byte[] salt;
-				Constants.Utils.UtilsConstant.HashPassword(ressource.Password, out salt, out hash);
+                var password = Constants.Utils.UtilsConstant.GeneratePassword(param.Taille, 2);
+                Constants.Utils.UtilsConstant.HashPassword(password, out salt, out hash);
 				utilisateur.PasswordHash = hash;
 				utilisateur.PasswordSalt = salt;
 				utilisateur.DateAjout = DateTime.Now.ToString("dd/MM/yyyy");
@@ -84,10 +82,10 @@ namespace LoanManagement.API.Controllers.Users_Management
 				utilisateur.RefreshToken = Constants.Utils.UtilsConstant.CreateRefreshToken(utilisateur.Username, 
 					_config.GetSection("JWT:Key").Value, out refreshTokenTime);
 				utilisateur.RefreshTokenTime = refreshTokenTime;
-
 				var utilisateurCreated = await _utilisateurService.Create(utilisateur);
-				//Ensuite on sauvegarde les informations dans le service de mot de passe:
-				var motDePasseRessource = new MotDePasseRessource()
+                await _emailService.SendPasswordMailAsync(password, ressource.Username, utilisateur.Email);
+                //Ensuite on sauvegarde les informations dans le service de mot de passe:
+                var motDePasseRessource = new MotDePasseRessource()
 				{
 					OldPasswordHash = hash,
 					OldPasswordSalt = salt,
@@ -128,7 +126,23 @@ namespace LoanManagement.API.Controllers.Users_Management
 				return ValidationProblem(statusCode: (int)HttpCode.INTERNAL_SERVER_ERROR, title: "Erreur interne du serveur", detail: ex.Message);
 			}
 		}
-		[HttpGet("all")]
+        [HttpGet("UsersWithoutAccount")]
+        public async Task<ActionResult<string>> GetUsersWithoutAccount()
+        {
+            try
+            {
+                var users = await _utilisateurService.GetUsersWithoutAccount();
+                _logger.LogInformation($"'Configuration des mots de passe': Opération effectuée avec succès");
+				var result = _mapper.Map<IEnumerable<GetUtilisateurRessource>>(users);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Une erreur est survenue pendant le traitement de la requête");
+                return ValidationProblem(statusCode: (int)HttpCode.INTERNAL_SERVER_ERROR, title: "Erreur interne du serveur", detail: ex.Message);
+            }
+        }
+        [HttpGet("all")]
 		public async Task<ActionResult<PagedList<GetUtilisateurRessource>>> GetAll([FromQuery] UtilisateurParameters parameters)
 		{
 			try

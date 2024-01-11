@@ -24,7 +24,7 @@
         }
 
 		[HttpGet("all")]
-		public async Task<ActionResult> GetAll([FromQuery] EmployeurParameters parameters)
+		public async Task<ActionResult> GetAll()
 		{
 			using (var connection = new SqlConnection(_configuration.GetConnectionString("Default")))
 			{
@@ -34,22 +34,16 @@
 					var Journal = new Journal() { Libelle = "Liste des employeurs", TypeJournalId = 8, Entite = "User" };
 					try
 					{
-						var all = await _employeurService.GetAll(parameters);
+						var all = await _employeurService.GetAll();
 						var result = _mapper.Map<IEnumerable<EmployeurRessource>>(all);
-						var metadata = new
-						{
-							all.PageSize,
-							all.TotalCount,
-							all.TotalPages,
-							all.CurrentPage
-						};
+						
 						Journal.Niveau = 2; //SUCCES;
 						await _journalisationService.Journalize(Journal);
 						await transaction.CommitAsync();
 						_logger.LogInformation("Liste des employeurs : Opération effectuée avec succès");
-						Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
+						
 
-						return Ok(result);
+						return Ok(all);
 					}
 					catch (Exception ex)
 					{

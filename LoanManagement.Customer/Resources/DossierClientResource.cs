@@ -28,5 +28,6 @@
         public string DateSoumission { get; set; } = string.Empty;
         public int StatutMaritalId { get; set; }
         public int ClientId { get; set; }
+        public string? NomClient { get; set; }
     }
 }

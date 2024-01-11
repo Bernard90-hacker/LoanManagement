@@ -21,6 +21,8 @@
 		Task<Profil> GetUserProfil(Utilisateur user);
 		Task Connect(Utilisateur user);
 		Task Disconnect(Utilisateur user);
+		Task<IEnumerable<Utilisateur>>? GetUsersWithoutAccount();
 
-	}
+
+    }
 }

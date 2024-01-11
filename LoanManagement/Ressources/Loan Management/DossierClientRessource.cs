@@ -28,7 +28,9 @@
 		public string NatureInfirmite { get; set; } = string.Empty;
 		public string DateSurvenance { get; set; } = string.Empty;
         public string DateSoumission { get; set; } = string.Empty;
+        public string Statut { get; set; } = string.Empty;
         public int StatutMaritalId { get; set; }
 		public int ClientId { get; set; }
+		public string? NomClient { get; set; }
 	}
 }

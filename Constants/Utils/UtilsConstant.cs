@@ -124,6 +124,11 @@ namespace Constants.Utils
 
             return pass;
         }
+        public static string Generate(string username)
+        {
+            return username + $"{DateTime.Now.ToString("dd/MM/yyyy")}";
+        }
+
 
         public static string GetRandomCryptoPassword(int length)
         {

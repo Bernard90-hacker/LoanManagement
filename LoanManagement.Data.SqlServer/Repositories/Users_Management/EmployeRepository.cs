@@ -22,11 +22,6 @@
 				employes, parameters.PageNumber, parameters.PageSize);
 		}
 
-		public async Task<Employe?> GetEmployeByEmail(string email)
-		{
-			return await _context.Employes
-				.Where(x => x.Email == email).FirstOrDefaultAsync();
-		}
 
 		public async Task<Employe?> GetEmployeById(int id)
 		{

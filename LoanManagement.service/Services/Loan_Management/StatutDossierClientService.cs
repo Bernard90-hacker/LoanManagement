@@ -69,6 +69,11 @@
 		{
 			statut.DecisionFinale = true;
 			statut.Date = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
+			var dossier = (from x in await _unitOfWork.DossierClients.GetAllAsync()
+							where x.Id == statut.DossierClientId
+							select x).FirstOrDefault();
+			dossier.Statut = "Approuvé";
+			dossier.DossierTraite = true;
 			await _unitOfWork.CommitAsync();
 
 			return statut;
@@ -79,6 +84,12 @@
 			statut.DecisionFinale = false;
 			statut.Date = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
 			statut.Motif = motif;
+			var dossier = (from x in await _unitOfWork.DossierClients.GetAllAsync()
+						   where x.Id == statut.DossierClientId
+						   select x).FirstOrDefault();
+			dossier.Statut = "Rejeté";
+			dossier.DossierTraite = true;
+
 			await _unitOfWork.CommitAsync();
 
 			return statut;

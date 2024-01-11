@@ -10,7 +10,6 @@ namespace LoanManagement.core.Models.Users_Management
         public string Nom { get; set; } = string.Empty;
         public string Prenoms { get; set; } =string.Empty;
         public string NomComplet { get; set; } = string.Empty;
-        public string Email { get; set; } = string.Empty;
         public string? Photo { get; set; } = string.Empty;
         public string DateAjout { get; set; } = string.Empty;
         public string DateModification { get; set; } = string.Empty;

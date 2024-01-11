@@ -27,6 +27,10 @@ public class Startup
                 options.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
                 options.SerializerSettings.DateFormatString = "dd/MM/yyyy HH:mm:ss";
             });
+        services.AddControllersWithViews(options =>
+        {
+            options.EnableEndpointRouting = false;
+        });
         services.AddLocalization(options => options.ResourcesPath = "Resources");
         services.AddRazorPages()
             .AddCookieTempDataProvider();
@@ -115,6 +119,7 @@ public class Startup
         app.UseRouting();
 
         app.UseAuthorization();
+        app.UseMvc();
 
         app.UseEndpoints(endpoints =>
         {

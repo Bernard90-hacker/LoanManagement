@@ -2,6 +2,7 @@
 {
     public class SaveDossierClientResource
     {
+        public int Id { get; set; }
         public double Taille { get; set; }
         public double Poids { get; set; }
         public double Montant { get; set; }

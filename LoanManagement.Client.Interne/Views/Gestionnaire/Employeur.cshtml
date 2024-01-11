@@ -1,4 +1,4 @@
-﻿@model ClientViewModel;
+﻿@model EmployeurViewModel
 @section PageStyles {
     <link rel="stylesheet" href="~/vendor/css/pages/page-auth.dist.css">
 }
@@ -16,85 +16,6 @@
 }
 
 
-<section class="bernard">
-    <div class="col-md-12">
-        @await Html.PartialAsync("Sections/Menu/_GestionnairePartial")
-    </div>
-    <h4 class="fw-bold py-3 mb-4">
-        <span class="text-muted fw-light">Enregistrer un employeur.</span>
-    </h4>
-
-    <div>
-        <div class="col-12">
-            <h5></h5>
-        </div>
-
-        <div class="row my-4">
-            <div class="col">
-                <h6>  </h6>
-                <div class="accordion" id="collapsibleSection">
-                    <!-- Delivery Address -->
-                    <div class="card accordion-item">
-                        <h2 class="accordion-header" id="headingDeliveryAddress">
-                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDeliveryAddress" aria-expanded="true" aria-controls="collapseDeliveryAddress">
-                                Employeur
-                            </button>
-                        </h2>
-                        <div id="collapseDeliveryAddress" class="accordion-collapse collapse show" aria-labelledby="headingDeliveryAddress" data-bs-parent="#collapsibleSection">
-                            <div class="accordion-body">
-                                <div class="row g-3">
-                                    <div class="col-md-6">
-                                        <div class="row">
-                                            <label class="col-sm-3 col-form-label text-sm-end" for="nom">Nom</label>
-                                            <div class="col-sm-9">
-                                                <input type="text" id="nom" class="form-control" placeholder="CEET" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="row">
-                                            <label class="col-sm-3 col-form-label text-sm-end" for="bp">Boîte Postale</label>
-                                            <div class="col-sm-9">
-                                                <input type="text" id="bp" class="form-control" placeholder="99345" aria-label="99345" />
-                                            </div>
-                                        </div>
-                                    </div>                                
-                                    <div class="col-md-6">
-                                        <div class="row">
-                                            <label class="col-sm-3 col-form-label text-sm-end" for="tel">Téléphone</label>
-                                            <div class="col-sm-9">
-                                                <input type="text" id="tel" class="form-control phone-mask" placeholder="22 20 47 00" aria-label="22 20 47 00" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row mt-4">
-                                        <div class="col-md-6">
-                                            <div class="row justify-content-end">
-                                                <div class="col-sm-9">
-                                                    <button type="submit" class="btn btn-primary me-sm-3 me-1">Submit</button>
-                                                    <button type="reset" class="btn btn-label-secondary">Cancel</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<style>
-    .bernard {
-        position: absolute;
-        left: 300px;
-        top: 60px;
-    }
-</style>
-
 @section VendorScripts{
     <script src="~/vendor/libs/bs-stepper/bs-stepper.dist.js"></script>
     <script src="~/vendor/libs/bootstrap-select/bootstrap-select.dist.js"></script>
@@ -111,34 +32,222 @@
     @*<script src="~/js/form-wizard-numbered.js"></script>*@
     <script src="~/bernard/assets/js/form-wizard-numbered.js"></script>
     <script src="~/js/custom/home-index.js"></script>
-    <script>
+	<script>
+		$(function () {
+			var form = window.$('#form'),
+				btn = window.$('#btnSubmit'),
+				//indice = $('#indice'),
+				//tel = $('#tel'),
+				title = '',
+				message = '',
+				errorTitle = new DOMParser().parseFromString('Erreur', 'text/html').body.innerHTML,
+				errorTypeMessage = 'error',
+				errorMessage = new DOMParser().parseFromString('Erreur Produite', 'text/html').body.innerHTML,
+				errorDescription = '',
+				errorTimeOut = 500000,
+				errors = [];
 
-    </script>
+			form.on("submit",
+				function (event) {
+					event.preventDefault();
+					var data = window.$(this).serialize();
+					var url = window.$(this).attr("action");
+					console.log(data);
+					window.$.ajax({
+						url: url,
+						type: "POST",
+						dataType: "json",
+						data: data,
+						beforeSend: function () {
+							btn.attr('disabled', 'disabled');
+							window.$.blockUI({
+								message: '<div class="spinner-border text-primary" role="status"></div>',
+								css: {
+									backgroundColor: 'transparent',
+									border: '0'
+								},
+								overlayCSS: {
+									backgroundColor: '#fff',
+									opacity: 0.8
+								}
+							});
+						},
+						success: function (response) {
+							console.log(response);
+							if (response.typeMessage === "error") {
+								window.toastr[response.typeMessage]('👋 ' + 'Erreur',
+									{
+										showMethod: 'slideDown',
+										hideMethod: 'slideUp',
+										closeButton: true,
+										tapToDismiss: false,
+										progressBar: true,
+										timeOut: response.timeOut,
+										rtl: window.$('html').attr('data-textdirection') === 'rtl',
+										onHidden: function () { }
+									});
+							}
+							var strJson = JSON.parse(response.strJson);
+							
+							message = new DOMParser().parseFromString(response.message, 'text/html').body.innerHTML;
+							window.toastr[response.typeMessage]('👋 ' + message,
+								response.title,
+								{
+									showMethod: 'slideDown',
+									hideMethod: 'slideUp',
+									closeButton: true,
+									tapToDismiss: false,
+									progressBar: true,
+									timeOut: response.timeOut,
+									rtl: window.$('html').attr('data-textdirection') === 'rtl',
+									onHidden: function () { }
+								});
+							
+						},
+						error: function (response) {
+							try {
+
+								var obj = JSON.parse(JSON.stringify(response.responseJSON));
+								if (obj.length !== 0) {
+									if (response.status === 401) {
+										message = new DOMParser().parseFromString('Non autorisé', 'text/html').body.innerHTML;
+										window.toastr[errorTypeMessage]('👋 ' + message,
+											errorTitle,
+											{
+												showMethod: 'slideDown',
+												hideMethod: 'slideUp',
+												closeButton: true,
+												tapToDismiss: false,
+												progressBar: true,
+												timeOut: errorTimeOut,
+												rtl: window.$('html').attr('data-textdirection') === 'rtl'
+											});
+									}
+									else {
+										if (obj.typeMessage != null && obj.typeMessage !== undefined) {
+											if (response.status === 0) {
+											} else if (response.status === 400 || response.status === 404 || response.status === 405 || response.status === 500) {
+												errorTitle = obj.title;
+												errorTypeMessage = obj.typeMessage;
+												errorMessage = obj.message;
+												errorDescription = obj.description;
+												errorTimeOut = obj.timeOut;
+												if (obj.erreurs != null && obj.erreurs != undefined) errors = obj.erreurs;
+											}
+											if (errors !== null && errors !== undefined && errors.length > 0) {
+												var messages = '';
+												if (errors.length == 1) {
+													messages = errors;
+												}
+												else {
+													for (var i = 0; i < errors.length; i++) {
+														messages += errors[i] + "<br>";
+													}
+													messages = messages.slice(0, -4);
+												}
+												errorMessage = new DOMParser().parseFromString(messages, 'text/html').body.innerHTML;
+
+											} else if (errorDescription !== null && errorDescription !== undefined) {
+												errorMessage = new DOMParser().parseFromString(errorDescription, 'text/html').body.innerHTML;
+											} else {
+												errorMessage = new DOMParser().parseFromString(errorMessage, 'text/html').body.innerHTML;
+											}
+											window.toastr[errorTypeMessage]('👋 ' + errorMessage,
+												errorTitle,
+												{
+													showMethod: 'slideDown',
+													hideMethod: 'slideUp',
+													closeButton: true,
+													tapToDismiss: false,
+													progressBar: true,
+													timeOut: errorTimeOut,
+													rtl: window.$('html').attr('data-textdirection') === 'rtl'
+												}
+											);
+										}
+									}
+								}
+							} catch (err) {
+								window.toastr[errorTypeMessage]('👋 ' + err,
+									errorTitle,
+									{
+										showMethod: 'slideDown',
+										hideMethod: 'slideUp',
+										closeButton: true,
+										tapToDismiss: false,
+										progressBar: true,
+										timeOut: errorTimeOut,
+										rtl: window.$('html').attr('data-textdirection') === 'rtl'
+									}
+								);
+							}
+						},
+						complete: function () {
+							btn.removeAttr('disabled');
+							window.$.unblockUI();
+						}
+					});
+				});
+		});
+	</script>
 }
 
-
-@{
-    if (TempData["IsSuccess"] != null)
-    {
-        <script>
-
-            alert('Connexion réussie.');
-        </script>
-        TempData["IsSuccess"] = null;
-    }
-
-    //if (!ViewBag.IsLoanSuccess.IsNull())
-    //{
-    //     <script>
-    //        alert('Demande effectuée avec succès');
-    //    </script>
-    //}
-    //if (!ViewBag.IsApplyFailed.IsNull())
-    //{
-    //     <script>
-    //        alert('Une erreur a été levée.');
-    //    </script>
-    //}
-}
+<div class="row my-4">
+    <div class="col">
+        <h6> Collapsible Section </h6>
+        <div class="accordion" id="collapsibleSection">
+            <!-- Delivery Address -->
+            <div class="card accordion-item">
+                <h2 class="accordion-header" id="headingDeliveryAddress">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDeliveryAddress" aria-expanded="true" aria-controls="collapseDeliveryAddress">
+                       Enregistrer un employeur
+                    </button>
+                </h2>
+                <div id="collapseDeliveryAddress" class="accordion-collapse collapse show" aria-labelledby="headingDeliveryAddress" data-bs-parent="#collapsibleSection">
+                    <form id="form" asp-action="AddEmployeur" asp-controller="Gestionnaire">
+						<div class="accordion-body">
+							<div class="row g-3">
+								<div class="col-md-6">
+									<div class="row">
+										<label class="col-sm-3 col-form-label text-sm-end" for="nom">Nom</label>
+										<div class="col-sm-9">
+											<input type="text" id="nom" class="form-control" placeholder="IAI" asp-for="@Model.EmployeurResource.Nom" />
+										</div>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="row">
+										<label class="col-sm-3 col-form-label text-sm-end" for="bp">Boîte Postale</label>
+										<div class="col-sm-9">
+											<input type="text" id="bp" class="form-control" placeholder="99345" aria-label="12345" asp-for="@Model.EmployeurResource.BoitePostale" />
+										</div>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="row">
+										<label class="col-sm-3 col-form-label text-sm-end" for="tel">Téléphone</label>
+										<div class="col-sm-9">
+											<input type="text" id="tel" class="form-control phone-mask" placeholder="22 20 47 00" aria-label="22 20 47 00" asp-for="@Model.EmployeurResource.Tel" />
+										</div>
+									</div>
+								</div>
+								<div class="row mt-4">
+									<div class="col-md-6">
+										<div class="row justify-content-end">
+											<div class="col-sm-9">
+												<button type="submit" class="btn btn-primary me-sm-3 me-1" id="btnSubmit">Envoyer</button>
+												<button type="reset" class="btn btn-label-secondary">Annuler</button>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 

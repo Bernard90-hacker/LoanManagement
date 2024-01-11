@@ -1,8 +1,12 @@
-﻿@model ClientViewModel;
+﻿@model PretAccordViewModel;
 @section PageStyles {
     <link rel="stylesheet" href="~/vendor/css/pages/page-auth.dist.css">
-}
 
+}
+@{
+    var dossiers = ViewBag.Dossiers as GetDossierClientResource;
+    var employeurs = ViewBag.Employeurs as IEnumerable<EmployeurRessource>;
+}
 @section VendorStyles{
     <link rel="stylesheet" href="~/vendor/libs/select2/select2.dist.css" />
     <link rel="stylesheet" href="~/vendor/libs/formvalidation/dist/css/formValidation.min.css" />
@@ -11,186 +15,311 @@
     <link rel="stylesheet" href="~/vendor/libs/spinkit/spinkit.dist.css" />
     <link rel="stylesheet" href="~/vendor/libs/toastr/toastr.dist.css" />
     <link rel="stylesheet" href="~/vendor/libs/sweetalert2/sweetalert2.dist.css" />
+    <link rel="stylesheet" href="~/vendor/libs/flatpickr/flatpickr.dist.css" />
 }
-
-
-<section class="bernard">
-    <div class="col-md-12">
-        @await Html.PartialAsync("Sections/Menu/_GestionnairePartial")
-    </div>
-    <h4 class="fw-bold py-3 mb-4">
-        <span class="text-muted fw-light">Monter un dossier crédit.</span>
-    </h4>
-
-    <div>
-        <div class="col-12">
-            <h5></h5>
-        </div>
-
-        <div class="row my-4">
-            <div class="col">
-                <h6>  </h6>
-                <div class="accordion" id="collapsibleSection">
-                    <!-- Delivery Address -->
-                    <div class="card accordion-item">
-                        <h2 class="accordion-header" id="headingDeliveryAddress">
-                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDeliveryAddress" aria-expanded="true" aria-controls="collapseDeliveryAddress">
-                                Client
-                            </button>
-                        </h2>
-                        <div id="collapseDeliveryAddress" class="accordion-collapse collapse show" aria-labelledby="headingDeliveryAddress" data-bs-parent="#collapsibleSection">
-                            <div class="accordion-body">
-                                <div class="row g-3">
-                                    <div class="col-md-6">
-                                        <div class="row">
-                                            <label class="col-sm-3 col-form-label text-sm-end" for="montant">Montant</label>
-                                            <div class="col-sm-9">
-                                                <input type="text" id="montant" class="form-control" placeholder="2.000.000" />
-                                            </div>
+<div class="row my-4">
+    <div class="col">
+        <h6> Dossier Crédit </h6>
+        <div class="accordion" id="collapsibleSection">
+            <!-- Delivery Address -->
+            <div class="card accordion-item">
+                <h2 class="accordion-header" id="headingDeliveryAddress">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDeliveryAddress" aria-expanded="true" aria-controls="collapseDeliveryAddress">
+                       Instruire un dossier crédit
+                    </button>
+                </h2>
+                <div id="collapseDeliveryAddress" class="accordion-collapse collapse show" aria-labelledby="headingDeliveryAddress" data-bs-parent="#collapsibleSection">
+                    <div class="accordion-body">
+                        <form asp-action="MonterDossierCredit" asp-controller="Gestionnaire" method="post" id="form">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="row">
+                                        <label class="col-sm-3 col-form-label text-sm-end" for="datePremiereEcheance">Date de la 1ere echeance</label>
+                                        <div class="col-sm-9">
+                                            <input type="date" class="form-control" id="datePremiereEcheance" asp-for="@Model.PretAccordResource.DatePremiereEcheance"/>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="row">
-                                            <label class="col-sm-3 col-form-label text-sm-end" for="duree">Durée (en mois)</label>
-                                            <div class="col-sm-9">
-                                                <input type="text" id="duree" class="form-control" placeholder="2" aria-label="2" />
-                                            </div>
+                                </div>
+                                 <input type="hidden" value="@dossiers.Montant" asp-for="@Model.PretAccordResource.MontantPret" />
+                                <div class="col-md-6">
+                                    <div class="row">
+                                        <label class="col-sm-3 col-form-label text-sm-end" for="dateDerniereEcheance">Date de la dernière échéance</label>
+                                        <div class="col-sm-9">
+                                            <input type="date" id="dateDerniereEcheance" class="form-control" asp-for="@Model.PretAccordResource.DateDerniereEcheance" />
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="row">
-                                            <label class="col-sm-3 col-form-label text-sm-end" for="datePremiereEcheance">Date de la 1ere echeance</label>
-                                            <div class="col-sm-9">
-                                                <input type="date" name="collapsible-address" class="form-control" id="datePremiereEcheance" />
-                                            </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="row">
+                                        <label class="col-sm-3 col-form-label text-sm-end" for="prime">Montant de la prime</label>
+                                        <div class="col-sm-9">
+                                            <input type="number" id="prime" class="form-control" asp-for="@Model.PretAccordResource.MontantPrime" />
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="row">
-                                            <label class="col-sm-3 col-form-label text-sm-end" for="dateDerniereEcheance">Date de la dernière échéance</label>
-                                            <div class="col-sm-9">
-                                                <input type="text" id="dateDerniereEcheance" name="dateDerniereEcheance" class="form-control"/>
-                                            </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="row">
+                                        <label class="col-sm-3 col-form-label text-sm-end" for="surprime">Surprime</label>
+                                        <div class="col-sm-9">
+                                            <input type="number" min="0" id="surprime" class="form-control" asp-for="@Model.PretAccordResource.Surprime" />
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="row">
-                                            <label class="col-sm-3 col-form-label text-sm-end" for="prime">Montant de la prime</label>
-                                            <div class="col-sm-9">
-                                                <input type="number" id="prime" class="form-control"/>
-                                            </div>
-                                        </div>
-                                    </div>                                    
-                                    <div class="col-md-6">
-                                        <div class="row">
-                                            <label class="col-sm-3 col-form-label text-sm-end" for="salaire">Salaire</label>
-                                            <div class="col-sm-9">
-                                                <input type="text" id="salaire" name="salaire" class="form-control" placeholder="" aria-label="" />
-                                            </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="row">
+                                        <label class="col-sm-3 col-form-label text-sm-end" for="salaire">Salaire</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" id="salaire" name="salaire" class="form-control" placeholder="" aria-label="" asp-for="@Model.PretAccordResource.SalaireNetMensuel" />
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="row">
-                                            <label class="col-sm-3 col-form-label text-sm-end" for="employeur">Employeur</label>
-                                            <div class="col-sm-9">
-                                                <select id="employeur" class="select2 form-select" data-allow-clear="true">
-                                                    <option value="">Select</option>
-                                                    <option value="1">CEET</option>
-                                                    <option value="2">CERGI</option>
-                                                </select>
-                                            </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="row">
+                                        <label class="col-sm-3 col-form-label text-sm-end" for="employeur">Employeur</label>
+                                        <div class="col-sm-9">
+                                            <select id="employeur" class="select2 form-select" data-allow-clear="true" asp-for="@Model.PretAccordResource.EmployeurId">
+                                                <option value="">Select</option>
+                                                @if (employeurs is not null)
+                                                {
+                                                    @foreach (var item in employeurs)
+                                                    {
+                                                        <option value="@item.Id">@item.Nom</option>
+                                                    }
+                                                }
+                                            </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="row">
-                                            <label class="col-sm-3 col-form-label text-sm-end" for="mensualite">Mensualite</label>
-                                            <div class="col-sm-9">
-                                                <input type="text" id="mensualite" class="form-control" placeholder="" aria-label="" />
-                                            </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="row">
+                                        <label class="col-sm-3 col-form-label text-sm-end" for="mensualite">Mensualite</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" id="mensualite" class="form-control" placeholder="" aria-label="" asp-for="@Model.PretAccordResource.Mensualite" />
                                         </div>
                                     </div>
-                                    <div class="col-md-6 col-12 mb-4">
-                                        <label for="dateRetraite" class="form-label">Date de départ à la retraite</label>
-                                        <input type="date" class="form-control" placeholder="DD-MM-YYYY" id="dateRetraite" />
-                                    </div>
-                                    <div class="col-md-6 col-12 mb-4">
-                                        <label for="dossierCredit" class="form-label">Sélectionner le dossier crédit.</label>
-                                        <select id="dossierCredit" class="select2 form-select" data-allow-clear="true">
-                                            <option value="">Select</option>
-                                            <option value="1">M. SOGBO</option>
-                                            <option value="2">M. ATTIOGBE</option>
-                                        </select>
-                                    </div>
-                                    <div class="row mt-4">
-                                        <div class="col-md-6">
-                                            <div class="row justify-content-end">
-                                                <div class="col-sm-9">
-                                                    <button type="submit" class="btn btn-primary me-sm-3 me-1">Submit</button>
-                                                    <button type="reset" class="btn btn-label-secondary">Cancel</button>
-                                                </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="dateRetraite" class="form-label">Date de départ à la retraite</label>
+                                    <input type="date" class="form-control" placeholder="DD-MM-YYYY" id="dateRetraite" asp-for="@Model.PretAccordResource.DateDepartRetraite" />
+                                </div>               
+                                <div class="col-md-6 col-12 mb-4">
+                                    <label for="periodicitePaiement" class="form-label">Sélectionner la périodicité de paiement</label>
+                                    <select id="periodicitePaiement" class="select2 form-select" data-allow-clear="true" asp-for="@Model.PretAccordResource.PeriodicitePaiementId">
+                                        <option value="">Select</option>
+                                        <option value="1">Unique</option>
+                                        <option value="2">Mensuelle</option>
+                                        <option value="3">Annuelle</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 col-12 mb-4">
+                                    <label for="typePret" class="form-label">Sélectionner le type de prêt</label>
+                                    <select id="typePret" class="select2 form-select" data-allow-clear="true" asp-for="@Model.PretAccordResource.TypePretId">
+                                        <option value="">Select</option>
+                                        <option value="1">Court terme (1 à 2 ans)</option>
+                                        <option value="2">Court terme (2 à 4 ans)</option>
+                                        <option value="3">Découvert</option>
+                                        <option value="4">Crédit Moyen Terme</option>
+                                        <option value="5">C.D.M.H</option>
+                                        <option value="6">Autre Prêt Immobilier</option>
+                                    </select>
+                                </div>
+                                <input type="hidden" value="@dossiers.Id" asp-for="@Model.PretAccordResource.DossierClientId" />
+                                <div class="row mt-4">
+                                    <div class="col-md-6">
+                                        <div class="row justify-content-end">
+                                            <div class="col-sm-9">
+                                                <button type="submit" class="btn btn-primary me-sm-3 me-1" id="btnSubmit">Envoyer</button>
+                                                <button type="reset" class="btn btn-label-secondary">Annuler</button>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </form>
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</section>
+</div>
 
-<style>
-    .bernard {
-        position: absolute;
-        left: 300px;
-        top: 60px;
-    }
-</style>
+
 
 @section VendorScripts{
     <script src="~/vendor/libs/select2/select2.dist.js"></script>
-    <script src="~/vendor/libs/select2/select2.dist.js"></script>
-    <script src="~/vendor/libs/cleavejs/cleave.dist.js"></script>
     <script src="~/vendor/libs/cleavejs/cleave-phone.dist.js"></script>
     <script src="~/vendor/libs/tagify/tagify.dist.js"></script>
     <script src="~/vendor/libs/block-ui/block-ui.dist.js"></script>
     <script src="~/vendor/libs/toastr/toastr.dist.js"></script>
     <script src="~/vendor/libs/sweetalert2/sweetalert2.dist.js"></script>
+    <script src="~/vendor/libs/cleavejs/cleave.dist.js"></script>
+    <script src="~/vendor/libs/moment/moment.dist.js"></script>
+    <script src="~/vendor/libs/flatpickr/flatpickr.dist.js"></script>
+    <script src="~/vendor/libs/select2/select2.dist.js"></script>
 }
 
 @section PageScripts {
     @*<script src="~/js/form-wizard-numbered.js"></script>*@
-    <script src="~/bernard/assets/js/form-wizard-numbered.js"></script>
+    <script src="~/js/form-layouts.dist.js"></script>
     <script src="~/js/custom/home-index.js"></script>
     <script>
+        $(function () {
+            var form = window.$('#form'),
+                btn = window.$('#btnSubmit'),
+                //indice = $('#indice'),
+                //tel = $('#tel'),
+                title = '',
+                message = '',
+                errorTitle = new DOMParser().parseFromString('Erreur', 'text/html').body.innerHTML,
+                errorTypeMessage = 'error',
+                errorMessage = new DOMParser().parseFromString('Erreur Produite', 'text/html').body.innerHTML,
+                errorDescription = '',
+                errorTimeOut = 500000,
+                errors = [];
 
+            form.on("submit",
+                function (event) {
+                    event.preventDefault();
+                    var data = window.$(this).serialize();
+                    var url = window.$(this).attr("action");
+                    console.log(data);
+                    window.$.ajax({
+                        url: url,
+                        type: "POST",
+                        dataType: "json",
+                        data: data,
+                        beforeSend: function () {
+                            btn.attr('disabled', 'disabled');
+                            window.$.blockUI({
+                                message: '<div class="spinner-border text-primary" role="status"></div>',
+                                css: {
+                                    backgroundColor: 'transparent',
+                                    border: '0'
+                                },
+                                overlayCSS: {
+                                    backgroundColor: '#fff',
+                                    opacity: 0.8
+                                }
+                            });
+                        },
+                        success: function (response) {
+                            console.log(response);
+                            if (response.typeMessage === "error") {
+                                window.toastr[response.typeMessage]('👋 ' + response.message,
+                                    {
+                                        showMethod: 'slideDown',
+                                        hideMethod: 'slideUp',
+                                        closeButton: true,
+                                        tapToDismiss: false,
+                                        progressBar: true,
+                                        timeOut: response.timeOut,
+                                        rtl: window.$('html').attr('data-textdirection') === 'rtl',
+                                        onHidden: function () { }
+                                    });
+                            }
+                            message = new DOMParser().parseFromString(response.message, 'text/html').body.innerHTML;
+                            window.toastr[response.typeMessage]('👋 ' + message,
+                                response.title,
+                                {
+                                    showMethod: 'slideDown',
+                                    hideMethod: 'slideUp',
+                                    closeButton: true,
+                                    tapToDismiss: false,
+                                    progressBar: true,
+                                    timeOut: response.timeOut,
+                                    rtl: window.$('html').attr('data-textdirection') === 'rtl',
+                                    onHidden: function () { }
+                                });
+                           
+                        },
+                        error: function (response) {
+                            try {
+                                
+                                var obj = JSON.parse(JSON.stringify(response.responseJSON));
+                                if (obj.length !== 0) {
+                                    if (response.status === 401) {
+                                        message = new DOMParser().parseFromString('Non autorisé', 'text/html').body.innerHTML;
+                                        window.toastr[errorTypeMessage]('👋 ' + message,
+                                            errorTitle,
+                                            {
+                                                showMethod: 'slideDown',
+                                                hideMethod: 'slideUp',
+                                                closeButton: true,
+                                                tapToDismiss: false,
+                                                progressBar: true,
+                                                timeOut: errorTimeOut,
+                                                rtl: window.$('html').attr('data-textdirection') === 'rtl'
+                                            });
+                                    }
+                                    else {
+                                        if (obj.typeMessage != null && obj.typeMessage !== undefined) {
+                                            if (response.status === 0) {
+                                            } else if (response.status === 400 || response.status === 404 || response.status === 405 || response.status === 500) {
+                                                errorTitle = obj.title;
+                                                errorTypeMessage = obj.typeMessage;
+                                                errorMessage = obj.message;
+                                                errorDescription = obj.description;
+                                                errorTimeOut = obj.timeOut;
+                                                if (obj.erreurs != null && obj.erreurs != undefined) errors = obj.erreurs;
+                                            }
+                                            if (errors !== null && errors !== undefined && errors.length > 0) {
+                                                var messages = '';
+                                                if (errors.length == 1) {
+                                                    messages = errors;
+                                                }
+                                                else {
+                                                    for (var i = 0; i < errors.length; i++) {
+                                                        messages += errors[i] + "<br>";
+                                                    }
+                                                    messages = messages.slice(0, -4);
+                                                }
+                                                errorMessage = new DOMParser().parseFromString(messages, 'text/html').body.innerHTML;
+
+                                            } else if (errorDescription !== null && errorDescription !== undefined) {
+                                                errorMessage = new DOMParser().parseFromString(errorDescription, 'text/html').body.innerHTML;
+                                            } else {
+                                                errorMessage = new DOMParser().parseFromString(errorMessage, 'text/html').body.innerHTML;
+                                            }
+                                            window.toastr[errorTypeMessage]('👋 ' + errorMessage,
+                                                errorTitle,
+                                                {
+                                                    showMethod: 'slideDown',
+                                                    hideMethod: 'slideUp',
+                                                    closeButton: true,
+                                                    tapToDismiss: false,
+                                                    progressBar: true,
+                                                    timeOut: errorTimeOut,
+                                                    rtl: window.$('html').attr('data-textdirection') === 'rtl'
+                                                }
+                                            );
+                                        }
+                                    }
+                                }
+                            } catch (err) {
+                                window.toastr[errorTypeMessage]('👋 ' + err,
+                                    errorTitle,
+                                    {
+                                        showMethod: 'slideDown',
+                                        hideMethod: 'slideUp',
+                                        closeButton: true,
+                                        tapToDismiss: false,
+                                        progressBar: true,
+                                        timeOut: errorTimeOut,
+                                        rtl: window.$('html').attr('data-textdirection') === 'rtl'
+                                    }
+                                );
+                            }
+                        },
+                        complete: function () {
+                            btn.removeAttr('disabled');
+                            window.$.unblockUI();
+                        }
+                    });
+                });
+        });
     </script>
 }
 
 
-@{
-    //if (TempData["IsSuccess"] != null)
-    //{
-    //    <script>
-
-    //        alert('Connexion réussie.');
-    //    </script>
-    //    TempData["IsSuccess"] = null;
-    //}
-
-    //if (!ViewBag.IsLoanSuccess.IsNull())
-    //{
-    //     <script>
-    //        alert('Demande effectuée avec succès');
-    //    </script>
-    //}
-    //if (!ViewBag.IsApplyFailed.IsNull())
-    //{
-    //     <script>
-    //        alert('Une erreur a été levée.');
-    //    </script>
-    //}
-}
 

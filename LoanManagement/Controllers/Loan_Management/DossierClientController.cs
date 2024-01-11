@@ -56,7 +56,14 @@ namespace LoanManagement.API.Controllers.Loan_Management
 					try
 					{
 						var all = await _dossierClientService.GetAll();
-						var result = _mapper.Map<IEnumerable<SaveDossierClientResource>>(all);
+						var result = _mapper.Map<IEnumerable<DossierClientRessource>>(all);
+
+						var client = new Client();
+						foreach (var item in result)
+						{
+							client = await _clientService.GetById(item.Id);
+							item.NomClient = $"{client.Nom} {client.Prenoms}";
+						}
 						Journal.Niveau = 3; //INFORMATION
 						await _journalisationService.Journalize(Journal);
 						_logger.LogInformation("Liste des demandes de prêts : Opération effectuée avec succès");
@@ -75,7 +82,49 @@ namespace LoanManagement.API.Controllers.Loan_Management
 			}
 		}
 
-		[HttpGet("closed")]
+        [HttpGet("dossierNonMontes")]
+        public async Task<ActionResult> DossiersNonMontes()
+        {
+
+            using (var connection = new SqlConnection(_configuration.GetConnectionString("Default")))
+            {
+                connection.Open();
+                using (var transaction = connection.BeginTransaction())
+                {
+                    var Journal = new Journal()
+                    {
+                        Libelle = "Liste des demandes de prêts non instruits",
+                        TypeJournalId = 8,
+                        Entite = "User"
+                    };
+                    try
+                    {
+                        var all = await _dossierClientService.GetDossiersNonMontes();
+                        var result = _mapper.Map<IEnumerable<DossierClientRessource>>(all);
+                        Journal.Niveau = 3; //INFORMATION
+                        await _journalisationService.Journalize(Journal);
+                        _logger.LogInformation("Liste des demandes de prêts non instruits : Opération effectuée avec succès");
+						var client = new Client();
+						foreach (var item in result)
+						{
+							client = await _clientService.GetById(item.Id);
+							item.NomClient = $"{client.Nom} {client.Prenoms}";
+						}
+                        return Ok(result);
+
+                    }
+                    catch (Exception ex)
+                    {
+                        Journal.Niveau = 1;
+                        await _journalisationService.Journalize(Journal);
+                        _logger.LogError("Une erreur est survenue pendant le traitement de la requête");
+                        return ValidationProblem(statusCode: (int)HttpCode.INTERNAL_SERVER_ERROR, title: "Erreur interne du serveur", detail: ex.Message);
+                    }
+                }
+            }
+        }
+
+        [HttpGet("closed")]
 		public async Task<ActionResult> GetClosed()
 		{
 			using (var connection = new SqlConnection(_configuration.GetConnectionString("Default")))
@@ -172,8 +221,9 @@ namespace LoanManagement.API.Controllers.Loan_Management
 						await _journalisationService.Journalize(journal);
 						_logger.LogInformation("Détails d'un dossier crédit : Opération effectuée avec succès");
 						var result = _mapper.Map<IEnumerable<DossierClientRessource>>(dossier);
+                       
 
-						return Ok(result);
+                        return Ok(result);
 					}
 					catch (Exception ex)
 					{
@@ -238,9 +288,11 @@ namespace LoanManagement.API.Controllers.Loan_Management
                             reference = dossiers.LastOrDefault().NumeroDossier.Substring(10);
                         dossier.NumeroDossier = "DEMANDE - " + Constants.Utils.UtilsConstant.IncrementStringWithNumbers(reference);
 						dossier.DateSoumission = DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss");
-
+						dossier.Statut = "En cours de traitement";
+						dossier.DossierTraite = false;
                         var dossierCreated = await _dossierClientService.Create(dossier);
 						var dossierCreatedSuccessFully = _mapper.Map<DossierClientRessource>(dossierCreated);
+						dossierCreatedSuccessFully.Statut = "En cours de traitement";
 						_logger.LogInformation("Enregistrement d'une demande de prêt : Opération effectuée avec succès");
 
 						return Ok(dossierCreatedSuccessFully);
@@ -349,7 +401,7 @@ namespace LoanManagement.API.Controllers.Loan_Management
 
 
 		[HttpPost("addInfoSanteClient")]
-		public async Task<ActionResult> Add(List<InfoSanteClientRessource> ressource)
+		public async Task<ActionResult> Add([FromBody] List<InfoSanteClientRessource> ressource)
 		{
 
 			using (var connection = new SqlConnection(_configuration.GetConnectionString("Default")))

@@ -1,8 +1,13 @@
 ﻿@{
     ViewData["Title"] = "Espace Admin";
 }
+@{
+    var clients = ViewBag.NbrClients as string;
+    var users = ViewBag.NbrUsers as string;
+}
 @section PageStyles {
     <link rel="stylesheet" href="~/vendor/css/pages/page-auth.dist.css">
+    <link rel="stylesheet" href="~/vendor/css/pages/cards-advance.dist.css" />
 }
 
 @section VendorStyles{
@@ -15,6 +20,11 @@
     <link rel="stylesheet" href="~/vendor/libs/spinkit/spinkit.dist.css" />
     <link rel="stylesheet" href="~/vendor/libs/toastr/toastr.dist.css" />
     <link rel="stylesheet" href="~/vendor/libs/sweetalert2/sweetalert2.dist.css" />
+    <link rel="stylesheet" href="~/vendor/libs/apex-charts/apex-charts.dist.css" />
+    <link rel="stylesheet" href="~/vendor/libs/swiper/swiper.dist.css" />
+    <link rel="stylesheet" href="~/vendor/libs/datatables-bs5/datatables.bootstrap5.dist.css">
+    <link rel="stylesheet" href="~/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.dist.css">
+    <link rel="stylesheet" href="~/vendor/libs/datatables-checkboxes-jquery/datatables.checkboxes.dist.css">
 }
 @section VendorScripts{
     <script src="~/vendor/libs/bs-stepper/bs-stepper.dist.js"></script>
@@ -26,11 +36,15 @@
     <script src="~/vendor/libs/block-ui/block-ui.dist.js"></script>
     <script src="~/vendor/libs/toastr/toastr.dist.js"></script>
     <script src="~/vendor/libs/sweetalert2/sweetalert2.dist.js"></script>
+    <script src="~/vendor/libs/apex-charts/apexcharts.dist.js"></script>
+    <script src="~/vendor/libs/swiper/swiper.dist.js"></script>
+    <script src="~/vendor/libs/datatables-bs5/datatables-bootstrap5.dist.js"></script>
 }
 
 @section PageScripts {
     <script src="~/bernard/assets/js/form-wizard-numbered.js"></script>
     <script src="~/js/custom/home-index.js"></script>
+    <script src="~/js/dashboards-analytics.dist.js"></script>
     <script>
         $(function () {
            
@@ -40,13 +54,133 @@
 
 
 <div class="row">
-    <div class="col-md-12">
-    </div>
-    <div class="col-md-12">
-        <div class="card mb-4">
-            <div class="card-body">
-                Bienvenue Admin
+    <div class="col-lg-6 mb-4">
+        <div class="swiper-container swiper-container-horizontal swiper swiper-card-advance-bg" id="swiper-with-pagination-cards">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide">
+                    <div class="row">
+                        <div class="col-12">
+                            <h5 class="text-white mb-0 mt-2">Statistiques</h5>
+                            <small></small>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-7 col-md-9 col-12 order-2 order-md-1">
+                                <h6 class="text-white mt-0 mt-md-3 mb-3"></h6>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <ul class="list-unstyled mb-0">
+                                            <li class="d-flex mb-4 align-items-center">
+                                                <p class="mb-0 fw-semibold me-2 website-analytics-text-bg"></p>
+                                                <p class="mb-0"></p>
+                                            </li>
+                                            <li class="d-flex align-items-center mb-2">
+                                                <p class="mb-0 fw-semibold me-2 website-analytics-text-bg"></p>
+                                                <p class="mb-0"></p>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-6">
+                                        <ul class="list-unstyled mb-0">
+                                            <li class="d-flex mb-4 align-items-center">
+                                                <p class="mb-0 fw-semibold me-2 website-analytics-text-bg"></p>
+                                                <p class="mb-0"></p>
+                                            </li>
+                                            <li class="d-flex align-items-center mb-2">
+                                                <p class="mb-0 fw-semibold me-2 website-analytics-text-bg"></p>
+                                                <p class="mb-0"></p>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-5 col-md-3 col-12 order-1 order-md-2 my-4 my-md-0 text-center">
+                                <img src="~/img/illustrations/card-website-analytics-1.png" alt="Website Analytics" width="170" class="card-website-analytics-img">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="swiper-slide">
+                    <div class="row">
+                        <div class="col-12">
+                            <h5 class="text-white mb-0 mt-2">Statistiques</h5>
+                            <small>Clients : @clients</small>
+                        </div>
+                        <div class="col-lg-7 col-md-9 col-12 order-2 order-md-1">
+                            <h6 class="text-white mt-0 mt-md-3 mb-3"></h6>
+                            <div class="row">
+                                <div class="col-6">
+                                    <ul class="list-unstyled mb-0">
+                                        <li class="d-flex mb-4 align-items-center">
+                                            <p class="mb-0 fw-semibold me-2 website-analytics-text-bg"></p>
+                                            <p class="mb-0"></p>
+                                        </li>
+                                        <li class="d-flex align-items-center mb-2">
+                                            <p class="mb-0 fw-semibold me-2 website-analytics-text-bg"></p>
+                                            <p class="mb-0"></p>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="col-6">
+                                    <ul class="list-unstyled mb-0">
+                                        <li class="d-flex mb-4 align-items-center">
+                                            <p class="mb-0 fw-semibold me-2 website-analytics-text-bg"></p>
+                                            <p class="mb-0"></p>
+                                        </li>
+                                        <li class="d-flex align-items-center mb-2">
+                                            <p class="mb-0 fw-semibold me-2 website-analytics-text-bg"></p>
+                                            <p class="mb-0"></p>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-5 col-md-3 col-12 order-1 order-md-2 my-4 my-md-0 text-center">
+                            <img src="~/img/illustrations/card-website-analytics-2.png" alt="Website Analytics" width="170" class="card-website-analytics-img">
+                        </div>
+                    </div>
+                </div>
+                <div class="swiper-slide">
+                    <div class="row">
+                        <div class="col-12">
+                            <h5 class="text-white mb-0 mt-2">Statistiques</h5>
+                            <small>Utilisateurs : @users</small>
+                        </div>
+                        <div class="col-lg-7 col-md-9 col-12 order-2 order-md-1">
+                            <h6 class="text-white mt-0 mt-md-3 mb-3"></h6>
+                            <div class="row">
+                                <div class="col-6">
+                                    <ul class="list-unstyled mb-0">
+                                        <li class="d-flex mb-4 align-items-center">
+                                            <p class="mb-0 fw-semibold me-2 website-analytics-text-bg"></p>
+                                            <p class="mb-0"></p>
+                                        </li>
+                                        <li class="d-flex align-items-center mb-2">
+                                            <p class="mb-0 fw-semibold me-2 website-analytics-text-bg"></p>
+                                            <p class="mb-0"></p>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="col-6">
+                                    <ul class="list-unstyled mb-0">
+                                        <li class="d-flex mb-4 align-items-center">
+                                            <p class="mb-0 fw-semibold me-2 website-analytics-text-bg"></p>
+                                            <p class="mb-0"></p>
+                                        </li>
+                                        <li class="d-flex align-items-center mb-2">
+                                            <p class="mb-0 fw-semibold me-2 website-analytics-text-bg"></p>
+                                            <p class="mb-0"></p>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-5 col-md-3 col-12 order-1 order-md-2 my-4 my-md-0 text-center">
+                            <img src="~/img/illustrations/card-website-analytics-3.png" alt="Website Analytics" width="170" class="card-website-analytics-img">
+                        </div>
+                    </div>
+                </div>
             </div>
+            <div class="swiper-pagination"></div>
         </div>
     </div>
 </div>

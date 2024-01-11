@@ -53,8 +53,8 @@
 				columns: [
 					{ data: 'NumeroDossier', title: "N° dossier" },
 					{ data: 'DateSoumission', title: "Date de soumission" },
-					//{ data: 'Montant', title: "Montant" },
-					//{ data: 'Statut', title: "Statut" },
+					{ data: 'Montant', title: "Montant" },
+					{ data: 'Statut', title: "Statut" },
 					{ data: '' }
 				],
 				columnDefs: [
@@ -87,6 +87,26 @@
 								'</div>';
 
 							return $row_output;
+						}
+					},
+					{
+						targets: 2,
+						responsivePriority: 1,
+						width: '140px',
+						render: function (data, type, full, meta) {
+
+
+							return full['Montant'];
+						}
+					},
+					{
+						targets: 3,
+						responsivePriority: 1,
+						width: '140px',
+						render: function (data, type, full, meta) {
+							
+
+							return full['Statut'];
 						}
 					},
 					{
@@ -183,6 +203,8 @@
 								<tr>
 									<th>N° dossier</th>
 									<th>Date de soumission</th>
+									<th>Montant</th>
+									<th>Statut</th>
 									<th>Actions</th>
 								</tr>
 							</thead>

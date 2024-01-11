@@ -1,5 +1,6 @@
 ﻿namespace LoanManagement.API.Controllers.Loan_Management
 {
+	[Route("api/Loan/[controller]")]
 	public class OrganeDecisionController : Controller
 	{
 		private readonly IOrganeDecisionService _organeDecisionService;
@@ -94,7 +95,7 @@
 		}
 
 		[HttpPost("add")]
-		public async Task<ActionResult> Add(OrganeDecisionRessource ressource)
+		public async Task<ActionResult> Add([FromBody] OrganeDecisionRessource ressource)
 		{
 			using (var connection = new SqlConnection(_configuration.GetConnectionString("Default")))
 			{

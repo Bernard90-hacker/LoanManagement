@@ -130,7 +130,7 @@ namespace LoanManagement.API.Controllers.Loan_Management
 			}
 		}
 
-		[HttpPost("add")]
+		[HttpPost("addDeroulement")]
 		public async Task<ActionResult> Add(DeroulementRessource ressource)
 		{
 			using(var connection = new SqlConnection(_configuration.GetConnectionString("Default")))

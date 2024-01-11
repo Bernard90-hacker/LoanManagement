@@ -3,7 +3,7 @@
 	public class SaveUtilisateurResource
 	{
 		public string Username { get; set; } = string.Empty;
-		public string Password { get; set; } = string.Empty;
+		public string Email { get; set; } = string.Empty;
 		public bool IsEditPassword { get; set; }
 		public bool IsSuperAdmin { get; set; }
 		public bool IsAdmin { get; set; }

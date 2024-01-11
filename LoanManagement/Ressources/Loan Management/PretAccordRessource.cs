@@ -2,7 +2,8 @@
 {
 	public class PretAccordRessource
 	{
-		public double MontantPret { get; set; }
+        public int Id { get; set; }
+        public double MontantPret { get; set; }
 		public string DatePremiereEcheance { get; set; } = string.Empty;
 		public string DateDerniereEcheance { get; set; } = string.Empty;
 		public double MontantPrime { get; set; }
@@ -14,5 +15,6 @@
 		public int PeriodicitePaiementId { get; set; }
 		public int DossierClientId { get; set; }
         public int EmployeurId { get; set; }
+        public string? NomClient { get; set; }
     }
 }

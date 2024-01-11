@@ -123,7 +123,7 @@ namespace LoanManagement.API.Controllers.Users_Management
 				
 				return Ok(new
 				{
-					Email = employe.Email,
+					Email = user.Email,
 					Nom = employe.Nom,
 					Prenoms = employe.Prenoms,
 					CodeProfil = profil.Code,
@@ -193,7 +193,7 @@ namespace LoanManagement.API.Controllers.Users_Management
 				var employe = await _employeService.GetEmployeByUsername(user.Username);
 				try
 				{
-					_mailService.SendPasswordResetMailAsync(generatedPassword, employe.Email);
+					await _mailService.SendPasswordResetMailAsync(generatedPassword, user.Email);
 				}
 				catch (Exception)
 				{

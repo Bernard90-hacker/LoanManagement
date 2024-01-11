@@ -74,10 +74,9 @@ public class HomeController : Controller
 		}
 		try
 		{
-			TempData["Admin"] = string.Empty ;
-			TempData["Analyste"] = string.Empty;
-			TempData["Gestionnaire"] = string.Empty;
-			TempData["User"] = string.Empty;
+			HttpContext.Session.SetString("analyste", "null");
+			HttpContext.Session.SetString("gestionnaire", "null");
+			HttpContext.Session.SetString("admin", "null");
 			var loginResource = new LoginResource()
 			{
 				Username = model.LoginResource.Username,
@@ -89,17 +88,19 @@ public class HomeController : Controller
 			{
 				var response = await result.Content.ReadFromJsonAsync<UtilisateurResource>();
 				HttpContext.Session.SetString("_SESSIONID", response.Username.ToString());
+				
+				
 				TempData["User"] = $"{response.Nom} {response.Prenoms}";
 				switch (response.CodeProfil)
 				{
 					case "PROFIL-001":
-						TempData["Admin"] = "admin";
+						HttpContext.Session.SetString("admin", "admin");
 						break;
 					case "PROFIL-002":
-						TempData["Gestionnaire"] = "gestionnaire";
+						HttpContext.Session.SetString("gestionnaire", "gestionnaire");
 						break;
 					case "PROFIL-003":
-						TempData["Analyste"] = "analyste";
+						HttpContext.Session.SetString("analyste", "analyste");
 						break;
 					default:
 						break;

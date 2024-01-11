@@ -50,6 +50,21 @@
                 errorDescription = '',
                 errorTimeOut = 500000,
                 errors = [];
+            function resetForm() 
+            {
+              $('#nom').reset();
+              $('#prenoms').reset();
+              $('#residence').reset();
+              $('#quartier').reset();
+              $('#ville').reset();
+              $('#lieuNaissance').reset();
+              $('#tel').reset();
+              $('#profession').reset();
+              $('#addressePostale').reset();
+              $('#indice').reset();
+              $('#dateNaissance').reset();
+              $('#email').reset();
+            }
 
             form.on("submit",
                 function (event) {
@@ -79,7 +94,7 @@
                         success: function (response) {
                             console.log(response);
                             if (response.typeMessage === "error") {
-                                window.toastr[response.typeMessage]('👋 ' + 'Erreur',
+                                window.toastr[response.typeMessage]('👋 ' + response.description,
                                     {
                                         showMethod: 'slideDown',
                                         hideMethod: 'slideUp',
@@ -228,7 +243,7 @@
                                                     <div class="row">
                                                         <label class="col-sm-3 col-form-label text-sm-end" asp-for="@Model.Client.Nom">Nom</label>
                                                         <div class="col-sm-9">
-                                                            <input type="text" id="nom" class="form-control" placeholder="JOHNSON" asp-for="@Model.Client.Nom"/>
+                                                            <input type="text" id="nom" class="form-control" placeholder="GBLOKPO" asp-for="@Model.Client.Nom"/>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -236,7 +251,7 @@
                                                     <div class="row">
                                                         <label class="col-sm-3 col-form-label text-sm-end" asp-for="@Model.Client.Prenoms">Prenoms</label>
                                                         <div class="col-sm-9">
-                                                            <input type="text" id="prenoms" class="form-control" placeholder="Akouavi" aria-label="Akouavi"  asp-for="@Model.Client.Prenoms" />
+                                                            <input type="text" id="prenoms" class="form-control" placeholder="KOFFI" aria-label="Akouavi"  asp-for="@Model.Client.Prenoms" />
                                                         </div>
                                                     </div>
                                                 </div>
@@ -244,7 +259,7 @@
                                                     <div class="row">
                                                         <label class="col-sm-3 col-form-label text-sm-end" asp-for="@Model.Client.Residence">Residence</label>
                                                         <div class="col-sm-9">
-                                                            <input type="text" class="form-control" id="residence" rows="4" placeholder="KOFFI JOHNSON" asp-for="@Model.Client.Residence"/>
+                                                            <input type="text" class="form-control" id="residence" rows="4" placeholder="Lomévivina" asp-for="@Model.Client.Residence"/>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -276,7 +291,7 @@
                                                     <div class="row">
                                                         <label class="col-sm-3 col-form-label text-sm-end" asp-for="@Model.Client.Quartier">Quartier</label>
                                                         <div class="col-sm-9">
-                                                            <input type="text" id="collapsible-landmark" class="form-control" placeholder="Dabadakondji" asp-for="@Model.Client.Quartier" />
+                                                            <input type="text" id="quartier" class="form-control" placeholder="Dabadakondji" asp-for="@Model.Client.Quartier" />
                                                         </div>
                                                     </div>
                                                 </div>
@@ -300,7 +315,7 @@
                                                     <div class="row">
                                                         <label class="col-sm-3 col-form-label text-sm-end" asp-for="@Model.Client.Profession">Profession</label>
                                                         <div class="col-sm-9">
-                                                            <input type="text" id="profession" class="form-control" placeholder="Banquier" aria-label="Banquier" asp-for="@Model.Client.Profession"/>
+                                                            <input type="text" id="profession" class="form-control" placeholder="Réparateur" aria-label="Banquier" asp-for="@Model.Client.Profession"/>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -324,8 +339,8 @@
                                                     <div class="col-md-6">
                                                         <div class="row justify-content-end">
                                                             <div class="col-sm-9">
-                                                                <button type="submit" class="btn btn-primary me-sm-3 me-1" id="submit">Submit</button>
-                                                                <button type="reset" class="btn btn-label-secondary">Cancel</button>
+                                                                <button type="submit" class="btn btn-primary me-sm-3 me-1" id="submit">Envoyer</button>
+                                                                <button type="reset" class="btn btn-label-secondary">Annuler</button>
                                                             </div>
                                                         </div>
                                                     </div>

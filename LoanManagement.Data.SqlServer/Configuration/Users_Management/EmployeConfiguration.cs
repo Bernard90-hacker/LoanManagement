@@ -15,9 +15,6 @@
 				.Property(x => x.Matricule)
 				.IsRequired();
 
-			builder
-				.HasIndex(x => x.Email)
-				.IsUnique();
 
 			builder
 				.HasIndex(x => x.Matricule)
@@ -36,11 +33,6 @@
 				.Property(x => x.Prenoms)
 				.IsRequired()
 				.HasMaxLength(30);
-
-			builder
-				.Property(x => x.Email)
-				.IsRequired()
-				.HasMaxLength(50);
 
 			builder.Property(x => x.DateAjout)
 				.HasDefaultValue(DateTime.Now.ToString("dd/MM/yyyy"))

@@ -44,6 +44,19 @@ namespace LoanManagement.service.Services.Users_Management
 			return await _unitOfWork.Utilisateurs.GetUserById(id);
 		}
 
+		public async Task<IEnumerable<Utilisateur>>? GetUsersWithoutAccount()
+		{
+			var users = await _unitOfWork.Utilisateurs.GetAll();
+			var employes = await _unitOfWork.Employes.GetAll();
+			var res = from x in users
+					from y in employes
+					where x.Id == y.UserId
+					select x;
+
+			return users.Except(res);
+			
+		}
+
 		public async Task<Utilisateur?> GetUserByUsername(string username)
 		{
 			return await _unitOfWork.Utilisateurs.GetUserByUsername(username);

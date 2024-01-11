@@ -5,6 +5,7 @@
         public int Id { get; set; }
         public string NumeroDossier { get; set; } = string.Empty;
         public double Taille { get; set; }
+        public double Montant { get; set; }
         public double Poids { get; set; }
         public string TensionArterielle { get; set; } = string.Empty;
         public bool Fumeur { get; set; }
@@ -27,7 +28,10 @@
         public string NatureInfirmite { get; set; } = string.Empty;
         public string DateSurvenance { get; set; } = string.Empty;
         public string DateSoumission { get; set; } = string.Empty;
+        public string Statut { get; set; } = string.Empty;
         public int StatutMaritalId { get; set; }
         public int ClientId { get; set; }
-    }
+		public string? NomClient { get; set; }
+
+	}
 }

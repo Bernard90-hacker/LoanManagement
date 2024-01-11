@@ -169,7 +169,7 @@ namespace LoanManagement.API.Controllers.Loan_Management
 
 		[HttpGet("id")]
 		public async Task<ActionResult> GetById(int id)
-		{
+			{
 			using(var connection = new SqlConnection(_configuration.GetConnectionString("Default")))
 			{
 				connection.Open();

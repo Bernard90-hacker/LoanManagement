@@ -26,14 +26,11 @@
                         <table class="table users">
                             <thead>
                                 <tr>
-                                    <th></th>
                                     <th>Username</th>
-                                    <th>Connecté</th>
-                                    <th>DateExpiration</th>
-                                    <th>DateDésactivation</th>
+                                    <th>Date d'expiration</th>
+                                    <th>Date de désactivation</th>
                                     <th>DateAjout</th>
-                                    <th>Admin</th>
-                                    <th>SuperAdmin</th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
                         </table>
@@ -66,90 +63,194 @@
         var users = $('.users'),
             data = { "Username": "awo", "Connecté": "Oui", "DateExpiration": "20/08/2023", "DateDesactivation": "21/08/2023", "DateAjout": "20/07/2023", "Admin" : "Non", "SuperAdmin" : "Non" };
         $(".div-datable").show();
-        users.DataTable({
-            processing: true,
-            destroy: true,
-            data: data,
-            columns: [
-                { data: 'Username' },
-                { data: 'Connecté' },
-                { data: 'DateExpiration' },
-                { data: 'DateDesactivation' },
-                { data: 'DateAjout' },
-                { data: 'Admin' },
-                { data: 'SuperAdmin' }
-            ],
-            columnDefs: [
-                {
-                    className: 'control',
-                    orderable: false,
-                    searchable: false,
-                    responsivePriority: 2,
-                    targets: 0,
-                    render: function (data, type, full, meta) {
-                        return '';
-                    }
-                }
-            ],
-            order: [[2, 'desc']],
-            dom: '<"card-header flex-column flex-md-row"<"head-label text-center"><"dt-action-buttons text-end pt-3 pt-md-0"B>><"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6 d-flex justify-content-center justify-content-md-end"f>>t<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
-            displayLength: 3,
-            lengthMenu: [3, 7, 10],
-            language: {
-                paginate: {
-                    //Supprimer le texte précédent et suivant de la pagination
-                    previous: new DOMParser().parseFromString("Précédent", 'text/html').body.innerHTML,
-                    next: new DOMParser().parseFromString("Suivant", 'text/html').body.innerHTML,
-                    last: new DOMParser().parseFromString("Dernier", 'text/html').body.innerHTML,
-                    first: new DOMParser().parseFromString("Premier", 'text/html').body.innerHTML
-                },
-                processing: new DOMParser().parseFromString("Traitement", 'text/html').body.innerHTML,
-                lengthMenu: new DOMParser().parseFromString("Afficher les entrées", 'text/html').body.innerHTML,
-                loadingRecords: new DOMParser().parseFromString("Chargement", 'text/html').body.innerHTML,
-                search: new DOMParser().parseFromString("Chercher", 'text/html').body.innerHTML,
-                zeroRecords: new DOMParser().parseFromString("Aucun enregistrement trouvé", 'text/html').body.innerHTML,
-                emptyTable: '<div class="text-center">' +
-                    '<img class="mt-2 mb-2" src="' + assetsPath + 'img/illustrations/no-records.png" alt="pas-de-données" width="160" height="160" />' +
-                    '<h6>' + new DOMParser().parseFromString("Aucune donnée disponible", 'text/html').body.innerHTML + '</h6>' +
-                    '</div>',
-                info: new DOMParser().parseFromString("Affichage des entrées", 'text/html').body.innerHTML,
-                infoEmpty: new DOMParser().parseFromString("Affichage zéro entrée", 'text/html').body.innerHTML,
-                infoFiltered: new DOMParser().parseFromString("Entrées filtrées", 'text/html').body.innerHTML
-            },
-            responsive: {
-                details: {
-                    display: $.fn.dataTable.Responsive.display.modal({
-                        header: function (row) {
-                            var data = row.data();
 
-                            return new DOMParser().parseFromString("Détails", 'text/html').body.innerHTML;
-                        }
-                    }),
-                    type: 'column',
-                    renderer: function (api, rowIdx, columns) {
-                        var data = $.map(columns, function (col, i) {
-                            return col.title !== '' // ? Ne pas afficher la ligne dans la fenêtre popup modale si le titre est vide (pour les cases à cocher)
-                                ? '<tr data-dt-row="' +
-                                col.rowIndex +
-                                '" data-dt-column="' +
-                                col.columnIndex +
-                                '">' +
-                                '<td>' +
-                                col.title +
-                                ' :' +
-                                '</td> ' +
-                                '<td>' +
-                                col.data +
-                                '</td>' +
-                                '</tr>'
-                                : '';
-                        }).join('');
+        window.$.ajax({
+            url: '@Url.Action("AllUsers", "Admin")',
+            type: "GET",
+            processData: false,
+            contentType: false,
+            dataType: 'json',
+            success: function (response) {
+                console.log(response.strJson.total);
 
-                        return data ? $('<table class="table"/><tbody />').append(data) : false;
-                    }
-                }
+                bindDataTable(users, JSON.parse(response.strJson));
             }
         });
+
+        function bindDataTable(users, asArray) {
+            $(".div-datable").show();
+            var data = asArray;
+            users.DataTable({
+                processing: true,
+                destroy: true,
+                data: data,
+                columns: [
+                    { data: 'Username', title: 'Nom d\'utilisateur' },
+                    { data: 'DateExpirationCompte', title: 'Date d\'expiration' },
+                    { data: 'DateDesactivation', title: 'Date de désactivation' },
+                    { data: 'DateAjout', title: 'Date d\'ajout' },
+                    { data: '' }
+                ],
+                columnDefs: [
+                    {
+                        responsivePriority: 1,
+                        targets: 0,
+                        render: function (data, type, full, meta) {
+                            return full['Username'];
+                        }
+                    },
+                    {
+                        //Données
+                        targets: 1,
+                        responsivePriority: 1,
+                        width: '160px',
+                        render: function (data, type, full, meta) {
+                            var $Indice = full['DateExpirationCompte'];
+                            var $output = '<img src="' + assetsPath + 'img/icons/misc/date.png" alt="xls-file" class="me-3" width="20">';
+                            var $row_output =
+                                '<div class="d-flex justify-content-start align-items-center user-name">' +
+                                '<div class="avatar-wrapper">' +
+                                '<div class="avatar me-2">' +
+                                $output +
+                                '</div>' +
+                                '</div>' +
+                                '<div class="d-flex flex-column">' +
+                                '<span class="emp_name text-truncate fs-6">' +
+                                $Indice +
+                                '</span>' +
+                                '</div>' +
+                                '</div>';
+
+                            return $row_output;
+                        }
+                    },
+                    {
+                        //Données
+                        targets: 2,
+                        responsivePriority: 1,
+                        width: '160px',
+                        render: function (data, type, full, meta) {
+                            var $Indice = full['DateDesactivation'];
+                            var $output = '<img src="' + assetsPath + 'img/icons/misc/date.png" alt="xls-file" class="me-3" width="20">';
+                            var $row_output =
+                                '<div class="d-flex justify-content-start align-items-center user-name">' +
+                                '<div class="avatar-wrapper">' +
+                                '<div class="avatar me-2">' +
+                                $output +
+                                '</div>' +
+                                '</div>' +
+                                '<div class="d-flex flex-column">' +
+                                '<span class="emp_name text-truncate fs-6">' +
+                                $Indice +
+                                '</span>' +
+                                '</div>' +
+                                '</div>';
+
+                            return $row_output;
+                        }
+                    },
+                    {
+                        targets: 3,
+                        responsivePriority: 1,
+                        width: '160px',
+                        render: function (data, type, full, meta) {
+                            var $Nom = full['DateAjout'];
+                            var $output = '<img src="' + assetsPath + 'img/icons/misc/date.png" alt="xls-file" class="me-3" width="20">';
+                            var $row_output =
+                                '<div class="d-flex justify-content-start align-items-center user-name">' +
+                                '<div class="avatar-wrapper">' +
+                                '<div class="avatar me-2">' +
+                                $output +
+                                '</div>' +
+                                '</div>' +
+                                '<div class="d-flex flex-column">' +
+                                '<span class="emp_name text-truncate fs-6">' +
+                                $Nom +
+                                '</span>' +
+                                '</div>' +
+                                '</div>';
+
+                            return $row_output;
+                        }
+                    },
+                    {
+                        targets: -1,
+                        title: 'Actions',
+                        orderable: false,
+                        searchable: false,
+                        render: function (data, type, full, meta) {
+                            return (
+                                '<div class="d-inline-block">' +
+                                '<a href="javascript:;" class="btn btn-sm btn-icon dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="text-primary ti ti-dots-vertical"></i></a>' +
+                                '<ul class="dropdown-menu dropdown-menu-end m-0">' +
+                                '<li><a href="javascript:;" class="dropdown-item">Details</a></li>' +
+                                '</ul>' +
+                                '</div>' +
+                                '<a href="javascript:;" class="btn btn-sm btn-icon item-edit"><i class="text-primary ti ti-pencil"></i></a>'
+                            );
+                        }
+                    },
+                ],
+                order: [[1, 'desc']],
+                dom: '<"card-header flex-column flex-md-row"<"head-label text-center"><"dt-action-buttons text-end pt-3 pt-md-0"B>><"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6 d-flex justify-content-center justify-content-md-end"f>>t<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
+                displayLength: 3,
+                lengthMenu: [3, 7, 10],
+                language: {
+                    paginate: {
+                        //Supprimer le texte précédent et suivant de la pagination
+                        previous: new DOMParser().parseFromString("Précédent", 'text/html').body.innerHTML,
+                        next: new DOMParser().parseFromString("Suivant", 'text/html').body.innerHTML,
+                        last: new DOMParser().parseFromString("Dernier", 'text/html').body.innerHTML,
+                        first: new DOMParser().parseFromString("Premier", 'text/html').body.innerHTML
+                    },
+                    processing: new DOMParser().parseFromString("Traitement", 'text/html').body.innerHTML,
+                    lengthMenu: new DOMParser().parseFromString("Afficher les entrées", 'text/html').body.innerHTML,
+                    loadingRecords: new DOMParser().parseFromString("Chargement", 'text/html').body.innerHTML,
+                    search: new DOMParser().parseFromString("Chercher", 'text/html').body.innerHTML,
+                    zeroRecords: new DOMParser().parseFromString("Aucun enregistrement trouvé", 'text/html').body.innerHTML,
+                    emptyTable: '<div class="text-center">' +
+                        '<img class="mt-2 mb-2" src="' + assetsPath + 'img/illustrations/no-records.png" alt="pas-de-données" width="160" height="160" />' +
+                        '<h6>' + new DOMParser().parseFromString("Aucune donnée disponible", 'text/html').body.innerHTML + '</h6>' +
+                        '</div>',
+                    info: new DOMParser().parseFromString("Affichage des entrées", 'text/html').body.innerHTML,
+                    infoEmpty: new DOMParser().parseFromString("Aucune entrée", 'text/html').body.innerHTML,
+                    infoFiltered: new DOMParser().parseFromString("Entrées filtrées", 'text/html').body.innerHTML
+                },
+                responsive: {
+                    details: {
+                        display: $.fn.dataTable.Responsive.display.modal({
+                            header: function (row) {
+                                var data = row.data();
+
+                                return new DOMParser().parseFromString("Détails", 'text/html').body.innerHTML;
+                            }
+                        }),
+                        type: 'column',
+                        renderer: function (api, rowIdx, columns) {
+                            var data = $.map(columns, function (col, i) {
+                                return col.title !== '' // ? Ne pas afficher la ligne dans la fenêtre popup modale si le titre est vide (pour les cases à cocher)
+                                    ? '<tr data-dt-row="' +
+                                    col.rowIndex +
+                                    '" data-dt-column="' +
+                                    col.columnIndex +
+                                    '">' +
+                                    '<td>' +
+                                    col.title +
+                                    ' :' +
+                                    '</td> ' +
+                                    '<td>' +
+                                    col.data +
+                                    '</td>' +
+                                    '</tr>'
+                                    : '';
+                            }).join('');
+
+                            return data ? $('<table class="table"/><tbody />').append(data) : false;
+                        }
+                    }
+                }
+            });
+        }
 
 
 

@@ -24,8 +24,8 @@ namespace LoanManagement.Data.SqlServer.Migrations
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Version = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
                     Statut = table.Column<int>(type: "int", nullable: false),
-                    DateAjout = table.Column<string>(type: "nvarchar(max)", nullable: false, defaultValue: "23/08/2023"),
-                    DateModification = table.Column<string>(type: "nvarchar(max)", nullable: false, defaultValue: "23/08/2023"),
+                    DateAjout = table.Column<string>(type: "nvarchar(max)", nullable: false, defaultValue: "01/09/2023"),
+                    DateModification = table.Column<string>(type: "nvarchar(max)", nullable: false, defaultValue: "01/09/2023"),
                     ApplicationId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
@@ -178,8 +178,8 @@ namespace LoanManagement.Data.SqlServer.Migrations
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DateExpiration = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Statut = table.Column<int>(type: "int", nullable: false),
-                    DateAjout = table.Column<string>(type: "nvarchar(max)", nullable: false, defaultValue: "23/08/2023"),
-                    DateModification = table.Column<string>(type: "nvarchar(max)", nullable: false, defaultValue: "23/08/2023")
+                    DateAjout = table.Column<string>(type: "nvarchar(max)", nullable: false, defaultValue: "01/09/2023"),
+                    DateModification = table.Column<string>(type: "nvarchar(max)", nullable: false, defaultValue: "01/09/2023")
                 },
                 constraints: table =>
                 {
@@ -323,6 +323,7 @@ namespace LoanManagement.Data.SqlServer.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Username = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PasswordSalt = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
                     RefreshToken = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -334,7 +335,7 @@ namespace LoanManagement.Data.SqlServer.Migrations
                     DateExpirationCompte = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
                     Statut = table.Column<int>(type: "int", nullable: false),
                     DateDesactivation = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DateAjout = table.Column<string>(type: "nvarchar(max)", nullable: false, defaultValue: "23/08/2023"),
+                    DateAjout = table.Column<string>(type: "nvarchar(max)", nullable: false, defaultValue: "01/09/2023"),
                     DateModificationMotDePasse = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ProfilId = table.Column<int>(type: "int", nullable: true)
                 },
@@ -357,6 +358,7 @@ namespace LoanManagement.Data.SqlServer.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     NumeroDossier = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Taille = table.Column<double>(type: "float", nullable: false),
+                    Montant = table.Column<double>(type: "float", nullable: false),
                     Poids = table.Column<double>(type: "float", nullable: false),
                     TensionArterielle = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Fumeur = table.Column<bool>(type: "bit", nullable: false),
@@ -381,6 +383,7 @@ namespace LoanManagement.Data.SqlServer.Migrations
                     TroisiemeBulletinSalaire = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FactureProFormat = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     EcheanceCarteIdentite = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Statut = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ClientId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -417,7 +420,7 @@ namespace LoanManagement.Data.SqlServer.Migrations
                     Entite = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PageURL = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PreferenceURL = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DateOperation = table.Column<string>(type: "nvarchar(max)", nullable: false, defaultValue: "23/08/2023"),
+                    DateOperation = table.Column<string>(type: "nvarchar(max)", nullable: false, defaultValue: "01/09/2023"),
                     DateSysteme = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UtilisateurId = table.Column<int>(type: "int", nullable: false),
                     ClientId = table.Column<int>(type: "int", nullable: false),
@@ -470,7 +473,7 @@ namespace LoanManagement.Data.SqlServer.Migrations
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Statut = table.Column<int>(type: "int", nullable: false),
                     Position = table.Column<int>(type: "int", nullable: false),
-                    DateAjout = table.Column<string>(type: "nvarchar(max)", nullable: false, defaultValue: "23/08/2023"),
+                    DateAjout = table.Column<string>(type: "nvarchar(max)", nullable: false, defaultValue: "01/09/2023"),
                     DateModification = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     MenuId = table.Column<int>(type: "int", nullable: true),
                     HabilitationProfilId = table.Column<int>(type: "int", nullable: false),
@@ -508,10 +511,9 @@ namespace LoanManagement.Data.SqlServer.Migrations
                     Matricule = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Nom = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
                     Prenoms = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Photo = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    DateAjout = table.Column<string>(type: "nvarchar(max)", nullable: false, defaultValue: "23/08/2023"),
-                    DateModification = table.Column<string>(type: "nvarchar(max)", nullable: false, defaultValue: "23/08/2023"),
+                    DateAjout = table.Column<string>(type: "nvarchar(max)", nullable: false, defaultValue: "01/09/2023"),
+                    DateModification = table.Column<string>(type: "nvarchar(max)", nullable: false, defaultValue: "01/09/2023"),
                     UserId = table.Column<int>(type: "int", nullable: false),
                     DepartementId = table.Column<int>(type: "int", nullable: false)
                 },
@@ -567,7 +569,7 @@ namespace LoanManagement.Data.SqlServer.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     OldPasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     OldPasswordSalt = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
-                    DateAjout = table.Column<string>(type: "nvarchar(max)", nullable: false, defaultValue: "23/08/2023"),
+                    DateAjout = table.Column<string>(type: "nvarchar(max)", nullable: false, defaultValue: "01/09/2023"),
                     UtilisateurId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -759,6 +761,11 @@ namespace LoanManagement.Data.SqlServer.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "OrganeDecisions",
+                columns: new[] { "Id", "Libelle" },
+                values: new object[] { 1, "Gestionnaire" });
+
+            migrationBuilder.InsertData(
                 table: "ParamGlobals",
                 columns: new[] { "Id", "DelaiExpiration", "ExcludeUsername", "FromPassword", "IncludeDigits", "IncludeLowerCase", "IncludeSpecialCharacters", "IncludeUpperCase", "Port", "SmtpClient", "SmtpEmail", "SmtpName", "Taille" },
                 values: new object[] { 1, 6, true, "", true, true, true, true, 0, "", "", "", 8 });
@@ -791,11 +798,11 @@ namespace LoanManagement.Data.SqlServer.Migrations
                 columns: new[] { "Id", "Code", "DateAjout", "DateExpiration", "DateModification", "Description", "Libelle", "Statut" },
                 values: new object[,]
                 {
-                    { 1, "PROFIL-001", "23/08/2023", "23/08/2024", "", "Profil destiné à l'administrateur", "Administrateur", 1 },
-                    { 2, "PROFIL-002", "23/08/2023", "23/08/2024", "", "Profil destiné aux au gestionnaire", "Gestionnaire", 1 },
-                    { 3, "PROFIL-003", "23/08/2023", "23/08/2024", "", "Profil destiné à l'analyste", "Analyste", 1 },
-                    { 4, "PROFIL-004", "23/08/2023", "23/08/2024", "", "Profil destiné au directeur de la GGR", "Directeur GGR", 1 },
-                    { 5, "PROFIL-005", "23/08/2023", "23/08/2024", "", "Profil destiné aux utilisateurs", "Chef Departement Back-Office Engagement", 1 }
+                    { 1, "PROFIL-001", "01/09/2023", "01/09/2024", "", "Profil destiné à l'administrateur", "Administrateur", 1 },
+                    { 2, "PROFIL-002", "01/09/2023", "01/09/2024", "", "Profil destiné aux au gestionnaire", "Gestionnaire", 1 },
+                    { 3, "PROFIL-003", "01/09/2023", "01/09/2024", "", "Profil destiné à l'analyste", "Analyste", 1 },
+                    { 4, "PROFIL-004", "01/09/2023", "01/09/2024", "", "Profil destiné au directeur de la GGR", "Directeur GGR", 1 },
+                    { 5, "PROFIL-005", "01/09/2023", "01/09/2024", "", "Profil destiné aux utilisateurs", "Chef Departement Back-Office Engagement", 1 }
                 });
 
             migrationBuilder.InsertData(
@@ -840,6 +847,11 @@ namespace LoanManagement.Data.SqlServer.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "Comptes",
+                columns: new[] { "Id", "ClientId", "NumeroCompte" },
+                values: new object[] { 1, 1, "121212121212" });
+
+            migrationBuilder.InsertData(
                 table: "Departements",
                 columns: new[] { "Id", "Code", "DirectionId", "Libelle" },
                 values: new object[,]
@@ -852,26 +864,57 @@ namespace LoanManagement.Data.SqlServer.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "Deroulements",
+                columns: new[] { "Id", "Description", "Libelle", "NiveauInstance", "Plafond", "Plancher", "TypePretId" },
+                values: new object[,]
+                {
+                    { 1, "Config d'un premier déroulement", "premier deroulement", 1, 100000000.0, 1.0, 1 },
+                    { 2, "Config d'un deuxième déroulement", "deuxième deroulement", 1, 100000000.0, 1.0, 2 },
+                    { 3, "Config d'un troisième déroulement", "troisième deroulement", 1, 100000000.0, 1.0, 3 },
+                    { 4, "Config d'un quatrième déroulement", "quatrième deroulement", 1, 100000000.0, 1.0, 4 },
+                    { 5, "Config d'un cinquième déroulement", "cinquième deroulement", 1, 100000000.0, 1.0, 5 },
+                    { 6, "Config d'un sixième déroulement", "sixième deroulement", 1, 100000000.0, 1.0, 6 }
+                });
+
+            migrationBuilder.InsertData(
                 table: "HabilitationProfils",
                 columns: new[] { "Id", "DateAjout", "DateModification", "Edition", "Generation", "Insertion", "Modification", "ProfilId", "Suppression" },
                 values: new object[,]
                 {
-                    { 1, "23/08/2023", "", true, true, true, true, 1, true },
-                    { 2, "23/08/2023", "", true, false, true, true, 2, false },
-                    { 3, "23/08/2023", "", true, false, true, true, 3, false },
-                    { 4, "23/08/2023", "", true, false, true, true, 4, false },
-                    { 5, "23/08/2023", "", true, false, true, true, 5, false }
+                    { 1, "01/09/2023", "", true, true, true, true, 1, true },
+                    { 2, "01/09/2023", "", true, false, true, true, 2, false },
+                    { 3, "01/09/2023", "", true, false, true, true, 3, false },
+                    { 4, "01/09/2023", "", true, false, true, true, 4, false },
+                    { 5, "01/09/2023", "", true, false, true, true, 5, false }
                 });
 
             migrationBuilder.InsertData(
+                table: "RoleOrganes",
+                columns: new[] { "Id", "DureeTraitement", "Libelle", "OrganeDecisionId" },
+                values: new object[] { 1, 24, "Instruction de dossiers", 1 });
+
+            migrationBuilder.InsertData(
                 table: "Utilisateurs",
-                columns: new[] { "Id", "DateAjout", "DateDesactivation", "DateExpirationCompte", "DateModificationMotDePasse", "IsAdmin", "IsConnected", "IsEditPassword", "IsSuperAdmin", "PasswordHash", "PasswordSalt", "ProfilId", "RefreshToken", "RefreshTokenTime", "Statut", "Username" },
-                values: new object[] { 1, "23/08/2023", "20/08/2025", "20/08/2025", "23/08/2023", true, false, true, true, "89D5327C40C8DB213126BDAC94FF7BC44FAF0EDB9247A8B594E1C76D44DD15F6E0D80747F04A812C80DCD49B78D3843963E6012CE9E34D43242AD64D3A0750C3", new byte[] { 57, 116, 129, 228, 245, 200, 207, 110, 45, 17, 252, 84, 112, 64, 138, 75, 120, 225, 88, 30, 151, 67, 91, 17, 52, 43, 32, 83, 238, 50, 131, 255, 10, 245, 11, 58, 128, 72, 101, 170, 190, 168, 137, 140, 48, 152, 52, 56, 129, 228, 35, 111, 19, 83, 248, 34, 136, 47, 224, 249, 58, 253, 36, 90 }, 1, "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IkFkbWluIiwibmJmIjoxNjkyODIxMDc4LCJleHAiOjE2OTM0MjU4Nzh9._ng0wE6DBCoXjtUafWQwG04TyCjjhN0fQmCLDye1WIc", "30/08/2023", 1, "Admin" });
+                columns: new[] { "Id", "DateAjout", "DateDesactivation", "DateExpirationCompte", "DateModificationMotDePasse", "Email", "IsAdmin", "IsConnected", "IsEditPassword", "IsSuperAdmin", "PasswordHash", "PasswordSalt", "ProfilId", "RefreshToken", "RefreshTokenTime", "Statut", "Username" },
+                values: new object[,]
+                {
+                    { 1, "01/09/2023", "20/08/2025", "20/08/2025", "01/09/2023", "ekeoula@gmail.com", true, false, true, true, "43B6FE4F85C1E392D1F7341EC43164B37FC57DF19B936200AD735A0255D619A644EA6280E5FAC80C6190ABBB1C0832DC1239BE7911FE724BCB90B16ADBBA55CF", new byte[] { 2, 38, 34, 52, 8, 114, 251, 11, 139, 162, 152, 133, 87, 122, 80, 18, 161, 1, 249, 5, 6, 128, 56, 183, 35, 43, 51, 228, 103, 206, 80, 120, 135, 163, 108, 97, 107, 214, 124, 76, 95, 98, 6, 192, 155, 38, 178, 138, 136, 129, 131, 214, 237, 89, 162, 124, 73, 45, 161, 133, 179, 153, 11, 69 }, 1, "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IkFkbWluIiwibmJmIjoxNjkzNTg4NzA4LCJleHAiOjE2OTQxOTM1MDh9.eUQhoKks4oDiMIZG6KnZL1Dmmm-ox3skotPpT4Sucq4", "08/09/2023", 1, "Admin" },
+                    { 2, "01/09/2023", "21/08/2025", "20/08/2025", "01/09/2023", "bhazou@biat.tg", false, false, true, false, "9D9B4DF8B59F183A72E0D3896CDB15548390C15CE4FCF93F73463CA14E28BED81A2C4BD94D67E24208659D4D56EEB6C5173FC95E0A2073B9511CF5E93480F6C0", new byte[] { 89, 11, 30, 108, 162, 42, 120, 131, 214, 101, 129, 212, 247, 127, 62, 125, 186, 119, 75, 213, 254, 167, 25, 28, 31, 150, 201, 95, 106, 129, 180, 149, 76, 235, 146, 64, 248, 47, 188, 78, 105, 213, 2, 79, 157, 187, 194, 92, 150, 35, 128, 182, 2, 1, 46, 91, 196, 117, 203, 188, 147, 1, 86, 173 }, 2, "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6Indhem91IiwibmJmIjoxNjkzNTg4NzA4LCJleHAiOjE2OTQxOTM1MDh9.5mYPc5drhBmphqzWHedopE1ZuIt2ZJmeRDf4Qph9UmE", "08/09/2023", 1, "bhazou" }
+                });
 
             migrationBuilder.InsertData(
                 table: "Employes",
-                columns: new[] { "Id", "DateAjout", "DateModification", "DepartementId", "Email", "Matricule", "Nom", "Photo", "Prenoms", "UserId" },
-                values: new object[] { 1, "23/08/2023", "23/08/2023", 1, "ekeoula@gmail.com", "6060", "KEOULA", null, "Lonlon Edem", 1 });
+                columns: new[] { "Id", "DateAjout", "DateModification", "DepartementId", "Matricule", "Nom", "Photo", "Prenoms", "UserId" },
+                values: new object[,]
+                {
+                    { 1, "01/09/2023", "01/09/2023", 1, "6060", "KEOULA", null, "Lonlon Edem", 1 },
+                    { 2, "01/09/2023", "01/09/2023", 4, "6061", "Bhazou", null, "Bhazou", 2 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "MembreOrganes",
+                columns: new[] { "Id", "Libelle", "OrganeDecisionId", "UtilisateurId" },
+                values: new object[] { 1, "Membre gestionnaire", 1, 2 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Applications_Code",
@@ -932,12 +975,6 @@ namespace LoanManagement.Data.SqlServer.Migrations
                 name: "IX_Employes_DepartementId",
                 table: "Employes",
                 column: "DepartementId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Employes_Email",
-                table: "Employes",
-                column: "Email",
-                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Employes_Matricule",

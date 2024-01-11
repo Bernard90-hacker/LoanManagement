@@ -52,11 +52,6 @@ namespace LoanManagement.service.Services.Users_Management
 			return null;
 		}
 
-		public async Task<Employe?> GetEmployeByEmail(string email)
-		{
-			return await _unitOfWork.Employes.GetEmployeByEmail(email);
-		}
-
 		public async Task<Employe?> GetEmployeById(int id)
 		{
 			return await _unitOfWork.Employes.GetEmployeById(id);

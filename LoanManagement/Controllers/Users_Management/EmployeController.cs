@@ -137,29 +137,6 @@ namespace LoanManagement.API.Controllers.Users_Management
 			}
 		}
 
-		[HttpGet("{email}")]
-		public async Task<ActionResult<EmployeRessource>> GetEmployeByEmail(string email)
-		{
-			try
-			{
-				var employe = await _employeService.GetEmployeByEmail(email);
-				if (employe is null)
-				{
-					_logger.LogWarning("Détails d'un employé : aucun employé trouvé");
-					return NotFound(new ApiResponse((int)CustomHttpCode.OBJECT_NOT_FOUND, description: "Aucun employé trouvé qui corresponde au critère spécifié"));
-				}
-
-				var result = _mapper.Map<GetEmployeResource>(employe);
-				_logger.LogInformation("'Détails d'un employé' : Opération effectuée avec succès");
-				
-				return Ok(result);
-			}
-			catch (Exception ex)
-			{
-				_logger.LogError("Une erreur est survenue pendant le traitement de la requête");
-				return ValidationProblem(statusCode: (int)HttpCode.INTERNAL_SERVER_ERROR, title: "Erreur interne du serveur", detail: ex.Message);
-			}
-		}
 
 		[HttpPost("add")]
 		public async Task<ActionResult<EmployeRessource>> Add(EmployeRessource ressource)
@@ -187,12 +164,7 @@ namespace LoanManagement.API.Controllers.Users_Management
 					_logger.LogWarning("Enregistrement d'un employé : L'utilisateur ou le département renseigné n'existe pas");
 					return BadRequest("L'utilisateur ou le département renseigné n'existe pas");
 				}
-				var employe = await _employeService.GetEmployeByEmail(ressource.Email);
-				if(employe is not null)
-				{
-					_logger.LogWarning("Enregistrement d'un employé : Un employé avec le même email existe, veuillez utiliser un autre");
-					return BadRequest("Un employé avec le même email existe, veuillez utiliser un autre");
-				}
+
 				var didUserAlreadyAfectedToEmploye = await _employeService.GetEmployeUserAccount(user.Id);
 				if (didUserAlreadyAfectedToEmploye is not null)
 				{

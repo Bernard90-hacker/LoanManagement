@@ -224,7 +224,7 @@
 					</a>
 				</div>
 				<!-- /Logo -->
-				<h4 class="mb-1 pt-2">Bienvenue 👋</h4>
+				<h4 class="mb-1 pt-2">Bienvenue</h4>
 				<p class="mb-4">Veuillez vous connecter</p>
 
 				<form id="form" class="mb-3" asp-action="Login" asp-controller="Home" method="POST">
@@ -232,10 +232,17 @@
 						<label asp-for="@Model.LoginResource.Username" class="form-label">Nom d'utilisateur</label>
 						<input type="text" class="form-control" id="username" placeholder="Entrez votre nom d'utilisateur" autofocus asp-for="@Model.LoginResource.Username">
 					</div>
-					<div class="input-group input-group-merge">
-						<input type="password" id="password" class="form-control" asp-for="@Model.LoginResource.Password" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" />
-						<span class="input-group-text cursor-pointer"><i class="ti ti-eye-off"></i></span>
+					<div class="mb-3 form-password-toggle">
+						<div class="d-flex justify-content-between">
+							<label class="form-label" for="password">Mot de passe</label>
+							
+						</div>
+						<div class="input-group input-group-merge">
+							<input type="password" id="password" class="form-control" asp-for="@Model.LoginResource.Password" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="password" />
+							<span class="input-group-text cursor-pointer"><i class="ti ti-eye-off"></i></span>
+						</div>
 					</div>
+					
 					<button class="btn btn-primary d-grid w-100" id="btnSubmit">
 						Se connecter
 					</button>

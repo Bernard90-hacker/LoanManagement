@@ -31,6 +31,8 @@ namespace LoanManagement.core.Models.Loan_Management
         public string TroisiemeBulletinSalaire { get; set; } = string.Empty;
         public string FactureProFormat { get; set; } = string.Empty;
         public string EcheanceCarteIdentite { get; set; } = string.Empty;
+        public bool DossierTraite { get; set; } = false;
+        public string Statut { get; set; } = string.Empty;
         public int ClientId { get; set; }
 		public Client? Client { get; set; }
 		public PretAccord? PretAccord { get; set; }
